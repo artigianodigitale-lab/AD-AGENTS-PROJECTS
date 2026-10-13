@@ -496,7 +496,7 @@ def evaluate(target: Path | str, root: Path | str | None = None) -> ScopeVerdict
     # Il 2026-10-13 ho misurato: **un progetto senza numero PASSA il cancello.** Non
     # e' numerato, quindi `protected_segment` non lo riconosce, quindi nessun permesso
     # serve e nessuna approvazione — e chi ci scrive dentro non viene fermato da
-    # niente. il CEO ha chiesto che l'AI *ricordi* che i progetti si numerano: non lo
+    # niente. Il CEO ha chiesto che l'AI *ricordi* che i progetti si numerano: non lo
     # ricordava perche' **non era scritto da nessuna parte, e nessun controllo lo
     # pretendeva**. Ora lo pretende.
     #
