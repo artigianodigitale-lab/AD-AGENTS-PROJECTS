@@ -41,6 +41,10 @@ CARTELLA = "errori"
 
 #: Le tre domande. Senza la terza una voce e' incompleta: non e' apprendimento,
 #: e' memoria di un dispiacere.
+#: Il credito di chi ha proposto la voce, quando arriva da un contributo.
+#: **Facoltativo**, e non in CAMPI: un credito non si pretende da nessuno.
+CAMPI_FACOLTATIVI = ("proposto_da",)
+
 CAMPI = (
     "id",
     "data",
@@ -53,12 +57,19 @@ CAMPI = (
 )
 
 DIVENTA = ("controllo", "nota", "verbale")
-TROVATO_DA = ("controllo", "revisore", "altro-agente", "io")
+TROVATO_DA = ("controllo", "revisore", "altro-agente", "io", "contributo")
 STATI = ("chiuso", "aperto")
 
 #: Come e' stato trovato l'errore. `controllo` e' l'unico che significa che il
 #: sistema sta imparando: gli altri tre sono gradi diversi di fortuna.
+#: Chi ha trovato una cicatrice, in TRE famiglie. La terza e' la migliore:
+#: **una persona che usa il sistema ce l'ha detto.** `revisore` e' chi controlla,
+#: `contributo` e' chi arriva da fuori. Nessuna delle due e' fortuna: sono occhi
+#: che non sono i nostri.
 FORTUNA = ("io", "altro-agente")
+PERSONE = ("revisore", "contributo")
+CONTROLLO = ("controllo",)
+FAMIGLIE = CONTROLLO + PERSONE + FORTUNA
 
 
 def carica(base: Path | None = None) -> list[dict]:
@@ -166,6 +177,9 @@ def statistiche(base: Path | None = None) -> dict:
         giudizio = "il sistema sta imparando: la maggioranza degli errori la trova un controllo"
     elif per_fortuna > totale / 2:
         giudizio = "stiamo avendo FORTUNA: la maggioranza degli errori l'ha trovata una persona"
+    elif per_trovato.get("contributo", 0) > 0:
+        giudizio = ("il sistema impara anche da fuori: "
+                    f"{per_trovato['contributo']} cicatrici le ha segnalate chi lo usa")
     else:
         giudizio = "equilibrio: meta' controlli, meta' fortuna"
 

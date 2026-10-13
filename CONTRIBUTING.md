@@ -17,6 +17,8 @@ python3 tools/contributo.py nuovo
 # 2. Rispondi alle 5 domande. Non serve essere ordinati: serve essere precisi.
 #    Se una domanda non ha risposta per te, scrivi "non lo so".
 #    «Non lo so» è un'informazione. Una risposta inventata per riempire lo spazio no.
+#    La sesta domanda chiede se vuoi essere RINGRAZIATO COL TUO NOME: decidi tu.
+#    Se scrivi «anonimo», resti anonimo, e non te lo chiediamo due volte.
 
 # 3. Controlla che non manchi niente
 python3 tools/contributo.py check contributi/CONTRIBUTO-001-*.md
@@ -48,6 +50,27 @@ esiste:** se dal tuo contributo nasce un **controllo** — una cosa che il siste
 lascia più sbagliare — **il tuo nome resta scritto lì**. Nel registro delle cicatrici, con
 il numero e la data. È il modo in cui questo sistema ricorda, e non dimentica chi l'ha
 aiutato.
+
+### Cosa succede da questa parte
+
+Il documento che hai mandato **non finisce in una casella**. Diventa una ** voce del registro
+delle cicatrici** — la scheda che questo sistema tiene per ogni problema che ha incontrato:
+
+```bash
+python3 tools/contributo.py importa contributi/CONTRIBUTO-001-*.md
+# -> crea errori/ERR-0053-da-contributo.yaml, con dentro il tuo racconto
+# -> e con il tuo nome, se l'hai voluto
+```
+
+**E il sistema prepara la scheda, ma non la completa.** Due campi restano scritti
+`DA COMPLETARE`, e li riempie **una persona**, perché quelle due cose non si possono dedurre
+da un racconto:
+
+- **cosa l'ha risolto** — lo sa chi risolve;
+- **cosa lo avrebbe preso** — è la domanda che rende utile tutto il resto.
+
+**Quando quella difesa diventa un controllo, la voce si chiude — e il tuo nome resta.**
+Nel registro, col numero e la data. È il modo in cui questo sistema ricorda.
 
 ### Le tre regole di un buon contributo
 
@@ -108,6 +131,27 @@ something legitimate, that is a defect **of the gate**, not of you.
 contribution becomes a **check** — something the system no longer lets anyone get wrong —
 **your name stays written there**. In the scar register, with its number and its date. That
 is how this system remembers, and it does not forget who helped it.
+
+### What happens on our side
+
+The document you sent **does not end up in an inbox**. It becomes an entry in the **scar
+register** — the record this system keeps for every problem it has met:
+
+```bash
+python3 tools/contributo.py importa contributi/CONTRIBUTO-001-*.md
+# -> creates errori/ERR-0053-da-contributo.yaml, with your account inside
+# -> and with your name, if you wanted it
+```
+
+**And the system prepares the record, but does not complete it.** Two fields stay marked
+`DA COMPLETARE` *(to be completed)*, and **a person** fills them, because those two things
+cannot be deduced from an account:
+
+- **what fixed it** — the one who fixes it knows;
+- **what would have caught it** — the question that makes all the rest useful.
+
+**When that defence becomes a check, the entry is closed — and your name stays.** In the
+register, with its number and its date. That is how this system remembers.
 
 ### The three rules of a good contribution
 

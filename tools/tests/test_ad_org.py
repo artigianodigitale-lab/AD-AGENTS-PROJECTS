@@ -22,6 +22,7 @@ import ad_coherence  # noqa: E402
 import ad_contract  # noqa: E402
 import ad_docs  # noqa: E402
 import ad_drift  # noqa: E402
+import errori as ad_errori  # noqa: E402  (e' un comando, ma importarlo e' sicuro)
 import ad_evidence  # noqa: E402
 import ad_milestone  # noqa: E402
 import ad_gates  # noqa: E402
@@ -1843,7 +1844,10 @@ def test_errori() -> None:
     )
     check(
         "la statistica distingue imparare da avere fortuna",
-        dati["dal_controllo"] + dati["per_fortuna"] + dati["per_trovato_da"].get("revisore", 0)
+        # Le famiglie vengono dal CODICE, non da un elenco ricopiato qui: cosi' la
+        # prova non deriva quando se ne aggiunge una. Il 2026-10-13 e' successo
+        # proprio questo: `contributo` e' nato e la prova elencava `revisore` a mano.
+        sum(dati["per_trovato_da"].get(famiglia, 0) for famiglia in ad_errori.FAMIGLIE)
         == dati["totale"],
         str(dati),
     )
