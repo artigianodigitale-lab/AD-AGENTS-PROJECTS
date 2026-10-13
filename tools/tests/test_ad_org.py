@@ -627,7 +627,7 @@ def test_scope() -> None:
         )
         approval_ok = temp / "approvazioni" / "T-1.yaml"
         approval_ok.write_text(
-            "task_id: T-1\napprovato_da: Luca\ndata: '2026-10-08T12:00:00+02:00'\n",
+            "task_id: T-1\napprovato_da: CEO\ndata: '2026-10-08T12:00:00+02:00'\n",
             encoding="utf-8",
         )
         # e gli mtime si mettono AL CONTRARIO, apposta: se il controllo li usasse
@@ -644,7 +644,7 @@ def test_scope() -> None:
         )
         approval_bad = temp / "approvazioni" / "T-2.yaml"
         approval_bad.write_text(
-            "task_id: T-2\napprovato_da: Luca\ndata: '2026-10-08T12:00:00+02:00'\n",
+            "task_id: T-2\napprovato_da: CEO\ndata: '2026-10-08T12:00:00+02:00'\n",
             encoding="utf-8",
         )
         os.utime(contract_bad, (base - 100, base - 100))
@@ -665,7 +665,7 @@ def test_scope() -> None:
             encoding="utf-8",
         )
         (temp / "approvazioni" / "T-scaduto.yaml").write_text(
-            "task_id: T-scaduto\napprovato_da: Luca\ndata: '2026-10-08T12:00:00+02:00'\n",
+            "task_id: T-scaduto\napprovato_da: CEO\ndata: '2026-10-08T12:00:00+02:00'\n",
             encoding="utf-8",
         )
 
@@ -938,7 +938,7 @@ def test_guardia() -> None:
 
         marcatore = finta / "approvazioni" / "T-1.yaml"
         marcatore.write_text(
-            "task_id: T-1\napprovato_da: Luca\ndata: '2026-10-08T12:00:00+02:00'\n",
+            "task_id: T-1\napprovato_da: CEO\ndata: '2026-10-08T12:00:00+02:00'\n",
             encoding="utf-8",
         )
         contratto = finta / "contratti" / "T-1.yaml"
@@ -1252,7 +1252,7 @@ def test_bootstrap_sprint() -> None:
 
         marcatore = root / "approvazioni" / "T-1.yaml"
         marcatore.write_text(
-            "task_id: T-1\napprovato_da: Luca\ndata: '2026-10-08T12:00:00+02:00'\n",
+            "task_id: T-1\napprovato_da: CEO\ndata: '2026-10-08T12:00:00+02:00'\n",
             encoding="utf-8",
         )
         contratto = root / "contratti" / "T-1.yaml"
@@ -1669,7 +1669,7 @@ def test_coherence() -> None:
         )
         # il marcatore c'e', ma e' sciolto nella cartella madre invece che nel gruppo
         (root / "approvazioni" / "X-1.yaml").write_text(
-            "task_id: X-1\napprovato_da: Luca\ndata: '2026-10-08T12:00:00+02:00'\n",
+            "task_id: X-1\napprovato_da: CEO\ndata: '2026-10-08T12:00:00+02:00'\n",
             encoding="utf-8",
         )
         check(

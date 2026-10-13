@@ -15,7 +15,7 @@ cosa_e_fallito: >
   **Il secondo.** Ho copiato il file nella macchina **senza eseguirlo**. Le tre sedi hanno
   smesso di funzionare insieme.
 
-  E la stessa forma era gia' successa **due volte oggi**: la sostituzione `Luca` -> `CEO` ha
+  E la stessa forma era gia' successa **due volte oggi**: la sostituzione del nome col ruolo ha
   creato `approver: CEO (CEO)` e `del CEO, CEO,`, perche' sostituiva testo senza guardare
   cosa ci stava intorno.
 
