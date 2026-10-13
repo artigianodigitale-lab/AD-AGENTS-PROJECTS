@@ -55,7 +55,7 @@ impact_forecast:
   shared_platform: MED
   product: NONE
 
-status: closed
+status: chiuso
 write_scope:
   - ".brain/plugin/enforce-contract/"
   - "tools/ad_scope.py"
@@ -66,3 +66,9 @@ expires: "2026-11-08T00:00:00+01:00"
 # Il lavoro non e' iniziato, e tocca GLI STESSI FILE della regola «un percorso, un
 # titolare»: `tools/ad_contract.py`. Con la regola in vigore, due contratti sugli stessi
 # file non si aprono: si aprono in UNO. Va tutto in GOV-005.
+
+# Chiuso il 2026-10-13: questa e' la versione che si distribuisce.
+# Un permesso aperto in una copia non e' un esempio: e' un permesso,
+# e darebbe autorita' sulla sede da cui la copia viene. La storia resta,
+# la forma resta dimostrabile, l'autorita' no. Chi riceve questo motore
+# crea i propri permessi (vedi la skill ad-avvio).

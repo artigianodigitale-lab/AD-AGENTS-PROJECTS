@@ -340,7 +340,11 @@ def coverage(relative: str, root: Path | str | None = None) -> tuple[WriteScope 
             # Negare bloccherebbe ogni permesso scritto prima di questa regola, e il
             # rimedio sarebbe peggio del male. Chi non dichiara la data viene elencato
             # da `contract_scope.py titolari` e messo in regola quando lo si tocca.
-            if scope.aperto and str(scope.aperto)[:10] > str(approval.data)[:10]:
+            # L'ORDINE E' consenso (7) -> permesso (8): il permesso si scrive DOPO il
+            # consenso e PRIMA della tappa. La condizione era invertita — bloccava
+            # il caso giusto e lasciava passare il retrodatato — e il 2026-10-13 l'ha
+            # trovata la dimostrazione del cancello, non un controllo. Vedi ERR-0052.
+            if scope.aperto and str(scope.aperto)[:10] < str(approval.data)[:10]:
                 return None, (
                     f'Il contract {scope.task_id} e\' stato scritto PRIMA '
                     f"dell'approvazione ({approval.data}).\nL'ordine e' "
@@ -492,7 +496,7 @@ def evaluate(target: Path | str, root: Path | str | None = None) -> ScopeVerdict
     # Il 2026-10-13 ho misurato: **un progetto senza numero PASSA il cancello.** Non
     # e' numerato, quindi `protected_segment` non lo riconosce, quindi nessun permesso
     # serve e nessuna approvazione — e chi ci scrive dentro non viene fermato da
-    # niente. Il CEO ha chiesto che l'AI *ricordi* che i progetti si numerano: non lo
+    # niente. il CEO ha chiesto che l'AI *ricordi* che i progetti si numerano: non lo
     # ricordava perche' **non era scritto da nessuna parte, e nessun controllo lo
     # pretendeva**. Ora lo pretende.
     #

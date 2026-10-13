@@ -563,23 +563,44 @@ def test_scope() -> None:
         ".brain" in ad_scope.protected_entries(root) and "tools" in ad_scope.protected_entries(root),
     )
 
-    for relativo in (
-        ".brain/COSTITUZIONE.md",
-        ".brain/plugin/enforce-contract/index.mjs",
-        "tools/ad_scope.py",
-    ):
-        verdict = ad_scope.evaluate(root / relativo, root)
-        # Qui c'era `verdict.task_id == "GOV-000"`: asseriva QUALE contract copre,
-        # cioe' lo stato del workspace, non il comportamento del codice. Il
-        # 2026-10-11 l'apertura di `ADMF-004` (write_scope: `tools/`) l'ha reso
-        # falso senza che niente fosse rotto — la stessa classe di ERR-0023, una
-        # misura che dipende dal momento invece che dal codice. E `check()` alza:
-        # la suite si e' fermata li', e i gruppi dopo non sono piu' stati eseguiti.
-        # La regola vera e' che il percorso sia coperto da un contract APPROVATO.
+    # La regola vera: il percorso e' coperto se esiste un contract APPROVATO che lo
+    # include. Questa prova se lo COSTRUISCE in una radice temporanea.
+    #
+    # Prima leggeva la radice di lavoro: funzionava finche' li' c'era un permesso di
+    # manutenzione attivo, e si fermava su una versione che li ha **tutti chiusi** —
+    # perche' un permesso aperto in una copia non e' un esempio, e' un permesso. Il
+    # 2026-10-13 la suite si e' fermata qui, ed e' la stessa famiglia di ERR-0049:
+    # **una prova che legge il mondo invece di costruirsi il caso.**
+    with tempfile.TemporaryDirectory() as temporanea:
+        radice = Path(temporanea)
+        (radice / "contratti" / "societa").mkdir(parents=True)
+        (radice / "approvazioni" / "societa").mkdir(parents=True)
+        (radice / "contratti" / "societa" / "MAN-001.yaml").write_text(
+            'task_id: MAN-001\nstatus: active\naperto: "2026-10-13"\n'
+            'write_scope:\n  - ".brain/"\n  - "tools/"\n',
+            encoding="utf-8",
+        )
+        (radice / "approvazioni" / "societa" / "MAN-001.yaml").write_text(
+            'task_id: MAN-001\napprovato_da: CEO\ndata: "2026-10-13"\n',
+            encoding="utf-8",
+        )
+        for relativo in (
+            ".brain/COSTITUZIONE.md",
+            ".brain/plugin/enforce-contract/index.mjs",
+            "tools/ad_scope.py",
+        ):
+            verdict = ad_scope.evaluate(radice / relativo, radice)
+            check(
+                f"governance coperta da un contract approvato ({relativo})",
+                verdict.allowed and verdict.task_id in ad_scope.load_approvals(radice),
+                verdict.reason,
+            )
+        # E la prova opposta, senza la quale il controllo potrebbe accettare tutto:
+        # tolto il CONSENSO, lo stesso percorso non e' piu' coperto.
+        (radice / "approvazioni" / "societa" / "MAN-001.yaml").unlink()
         check(
-            f"governance coperta da un contract approvato ({relativo})",
-            verdict.allowed and verdict.task_id in ad_scope.load_approvals(root),
-            verdict.reason,
+            "senza il consenso, la governance NON e' coperta",
+            not ad_scope.evaluate(radice / "tools" / "ad_scope.py", radice).allowed,
         )
 
     check(
@@ -616,18 +637,20 @@ def test_scope() -> None:
         (temp / "9. Prova" / "src").mkdir(parents=True)
         (temp / "9. Prova" / "altro").mkdir()
 
-        # T-1: consenso PRIMA del contract -> copre
-        # La data e' DICHIARATA nel documento, non presa dall'mtime: cosi' l'ordine
-        # viaggia con i documenti, e regge a una copia e a un `git clone`.
+        # T-1: consenso PRIMA del contract -> copre.
+        # L'ORDINE E' consenso (passo 7) -> permesso (passo 8): il permesso si scrive
+        # DOPO il consenso e PRIMA della tappa. Il 2026-10-13 il controllo era
+        # invertito e questa prova lo assecondava: i suoi dati dicevano il contrario
+        # del suo commento (ERR-0052).
         contract_ok = temp / "contratti" / "T-1.yaml"
         contract_ok.write_text(
-            'task_id: T-1\nagent: backend\nstatus: active\naperto: "2026-10-07"\n'
+            'task_id: T-1\nagent: backend\nstatus: active\naperto: "2026-10-08"\n'
             'write_scope:\n  - "9. Prova/src"\n',
             encoding="utf-8",
         )
         approval_ok = temp / "approvazioni" / "T-1.yaml"
         approval_ok.write_text(
-            "task_id: T-1\napprovato_da: CEO\ndata: '2026-10-08T12:00:00+02:00'\n",
+            "task_id: T-1\napprovato_da: CEO\ndata: '2026-10-07T12:00:00+02:00'\n",
             encoding="utf-8",
         )
         # e gli mtime si mettono AL CONTRARIO, apposta: se il controllo li usasse
@@ -635,10 +658,10 @@ def test_scope() -> None:
         os.utime(approval_ok, (base, base))
         os.utime(contract_ok, (base - 100, base - 100))
 
-        # T-2: contract DICHIARATO dopo il consenso -> non copre
+        # T-2: contract RETRODATATO, scritto PRIMA del consenso -> non copre.
         contract_bad = temp / "contratti" / "T-2.yaml"
         contract_bad.write_text(
-            'task_id: T-2\nstatus: active\naperto: "2026-10-09"\n'
+            'task_id: T-2\nstatus: active\naperto: "2026-10-07"\n'
             'write_scope:\n  - "9. Prova/altro"\n',
             encoding="utf-8",
         )
@@ -647,8 +670,8 @@ def test_scope() -> None:
             "task_id: T-2\napprovato_da: CEO\ndata: '2026-10-08T12:00:00+02:00'\n",
             encoding="utf-8",
         )
-        os.utime(contract_bad, (base - 100, base - 100))
-        os.utime(approval_bad, (base, base))
+        os.utime(contract_bad, (base, base))
+        os.utime(approval_bad, (base - 100, base - 100))
 
         # T-3: contract senza marcatore -> non copre
         (temp / "9. Prova" / "terzo").mkdir()
@@ -1008,14 +1031,45 @@ def test_guardia() -> None:
     rifiuta("security_scan.py", lambda: security_scan.disattiva(scoperto, [{"file": "AGENTS.md"}]))
     check("nessuno di loro ha lasciato una traccia", not scoperto.exists(), str(scoperto))
 
-    # E la guardia non rifiuta TUTTO: `tools/` e' coperto da un contract approvato,
-    # ed e' la condizione perche' questo lavoro si possa fare.
-    try:
-        ad_scope.guard(vera / "tools" / "ad_scope.py")
-        coperto = True
-    except PermissionError:
-        coperto = False
-    check("un contract approvato apre il percorso: la guardia non dice sempre no", coperto)
+    # E la guardia non rifiuta TUTTO: un contract APPROVATO apre il percorso, ed e'
+    # la condizione perche' un lavoro sulla governance si possa fare.
+    #
+    # Questa prova se lo COSTRUISCE in una radice temporanea. Prima leggeva la root di
+    # lavoro e passava finche' li' c'era un permesso di manutenzione attivo: su una
+    # versione che li ha **tutti chiusi** si fermava, perche' un permesso aperto in una
+    # copia non e' un esempio, e' un permesso. E' la stessa famiglia di ERR-0049 —
+    # **una prova che legge il mondo invece di costruirsi il caso**.
+    with tempfile.TemporaryDirectory() as temporanea:
+        autorita = Path(temporanea)
+        (autorita / "contratti" / "societa").mkdir(parents=True)
+        (autorita / "approvazioni" / "societa").mkdir(parents=True)
+        (autorita / "tools").mkdir()
+        (autorita / "contratti" / "societa" / "GOV-900.yaml").write_text(
+            'task_id: GOV-900\nstatus: active\naperto: "2026-10-13"\n'
+            'write_scope:\n  - "tools/"\n',
+            encoding="utf-8",
+        )
+        (autorita / "approvazioni" / "societa" / "GOV-900.yaml").write_text(
+            'task_id: GOV-900\napprovato_da: CEO\ndata: "2026-10-13"\n',
+            encoding="utf-8",
+        )
+        try:
+            ad_scope.guard(autorita / "tools" / "ad_scope.py", autorita)
+            coperto = True
+        except PermissionError:
+            coperto = False
+        check("un contract approvato apre il percorso: la guardia non dice sempre no", coperto)
+
+        # La prova opposta, senza la quale il controllo potrebbe accettare qualunque
+        # cosa: tolto il CONSENSO, lo stesso percorso non e' piu' coperto e la guardia
+        # lo rifiuta.
+        (autorita / "approvazioni" / "societa" / "GOV-900.yaml").unlink()
+        try:
+            ad_scope.guard(autorita / "tools" / "ad_scope.py", autorita)
+            rifiutato = False
+        except PermissionError:
+            rifiutato = True
+        check("senza il consenso lo stesso percorso e' rifiutato", rifiutato)
 
     # --- 4. FUORI DALL'ALBERO DI AUTORITA' ----------------------------------
     # Il caso che il gate ha contestato: `--root /tmp/x` non e' un permesso, e' un
@@ -3202,12 +3256,15 @@ def test_un_percorso_un_titolare() -> None:
             str([f.code for f in esiti_normale]),
         )
 
-    # 4b. E I NOMI REALI: ogni voce della lista dev'essere un permesso VERO — o un
-    #     contract che esiste ancora (e allora dev'essere attivo), o la voce della
-    #     decisione che l'ha congelato. Un nome dimenticato non compare da nessuna
-    #     parte, e questo controllo lo prende. Su un motore vergine i permessi sono
-    #     stati potati con i progetti e la decisione resta: la voce e' SPESA, non
-    #     sbagliata (ERR-0049).
+    # 4b. E I NOMI REALI: ogni voce della lista dev'essere un permesso VERO — un
+    #     contract ancora ATTIVO, oppure la voce della decisione che l'ha congelato.
+    #     Un nome dimenticato non compare da nessuna parte, e questo controllo lo
+    #     prende. Su un motore vergine i permessi sono stati chiusi (o potati con i
+    #     progetti) e la decisione resta: la voce e' SPESA, non sbagliata (ERR-0049).
+    #     Le due condizioni sono **alternative, non esclusive**: un permesso chiuso
+    #     esiste ancora come file e il suo nome sta nella decisione — la versione
+    #     che si distribuisce ha **tutti** i contratti chiusi, e il ramo `if/else`
+    #     di prima la faceva fallire pur essendo il registro in regola.
     check(
         "i permessi precedenti alla regola sono elencati",
         len(ad_contract.ESENTI_DALLA_REGOLA) > 0,
@@ -3217,14 +3274,15 @@ def test_un_percorso_un_titolare() -> None:
     testo_decisione = decisione.read_text(encoding="utf-8") if decisione.is_file() else ""
     for task in ad_contract.ESENTI_DALLA_REGOLA:
         file_contratto = sorted((base / "contratti").rglob(f"{task}.yaml"))
-        if file_contratto:
-            vivo = str(ad_contract.load(file_contratto[0]).get("status")) == "active"
-        else:
-            vivo = task in testo_decisione
+        attivo = bool(file_contratto) and (
+            str(ad_contract.load(file_contratto[0]).get("status")) == "active"
+        )
+        vivo = attivo or task in testo_decisione
         check(
             f"{task} e' un permesso vivo o la voce che l'ha congelato, non un nome dimenticato",
             vivo,
-            f"contract: {bool(file_contratto)} · in {decisione.name}: {task in testo_decisione}",
+            f"contract: {bool(file_contratto)} (attivo: {attivo}) · "
+            f"in {decisione.name}: {task in testo_decisione}",
         )
 
     # 5. E OGNI CONTRACT ATTIVO VALIDA ANCORA: la regola non rompe il passato.

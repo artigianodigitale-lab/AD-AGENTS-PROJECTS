@@ -1,0 +1,58 @@
+# ERR-0052 — L'ordine consenso-permesso era invertito, e una prova lo difendeva
+
+id: ERR-0052
+data: "2026-10-13"
+
+cosa_e_fallito: >
+  Il controllo dell'ordine era **al contrario** in **due posti**:
+
+  - `ad_scope.py:343` — l'autorita': bloccava `aperto > consenso`, cioe' il caso
+    **giusto** (il permesso scritto **dopo** il consenso), e lasciava passare il
+    **retrodatato**;
+  - `index.mjs:302` — la meta' del cancello che avvisa: stessa condizione, stessa
+    direzione sbagliata.
+
+  La costituzione non lascia dubbi: **7 CONSENSO -> 8 PERMESSO**, e *«si scrive PRIMA
+  DELLA TAPPA»* — cioe' prima del **lavoro**, non del consenso. E `comportamento.py`,
+  prova **B1**, gia' accusa nel verso giusto (*«l'orario del permesso precede quello
+  del marcatore»*): **il sistema si contraddiceva**.
+
+  **E una prova lo difendeva.** `test_ad_org` caso `T-2` diceva *«contract DICHIARATO
+  dopo il consenso -> non copre»*, col commento che contraddiceva i propri dati: `T-1`
+  si chiamava *«consenso PRIMA del contract»* e aveva il consenso **dopo**. Era scritta
+  per **aderire al codice**, non alla regola.
+
+  **Nella macchina non si vedeva** perche' i permessi veri hanno consenso e apertura
+  **lo stesso giorno**: `13 > 13` e' falso, e il difetto restava nascosto.
+
+cosa_l_ha_risolto: >
+  Le due condizioni invertite (`<` al posto di `>`), e le date del caso `T-2`
+  raddrizzate, con il commento che ora dice la regola vera.
+
+  Provato su tre casi, non su uno: consenso prima -> **passa**; permesso prima ->
+  **rifiuta**; stesso giorno -> **passa** (l'ordine sta nella giornata, non nel secondo).
+
+cosa_l_avrebbe_preso: >
+  **La dimostrazione del cancello**, ed e' la parte che vale. Il CEO ha scelto di
+  **chiudere i 14 permessi** e **mostrare il cancello con un permesso creato al momento**
+  (opzione A', invece di tenerli aperti o svuotarli): costruendo quel caso, il quarto
+  passo — *«e se il permesso viene prima del consenso?»* — ha risposto **OK** dove
+  doveva rispondere **NO**.
+
+  **Una prova che passa non dimostra che la regola sia giusta: dimostra che il codice
+  fa quello che il codice fa.** Se la prova e' scritta guardando il codice, il difetto
+  e' invisibile — e serve un caso **costruito dalla regola**, non dal codice.
+
+  E' la terza volta in un giorno che la forma e' la stessa: ERR-0049 (una prova che
+  dipende dal mondo), ERR-0051 (una firma che dipende dal mondo), e questa (una prova
+  che dipende dal **codice** invece che dalla **regola**).
+
+diventa: controllo
+dove: "tools/tests/test_ad_org.py"
+
+trovato_da: revisore
+stato: chiuso
+
+riferimenti:
+  - "errori/ERR-0049-la-suite-che-dipende-dallo-stato.yaml"
+  - "errori/ERR-0051-firma-non-sopravvive-a-una-copia.yaml"

@@ -835,7 +835,7 @@ devono essere symlink rotti; il plugin deve esistere e risultare **montato** in
 ### 10.3 · `DOCUMENTI_NON_NORMATIVI`
 
 ```python
-# tools/ad_coherence.py:463
+# tools/ad_coherence.py:464
 #: I documenti di root che **non sono normativi**: porte e spiegazioni.
 #:
 #: Il 2026-10-13 la versione vergine ha aggiunto `README.md` (una distribuzione

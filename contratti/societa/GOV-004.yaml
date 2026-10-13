@@ -55,7 +55,7 @@ impact_forecast:
   shared_platform: MED
   product: NONE
 
-status: closed
+status: chiuso
 write_scope:
   - "tools/milestone.py"
   - "tools/stato.py"
@@ -67,3 +67,9 @@ expires: "2026-11-08T00:00:00+01:00"
 # --- chiuso il 2026-10-13 ---
 # Il lavoro e' finito e provato: il controllo sulle sei sezioni del rapporto e la vista
 # condivisa dei lavori, 11 prove di cui 3 con il difetto iniettato. Suite: 434 controlli.
+
+# Chiuso il 2026-10-13: questa e' la versione che si distribuisce.
+# Un permesso aperto in una copia non e' un esempio: e' un permesso,
+# e darebbe autorita' sulla sede da cui la copia viene. La storia resta,
+# la forma resta dimostrabile, l'autorita' no. Chi riceve questo motore
+# crea i propri permessi (vedi la skill ad-avvio).

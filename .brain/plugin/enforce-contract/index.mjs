@@ -299,7 +299,10 @@ function controllaScritto(percorso, settings) {
         if (dataContratto !== null && dataApprovazione !== null) {
           // Granularita' al giorno: un permesso aperto lo STESSO giorno
           // dell'approvazione va bene — l'ordine sta nella giornata, non nel secondo.
-          if (dataContratto > dataApprovazione) {
+          // L'ordine e' consenso -> permesso: il permesso si scrive DOPO il consenso.
+        // La condizione era invertita (2026-10-13, ERR-0052), e questa meta' del
+        // cancello accusa dopo la scrittura: accusava il caso giusto.
+        if (dataContratto < dataApprovazione) {
             problemi.push(
               [
                 `L'ordine e' rotto: il permesso "${task}" dichiara di essere stato aperto`,

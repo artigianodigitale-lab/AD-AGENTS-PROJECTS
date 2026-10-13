@@ -67,7 +67,7 @@ I numeri di oggi, e si possono rifare — sono nel repository:
 
 | | |
 |---|---|
-| **463** controlli deterministici | girano in pochi secondi, senza rete |
+| **464** controlli deterministici | girano in pochi secondi, senza rete |
 | **36** controlli del cancello | modalità, classi di percorso, esiti di guasto |
 | **19** comandi · **9** procedure · **12** passi | la banda deterministica e il processo |
 | **0** permessi in conflitto | due contratti sullo stesso percorso: nessuno |
@@ -202,6 +202,54 @@ Verificato il 2026-10-13, **spostando davvero il motore** e facendo girare tutto
 
 > **La differenza fra «sconsigliato» e «impossibile» è tutto quello che questo sistema ha
 > imparato. Non si cancella per far contenta una tabella.**
+
+## Vedere il cancello in azione
+
+I permessi in questa cartella sono **tutti chiusi**, ed è voluto: *un permesso aperto in una
+copia non è un esempio, è un permesso* — darebbe autorità sulla sede da cui la copia viene.
+Il cancello si dimostra **creando il permesso al momento**. Due file, dieci righe, e si vede.
+
+```text
+# 1. senza permesso: rifiutato
+$ python3 tools/contract_scope.py check ".brain/COSTITUZIONE.md"
+".brain/COSTITUZIONE.md" e' un artefatto di GOVERNANCE (.brain/), non una cartella prodotto.
+Rimedio: un contract con write_scope che includa ".brain/" e il marcatore
+approvazioni/<task_id>.yaml approvato dal CEO
+[exit 1]
+
+# 2. il CEO approva, e si scrive il permesso
+$ cat > approvazioni/societa/DEMO-001.yaml <<'FINE'
+task_id: DEMO-001
+approvato_da: CEO
+data: "2026-10-13"
+FINE
+$ cat > contratti/societa/DEMO-001.yaml <<'FINE'
+task_id: DEMO-001
+status: active
+aperto: "2026-10-13"
+write_scope:
+  - ".brain/"
+FINE
+
+# 3. e adesso passa
+$ python3 tools/contract_scope.py check ".brain/COSTITUZIONE.md"
+OK   .brain/COSTITUZIONE.md — coperto dal contract DEMO-001 (DEMO-001.yaml),
+     approvato da CEO il 2026-10-13
+
+# 4. ma se il permesso e' RETRODATATO, non copre
+$ sed -i 's/2026-10-13/2026-10-11/' contratti/societa/DEMO-001.yaml
+$ python3 tools/contract_scope.py check ".brain/COSTITUZIONE.md"
+Il contract DEMO-001 e' stato scritto PRIMA dell'approvazione (2026-10-13).
+L'ordine e' ricerca -> risposta -> consenso -> contract: un contract retrodatato non copre.
+```
+
+**Il quarto passo è il motivo per cui questa dimostrazione esiste.** Scrivendola, il 2026-10-13,
+ha risposto **OK** dove doveva rispondere **NO** — perché la condizione dell'ordine era
+**invertita**. Nella macchina da cui viene questa copia non si vedeva: i permessi veri hanno
+consenso e apertura **lo stesso giorno**, e il difetto restava nascosto. Vedi `ERR-0052`.
+
+> **Una prova che passa non dimostra che la regola sia giusta: dimostra che il codice fa quello
+> che il codice fa.** Se la prova è scritta guardando il codice, il difetto è invisibile.
 
 ## Cosa manca — da leggere prima di fidarsi
 

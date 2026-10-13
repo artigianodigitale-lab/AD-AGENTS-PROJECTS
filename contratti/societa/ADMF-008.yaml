@@ -87,7 +87,7 @@ impact_forecast:
   shared_platform: HIGH
   product: NONE
 
-status: active
+status: chiuso
 write_scope:
   - "tools/README.md"
   - ".brain/"
@@ -99,3 +99,9 @@ expires: "2027-01-11T00:00:00+01:00"
 # milestone e sprint, quindi la cartella giusta era quella del SUO passo.
 # **Nessuna autorita' e' stata tolta**: il raggio e' piu' stretto, non diverso.
 # DEC-0054, regola 3: si dichiarano i file, non le cartelle.
+
+# Chiuso il 2026-10-13: questa e' la versione che si distribuisce.
+# Un permesso aperto in una copia non e' un esempio: e' un permesso,
+# e darebbe autorita' sulla sede da cui la copia viene. La storia resta,
+# la forma resta dimostrabile, l'autorita' no. Chi riceve questo motore
+# crea i propri permessi (vedi la skill ad-avvio).

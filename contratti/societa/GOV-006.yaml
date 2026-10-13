@@ -58,7 +58,7 @@ impact_forecast:
   shared_platform: HIGH
   product: NONE
 
-status: closed
+status: chiuso
 aperto: "2026-10-13"
 write_scope:
   - "tools/setup.py"
@@ -68,3 +68,9 @@ expires: "2026-11-08T00:00:00+01:00"
 # --- chiuso il 2026-10-13 ---
 # L'installatore e' fatto e provato (6 prove, anche da una sede diversa). Il lavoro nuovo
 # lo estende — la porta d'ingresso, il primo avvio — e tocca `tools/setup.py`. Va in GOV-007.
+
+# Chiuso il 2026-10-13: questa e' la versione che si distribuisce.
+# Un permesso aperto in una copia non e' un esempio: e' un permesso,
+# e darebbe autorita' sulla sede da cui la copia viene. La storia resta,
+# la forma resta dimostrabile, l'autorita' no. Chi riceve questo motore
+# crea i propri permessi (vedi la skill ad-avvio).
