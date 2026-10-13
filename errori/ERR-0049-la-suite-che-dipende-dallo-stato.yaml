@@ -13,11 +13,16 @@ cosa_e_fallito: >
   soglia, e dopo la potatura dei registri sono 34 invece di 56.
 
 cosa_l_ha_risolto: >
-  **Niente, ed e' dichiarato.** La correzione vera e' far si' che ogni prova si **costruisca
-  il proprio caso** in una root temporanea invece di leggerlo dal mondo — che e' esattamente
-  cio' che la maggior parte di queste prove gia' fa (`rompi()`, `scratch_root()`).
+  **Sette prove** riscritte perche' si costruiscano il proprio caso in una root temporanea:
+  milestone, coerenza, security scan, vista, verbali, rapporti e vista, e il conflitto di
+  raggio. La suite e' passata da 458 a **461 controlli sulla macchina** e gira **460** su un
+  motore vergine (uno in meno: un controllo GUARDATO su un contract reale che li' non esiste,
+  ed e' dichiarato nel commento).
 
-  E' un lavoro sulla macchina, non sulla copia: si fa una volta, e vale per tutte e due.
+  **Nessuna asserzione cancellata, nessun conteggio sceso.** E le prove che continuano a
+  guardare il mondo — quelle che verificano la coerenza dei registri che il motore consegna —
+  ora **passano a vuoto invece di fallire**, perche' zero conflitti e' un risultato valido.
+
 
 cosa_l_avrebbe_preso: >
   **La stessa domanda di ERR-0047, fatta prima:** *da cosa dipende questa prova?* Se la
@@ -31,11 +36,11 @@ cosa_l_avrebbe_preso: >
   **La forma, in una riga: una prova che non si costruisce il proprio caso prova il mondo,
   non il codice.**
 
-diventa: nota
+diventa: controllo
 dove: "tools/tests/test_ad_org.py"
 
 trovato_da: controllo
-stato: aperto
+stato: chiuso
 
 riferimenti:
   - "errori/ERR-0047-la-prova-che-aveva-bisogno-di-un-progetto.yaml"

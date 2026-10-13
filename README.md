@@ -67,7 +67,7 @@ I numeri di oggi, e si possono rifare — sono nel repository:
 
 | | |
 |---|---|
-| **458** controlli deterministici | girano in pochi secondi, senza rete |
+| **461** controlli deterministici | girano in pochi secondi, senza rete |
 | **36** controlli del cancello | modalità, classi di percorso, esiti di guasto |
 | **19** comandi · **9** procedure · **12** passi | la banda deterministica e il processo |
 | **0** permessi in conflitto | due contratti sullo stesso percorso: nessuno |

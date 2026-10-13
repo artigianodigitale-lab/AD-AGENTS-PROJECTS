@@ -1,0 +1,48 @@
+# ERR-0050 — Una sostituzione che ignora il contesto, e un file copiato senza eseguirlo
+
+id: ERR-0050
+data: "2026-10-13"
+
+cosa_e_fallito: >
+  Due errori nella stessa mezz'ora, con la stessa radice.
+
+  **Il primo.** Per aggiungere `import shutil` ho cercato la stringa `import subprocess\n` e
+  l'ho sostituita con `import shutil\nimport subprocess\n`. Ma la riga originale era
+  **indentata** — `    import subprocess` — e le quattro spazi sono rimaste **prima di
+  shutil**. Risultato: `shutil` indentato e `subprocess` **a colonna zero**. Sintassi
+  rotta in un blocco indentato.
+
+  **Il secondo.** Ho copiato il file nella macchina **senza eseguirlo**. Le tre sedi hanno
+  smesso di funzionare insieme.
+
+  E la stessa forma era gia' successa **due volte oggi**: la sostituzione `Luca` -> `CEO` ha
+  creato `approver: CEO (CEO)` e `del CEO, CEO,`, perche' sostituiva testo senza guardare
+  cosa ci stava intorno.
+
+cosa_l_ha_risolto: >
+  L'import messo **in cima al file**, con lo strumento di modifica che lavora su testo
+  letterale e non su espressioni. E la copia fatta **dopo** aver eseguito la prova, non prima.
+
+  Verificato in **tre sedi**: macchina 461 controlli, AAP 460, copia vergine 460. I file
+  sono identici.
+
+cosa_l_avrebbe_preso: >
+  **Due domande, entrambe da fare prima:**
+
+  1. *Questa sostituzione sa dove si trova?* — se il testo cercato puo' stare **dentro** una
+     riga (indentata, in mezzo a una frase, in un elenco), sostituirlo **ciecamente** sposta
+     il contesto. Si sostituisce la **riga intera**, non il frammento.
+  2. *L'ho eseguito?* — gia' scritta in ERR-0048 e gia' disattesa: **un file si copia dopo
+     averlo eseguito.** Il commit e' una firma; anche la copia lo e'.
+
+  **Un controllo che scrive non verifica: verifica chi legge il risultato.** In due occasioni
+  su tre ho visto il difetto **rileggendo**, non contando.
+
+diventa: controllo
+dove: "tools/tests/test_ad_org.py"
+
+trovato_da: controllo
+stato: chiuso
+
+riferimenti:
+  - "errori/ERR-0048-committato-un-file-rotto.yaml"

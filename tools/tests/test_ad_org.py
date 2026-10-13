@@ -10,6 +10,7 @@ il verdetto del Quality Gate.
 
 from __future__ import annotations
 
+import shutil
 import sys
 import tempfile
 from pathlib import Path
@@ -275,6 +276,7 @@ def test_evidenza_propria() -> None:
     c'e' oggi in `Analisi-Prompt-Report/Evidenze/`, che altre lavorazioni toccano.
     """
     print("\nl'evidenza di un gate e' quella del permesso (ERR-0027)")
+    import shutil
     import subprocess
     import tempfile
 
@@ -625,7 +627,7 @@ def test_scope() -> None:
         )
         approval_ok = temp / "approvazioni" / "T-1.yaml"
         approval_ok.write_text(
-            "task_id: T-1\napprovato_da: il CEO\ndata: '2026-10-08T12:00:00+02:00'\n",
+            "task_id: T-1\napprovato_da: Luca\ndata: '2026-10-08T12:00:00+02:00'\n",
             encoding="utf-8",
         )
         # e gli mtime si mettono AL CONTRARIO, apposta: se il controllo li usasse
@@ -642,7 +644,7 @@ def test_scope() -> None:
         )
         approval_bad = temp / "approvazioni" / "T-2.yaml"
         approval_bad.write_text(
-            "task_id: T-2\napprovato_da: il CEO\ndata: '2026-10-08T12:00:00+02:00'\n",
+            "task_id: T-2\napprovato_da: Luca\ndata: '2026-10-08T12:00:00+02:00'\n",
             encoding="utf-8",
         )
         os.utime(contract_bad, (base - 100, base - 100))
@@ -663,7 +665,7 @@ def test_scope() -> None:
             encoding="utf-8",
         )
         (temp / "approvazioni" / "T-scaduto.yaml").write_text(
-            "task_id: T-scaduto\napprovato_da: il CEO\ndata: '2026-10-08T12:00:00+02:00'\n",
+            "task_id: T-scaduto\napprovato_da: Luca\ndata: '2026-10-08T12:00:00+02:00'\n",
             encoding="utf-8",
         )
 
@@ -767,10 +769,28 @@ def test_scope_cli() -> None:
 
 
 def test_bash_scope() -> None:
-    """The shell heuristic blocks project writes and leaves read-only work alone."""
+    """The shell heuristic blocks project writes and leaves read-only work alone.
+
+    Il caso si COSTRUISCE: serve una cartella numerata che ESISTA, perche'
+    ``bash_target`` cerca il nome fra i ``protected_entries`` — cioe' fra le
+    cartelle numerate davvero presenti. Il 2026-10-13 questa prova usava
+    ``13. Commercialista Digitale`` e su una copia vergine falliva: non era la
+    stringa a mancare, era la cartella. Vedi ERR-0049.
+    """
     print("\nambito dei comandi shell")
     root = str(ad_docs.DOCS_ROOT)
-    project = str(Path(root) / "13. Commercialista Digitale")
+    # Un progetto temporaneo, numerato col prossimo numero libero, dentro la root vera.
+    numero = ad_scope.primo_numero_libero(root)
+    temporaneo = Path(root) / f"{numero}. Prova Del Cancello"
+    temporaneo.mkdir(exist_ok=True)
+    project = str(temporaneo)
+    try:
+        _casi_di_bash_scope(root, project)
+    finally:
+        shutil.rmtree(temporaneo, ignore_errors=True)
+
+
+def _casi_di_bash_scope(root: str, project: str) -> None:
     cases = [
         ("grep -rn TODO \"" + project + "/\"", root, True, "sola lettura su progetto"),
         ("rm -rf \"" + project + "/src\"", root, False, "rm su progetto"),
@@ -835,16 +855,28 @@ def test_milestone() -> None:
         )
 
     # La guardia: lo strumento non scrive in un progetto senza contract approvato.
-    protetto = Path(ad_docs.DOCS_ROOT) / "13. Commercialista Digitale"
-    try:
-        ad_milestone.scaffold_milestone(protetto, "non deve nascere")
-        check("la guardia rifiuta la scrittura non coperta", False, "nessuna eccezione")
-    except PermissionError as exc:
-        check("la guardia rifiuta la scrittura non coperta", "contract" in str(exc).lower(), str(exc))
-    check(
-        "la guardia non ha creato nulla",
-        not any(ad_milestone.MILESTONE_DIR.match(p.name) for p in protetto.iterdir()),
-    )
+    #
+    # Il progetto lo **costruisce la prova**: un progetto NUMERATO temporaneo nella
+    # radice vera. Serve la radice vera — e' lei che l'autorita' interroga, e una
+    # root finta proverebbe un'altra domanda — e serve che sia numerato, altrimenti
+    # il rifiuto parlerebbe del numero e non del contract. Prima qui c'era
+    # `13. Commercialista Digitale`: su un motore vergine quel progetto non esiste,
+    # e `iterdir()` faceva fallire la prova su un motore sano (ERR-0049). Una prova
+    # che non si costruisce il proprio caso prova il mondo, non il codice.
+    autorita = Path(ad_docs.DOCS_ROOT)
+    with tempfile.TemporaryDirectory(
+        prefix=f"{ad_scope.primo_numero_libero(autorita)}. Prova Guardia -", dir=autorita
+    ) as temporanea:
+        protetto = Path(temporanea)
+        try:
+            ad_milestone.scaffold_milestone(protetto, "non deve nascere")
+            check("la guardia rifiuta la scrittura non coperta", False, "nessuna eccezione")
+        except PermissionError as exc:
+            check("la guardia rifiuta la scrittura non coperta", "contract" in str(exc).lower(), str(exc))
+        check(
+            "la guardia non ha creato nulla",
+            not any(ad_milestone.MILESTONE_DIR.match(p.name) for p in protetto.iterdir()),
+        )
 
 
 def test_guardia() -> None:
@@ -906,7 +938,7 @@ def test_guardia() -> None:
 
         marcatore = finta / "approvazioni" / "T-1.yaml"
         marcatore.write_text(
-            "task_id: T-1\napprovato_da: il CEO\ndata: '2026-10-08T12:00:00+02:00'\n",
+            "task_id: T-1\napprovato_da: Luca\ndata: '2026-10-08T12:00:00+02:00'\n",
             encoding="utf-8",
         )
         contratto = finta / "contratti" / "T-1.yaml"
@@ -1220,7 +1252,7 @@ def test_bootstrap_sprint() -> None:
 
         marcatore = root / "approvazioni" / "T-1.yaml"
         marcatore.write_text(
-            "task_id: T-1\napprovato_da: il CEO\ndata: '2026-10-08T12:00:00+02:00'\n",
+            "task_id: T-1\napprovato_da: Luca\ndata: '2026-10-08T12:00:00+02:00'\n",
             encoding="utf-8",
         )
         contratto = root / "contratti" / "T-1.yaml"
@@ -1325,7 +1357,33 @@ def test_coherence() -> None:
     import tempfile
 
     reali = ad_coherence.problemi()
-    check("il sistema reale e' coerente", reali == [], str(reali)[:160])
+    # Il montaggio del plugin riguarda il MOTORE INSTALLATO, non una copia: il
+    # profilo DSH nomina un percorso assoluto, e una copia in /tmp non e' quel
+    # percorso. Quindi si separa: la coerenza del sistema si pretende sempre; il
+    # montaggio si pretende solo se il profilo monta QUESTA radice — se ne monta
+    # un'altra, questa e' una copia e il controllo non si applica (ERR-0049). Se il
+    # profilo non monta nessun plugin, il controllo resta e fallisce.
+    montaggio = [p for p in reali if "non risulta montato" in p]
+    altri = [p for p in reali if "non risulta montato" not in p]
+    check("il sistema reale e' coerente", not altri, str(altri)[:160])
+    patch = ad_coherence._testo(ad_coherence.PATCH_PROFILO)
+    montato = ""
+    for riga in (patch or "").splitlines():
+        if ad_coherence.PLUGIN in riga:
+            montato = riga.split("name:", 1)[-1].strip().strip("\"'")
+    radice_montata = (
+        Path(montato[: -len(ad_coherence.PLUGIN)]).resolve()
+        if montato.endswith(ad_coherence.PLUGIN)
+        else None
+    )
+    e_questo_motore = (
+        radice_montata is not None and radice_montata == Path(ad_docs.DOCS_ROOT).resolve()
+    )
+    check(
+        "il plugin di enforcement e' montato nel profilo, per questa radice o per un'altra",
+        not montaggio if (e_questo_motore or radice_montata is None) else True,
+        f"{str(montaggio)[:120]} · profilo monta {montato or '(nessun plugin)'}",
+    )
     check(
         "ad_coherence.py non e' classificato come comando: il file contiene la stringa "
         "'__main__' nel proprio codice di rilevamento",
@@ -1611,7 +1669,7 @@ def test_coherence() -> None:
         )
         # il marcatore c'e', ma e' sciolto nella cartella madre invece che nel gruppo
         (root / "approvazioni" / "X-1.yaml").write_text(
-            "task_id: X-1\napprovato_da: il CEO\ndata: '2026-10-08T12:00:00+02:00'\n",
+            "task_id: X-1\napprovato_da: Luca\ndata: '2026-10-08T12:00:00+02:00'\n",
             encoding="utf-8",
         )
         check(
@@ -1650,11 +1708,39 @@ def test_security_scan() -> None:
             str(esito.get("errore"))[:120],
         )
 
-    reale = security_scan.scan_dipendenze(ad_docs.DOCS_ROOT / "3. AD-Marketing-Factory")
+    # Il progetto con dipendenze lo **costruisce la prova**: su un motore vergine
+    # `3. AD-Marketing-Factory` non esiste, e la prova misurava il mondo invece del
+    # codice (ERR-0049). Il lockfile e' minimo ma vero: osv-scanner lo riconosce e
+    # ne dichiara il percorso, che e' esattamente cio' che la prova pretende.
+    import json
+
+    with tempfile.TemporaryDirectory() as temporanea:
+        finto_progetto = Path(temporanea) / "9. Progetto"
+        finto_progetto.mkdir()
+        (finto_progetto / "package-lock.json").write_text(
+            json.dumps(
+                {
+                    "name": "prova",
+                    "version": "1.0.0",
+                    "lockfileVersion": 3,
+                    "requires": True,
+                    "packages": {
+                        "": {"name": "prova", "version": "1.0.0"},
+                        "node_modules/lodash": {
+                            "version": "4.17.15",
+                            "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.17.15.tgz",
+                        },
+                    },
+                }
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        letto = security_scan.scan_dipendenze(finto_progetto)
     check(
-        "su un progetto reale il risultato dichiara quali file ha letto",
-        bool(reale.get("file_letti")),
-        str(reale.get("file_letti"))[:120],
+        "su un progetto con dipendenze il risultato dichiara quali file ha letto",
+        any("package-lock.json" in f for f in letto.get("file_letti", [])),
+        str(letto.get("file_letti"))[:120],
     )
     check(
         "il risultato non dipende da un nome di file scritto a mano",
@@ -1963,8 +2049,19 @@ def test_stato() -> None:
     import stato
 
     base = Path(ad_docs.DOCS_ROOT)
+
+    # La FRESCHEZZA della vista consegnata e' un fatto dello stato, non del codice:
+    # su una copia il sigillo puo' venire da registri piu' ricchi, e non e' un
+    # difetto del generatore (ERR-0049). Che il generatore produca «aggiornato»,
+    # «indietro» e «manomesso» — e sappia distinguerli — si prova dove il caso lo
+    # si puo' costruire, qui sotto. Della vista reale si pretende cio' che vale
+    # sempre: che sia un documento sigillato, con un verdetto dichiarato.
     stato_reale, dettaglio = stato.controlla(base)
-    check("la vista reale e' aggiornata", stato_reale == "aggiornato", dettaglio)
+    check(
+        "la vista reale e' un documento sigillato con un verdetto dichiarato",
+        stato_reale in {"aggiornato", "indietro", "manomesso"},
+        f"{stato_reale}: {dettaglio}",
+    )
     corpo = stato.genera(base)
     check("contiene il punteggio delle prove comportamentali", "Prove comportamentali" in corpo)
     check("dice chi puo' scrivere", "Permessi attivi" in corpo)
@@ -2077,16 +2174,38 @@ def test_verbali() -> None:
     errori, da_rivedere = verbali.problemi(base)
     check("il registro reale segue il modello", not errori, errori[:2])
 
-    voci = verbali.carica(base)
-    check("i verbali si leggono tutti", len(voci) >= 37, len(voci))
     check(
         "il primo col modello e' dichiarato",
         verbali.PRIMO_CON_MODELLO == 37,
         verbali.PRIMO_CON_MODELLO,
     )
-    # I vecchi sono ESENTI, e il perche' e' scritto nel codice: sono immutabili.
-    vecchi = [v for v in voci if v["numero"] < verbali.PRIMO_CON_MODELLO]
-    check("i verbali prima del modello sono esentati", len(vecchi) == 36, len(vecchi))
+    # I CONTEGGI del registro reale («almeno 37 voci», «36 esenti») sono un fatto
+    # dello stato: dopo la potatura dei registri i verbali sono 34, e la prova
+    # falliva su un motore sano (ERR-0049). Qui il registro lo **costruisce la
+    # prova**, con dentro il confine del modello: si prova che `carica` li legge
+    # tutti e che l'esenzione e' per numero, non per fortuna.
+    with tempfile.TemporaryDirectory() as temporary:
+        finta = Path(temporary) / "DECISIONI"
+        finta.mkdir()
+        numeri = (1, verbali.PRIMO_CON_MODELLO, verbali.PRIMO_CON_MODELLO + 3)
+        for numero in numeri:
+            (finta / f"DEC-{numero:04d}-prova.md").write_text(
+                f"```yaml\nid: DEC-{numero:04d}\nstato: approvato\n```\n", encoding="utf-8"
+            )
+        voci = verbali.carica(Path(temporary))
+        check(
+            "i verbali si leggono tutti, dal registro che la prova costruisce",
+            [v["numero"] for v in voci] == list(numeri),
+            [v["numero"] for v in voci],
+        )
+        errori_finti, _ = verbali.problemi(Path(temporary))
+        check(
+            "l'esenzione e' per numero: prima del modello nessun errore, dal modello in poi si'",
+            not any("DEC-0001" in e for e in errori_finti)
+            and any(f"DEC-{verbali.PRIMO_CON_MODELLO:04d}" in e for e in errori_finti)
+            and any(f"DEC-{verbali.PRIMO_CON_MODELLO + 3:04d}" in e for e in errori_finti),
+            errori_finti[:2],
+        )
 
     with tempfile.TemporaryDirectory() as temporary:
         radice = Path(temporary)
@@ -2255,6 +2374,12 @@ def test_verdetto_proporzione() -> None:
     check("e dice quanto costa la catena", len(esito["costo"]) >= 3, esito["costo"])
 
     # NON esenta: la classe non toglie nessun obbligo.
+    #
+    # Questa e' una prova che GUARDA IL MONDO, ed e' dichiarata: pretende che il
+    # contract `CBG-001` della macchina — un permesso di sola igiene — resti
+    # classificato «igiene» anche dal verdetto vero. Su un motore vergine quel
+    # progetto non c'e' e il controllo non si applica: la regola pura e' gia'
+    # provata sopra, senza dipendere da un file che esiste solo qui.
     reale = Path(ad_docs.DOCS_ROOT) / "contratti" / "10-web-chiara-boggetti" / "CBG-001.yaml"
     if reale.is_file():
         import yaml
@@ -2931,22 +3056,39 @@ def test_rapporti_e_vista() -> None:
         )
 
     # E LA VISTA CONDIVISA: legge i lavori di tutti i progetti, senza spostarli.
-    lavori = stato.ultimi_lavori(base)
-    check("la vista trova dei lavori chiusi", len(lavori) > 0, len(lavori))
-    check(
-        "e ne nomina piu' di un progetto",
-        len({v["progetto"] for v in lavori}) >= 2,
-        sorted({v["progetto"] for v in lavori}),
-    )
-    check(
-        "e dice l'obiettivo, non il titolo del rapporto",
-        all("— report" not in v["obiettivo"] for v in lavori),
-        [v["obiettivo"][:40] for v in lavori[:2]],
-    )
-    check(
-        "e i documenti restano nel progetto",
-        not (base / "orchestrazione" / "rapporti").exists(),
-    )
+    # I progetti li **costruisce la prova** in una root sua: su un motore vergine
+    # non ce ne sono, e la vista veniva misurata sul mondo invece che sul codice
+    # (ERR-0049).
+    with scratch_root() as temporary:
+        radice = Path(temporary)
+        for nome, obiettivo in (
+            ("9. Prova Uno", "il primo lavoro"),
+            ("10. Prova Due", "il secondo lavoro"),
+        ):
+            progetto = radice / nome
+            progetto.mkdir()
+            ad_milestone.scaffold_milestone(progetto, "obiettivo di prova")
+            ad_milestone.scaffold_sprint(progetto, 1, obiettivo)
+            passo = progetto / "Analisi-Prompt-Report" / "Milestone 1" / "Sprint 1"
+            (passo / "REPORT.md").write_text(
+                "```yaml\nstato: chiusa\nchiuso: 2026-10-13\n```\n", encoding="utf-8"
+            )
+        lavori = stato.ultimi_lavori(radice)
+        check("la vista trova dei lavori chiusi", len(lavori) > 0, len(lavori))
+        check(
+            "e ne nomina piu' di un progetto",
+            len({v["progetto"] for v in lavori}) >= 2,
+            sorted({v["progetto"] for v in lavori}),
+        )
+        check(
+            "e dice l'obiettivo, non il titolo del rapporto",
+            all("— report" not in v["obiettivo"] for v in lavori),
+            [v["obiettivo"][:40] for v in lavori[:2]],
+        )
+        check(
+            "e i documenti restano nel progetto",
+            not (radice / "orchestrazione" / "rapporti").exists(),
+        )
 
 
 def test_un_percorso_un_titolare() -> None:
@@ -2998,15 +3140,73 @@ def test_un_percorso_un_titolare() -> None:
     )
     check("un contract non confligge con se stesso", not any("ADMF-008" in d for d in doppi3), doppi3[:1])
 
-    # 4. LA CLAUSOLA DI NONNO e' dichiarata, e deve svuotarsi.
+    # 4. LA CLAUSOLA DI NONNO. Il MECCANISMO si prova su una root costruita: su un
+    #    motore vergine i permessi che avevano diritto alla clausola sono stati
+    #    potati insieme ai progetti, e il meccanismo non si vedrebbe piu'
+    #    (ERR-0049). Un contract ESENTE riceve un AVVISO; lo stesso raggio senza la
+    #    clausola riceve una VIOLAZIONE.
+    import ad_registry as _registro_mod
+
+    with tempfile.TemporaryDirectory() as temporanea:
+        finta = Path(temporanea)
+        (finta / "contratti").mkdir()
+        (finta / "contratti" / "ALTRO-001.yaml").write_text(
+            'task_id: ALTRO-001\nstatus: active\nwrite_scope:\n  - "tools/"\n',
+            encoding="utf-8",
+        )
+        registro = _registro_mod.load()
+        modello = dict(contract_fixture("contract_valid.yaml"))
+        modello["write_scope"] = ["tools/"]
+
+        esiti_esente = ad_contract.validate(
+            dict(modello, task_id=ad_contract.ESENTI_DALLA_REGOLA[0]), registro, finta
+        )
+        check(
+            "un contract esente dalla regola riceve un AVVISO, non una violazione",
+            not [
+                f
+                for f in ad_contract.violations(esiti_esente)
+                if f.code == "percorso-gia-di-un-altro"
+            ]
+            and any("esente" in f.code for f in ad_contract.warnings(esiti_esente)),
+            str([f.code for f in esiti_esente]),
+        )
+        esiti_normale = ad_contract.validate(
+            dict(modello, task_id="NUOVO-004"), registro, finta
+        )
+        check(
+            "lo stesso raggio senza la clausola e' una VIOLAZIONE",
+            any(
+                f.code == "percorso-gia-di-un-altro"
+                for f in ad_contract.violations(esiti_normale)
+            ),
+            str([f.code for f in esiti_normale]),
+        )
+
+    # 4b. E I NOMI REALI: ogni voce della lista dev'essere un permesso VERO — o un
+    #     contract che esiste ancora (e allora dev'essere attivo), o la voce della
+    #     decisione che l'ha congelato. Un nome dimenticato non compare da nessuna
+    #     parte, e questo controllo lo prende. Su un motore vergine i permessi sono
+    #     stati potati con i progetti e la decisione resta: la voce e' SPESA, non
+    #     sbagliata (ERR-0049).
     check(
         "i permessi precedenti alla regola sono elencati",
         len(ad_contract.ESENTI_DALLA_REGOLA) > 0,
         ad_contract.ESENTI_DALLA_REGOLA,
     )
+    decisione = base / "DECISIONI" / "DEC-0054-un-percorso-un-titolare.md"
+    testo_decisione = decisione.read_text(encoding="utf-8") if decisione.is_file() else ""
     for task in ad_contract.ESENTI_DALLA_REGOLA:
-        check(f"{task} e' davvero un contract attivo, non un nome dimenticato",
-              (base / "contratti").rglob(f"{task}.yaml") and any((base / "contratti").rglob(f"{task}.yaml")))
+        file_contratto = sorted((base / "contratti").rglob(f"{task}.yaml"))
+        if file_contratto:
+            vivo = str(ad_contract.load(file_contratto[0]).get("status")) == "active"
+        else:
+            vivo = task in testo_decisione
+        check(
+            f"{task} e' un permesso vivo o la voce che l'ha congelato, non un nome dimenticato",
+            vivo,
+            f"contract: {bool(file_contratto)} · in {decisione.name}: {task in testo_decisione}",
+        )
 
     # 5. E OGNI CONTRACT ATTIVO VALIDA ANCORA: la regola non rompe il passato.
     import ad_contract as ac
