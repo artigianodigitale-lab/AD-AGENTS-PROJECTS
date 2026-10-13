@@ -1,0 +1,75 @@
+# ERR-0028 — ho modificato l'artefatto mentre il gate lo stava verificando
+
+id: ERR-0028
+data: "2026-10-11"
+
+# --- le tre domande ---------------------------------------------------------
+
+cosa_e_fallito: >
+  Mentre i due gate verificavano il report dello sprint 1 di Marketing Factory,
+  **io ho modificato quel report**: ho aggiunto la riga sulla rigenerazione del
+  Blueprint nel paragrafo «Cosa passa allo sprint successivo». Non l'ho fatto per
+  nascondere niente — la riga precedente era diventata falsa (diceva che la
+  rigenerazione «non e' stata fatta», e l'avevo appena fatta) — ma il momento era
+  sbagliato. Il gate verifica **una revisione**: se il file cambia sotto, la
+  verifica perde il suo oggetto. Entrambi i verificatori se ne sono accorti e
+  l'hanno dovuto dichiarare: uno ha scritto «il progetto si e' mosso durante la
+  verifica per mano di un'altra sessione», e per giudicare hanno dovuto **pinnare
+  l'impronta** del file invece di fidarsi del percorso. Il danno vero non e' quel
+  paragrafo: e' che due verifiche indipendenti hanno dovuto spendere parte del
+  loro lavoro a stabilire **cosa** stavano verificando. E la manomissione non e'
+  distinguibile, a posteriori, da una modifica dell'esecutore: il gate l'ha
+  infatti segnalata come «DOCUMENTATION_MISMATCH dichiarato» per il vincolo
+  «il report e' l'unico file che l'esecutore poteva scrivere». Inoltre la cartella
+  si e' mossa in **sette** momenti diversi durante la stessa finestra (piano
+  17:07:35, Blueprint 17:09:02, ERR-0026 17:10:01, REPORT di milestone 17:10:11, il
+  report 17:10:17, le due evidenze 17:14 e 17:16, ERR-0027 17:23:22), e i conteggi
+  citati nel report sono invecchiati mentre lo si verificava.
+
+cosa_l_ha_risolto: >
+  I due gate hanno fatto la cosa giusta senza che nessuno gliela dicesse:
+  **hanno registrato l'impronta `sha256` della revisione all'inizio e l'hanno
+  ricontrollata alla fine**, dichiarando che il file non era cambiato durante la
+  loro verifica. Il secondo tentativo e' stato giudicato su una revisione
+  **stabile** (`b2ad828538e6b5…`), ed e' per questo che il suo verdetto vale. La
+  lezione operativa e' li': quando una cartella e' viva, il gate non giudica un
+  **percorso**, giudica una **revisione con la sua impronta**. Da scrivere nel
+  processo, perche' oggi e' un'iniziativa dei verificatori e non una regola.
+
+cosa_l_avrebbe_preso: >
+  **Una regola di congelamento, e un divieto.** Dal momento in cui un gate parte
+  fino al suo verdetto, l'artefatto **non si tocca** — nemmeno per correggere una
+  frase diventata falsa. Se una cosa cambia durante la verifica, le strade sono
+  due: si annulla il gate e si riparte sulla revisione nuova, oppure si aspetta il
+  verdetto e si apre il rework. Ho scelto la terza, che non esiste: correggere
+  «intanto». Il controllo meccanico che manca e' un `sha256` **registrato dal
+  gate all'apertura** e riverificato alla chiusura, con l'esito dichiarato
+  nell'evidenza (i verificatori l'hanno fatto a mano: va reso obbligatorio).
+  Nota che il registro dei permessi sa già dire **chi** puo' scrivere un percorso:
+  cio' che non sa dire e' **quando** quel percorso e' congelato. La finestra di
+  congelamento e' il pezzo che manca.
+
+# --- cosa ne facciamo -------------------------------------------------------
+
+diventa: controllo
+dove: "QUALITY-GATES.md"
+
+# --- come e' stato trovato --------------------------------------------------
+
+trovato_da: revisore
+stato: aperto
+
+# --- collegamenti -----------------------------------------------------------
+
+riferimenti:
+  - "QUALITY-GATES.md"
+  - "3. AD-Marketing-Factory/Analisi-Prompt-Report/Evidenze/ADMF-001-code-review.yaml"
+  - "3. AD-Marketing-Factory/Analisi-Prompt-Report/Evidenze/ADMF-001-qa.yaml"
+  - "errori/ERR-0027-evidenza-scelta-senza-filtro.yaml"
+  # Seconda occorrenza, due giorni prima e su un altro progetto: il 9 ottobre 2026 la
+  # cartella del modulo di raccolta dati di Modelbel e' stata riscritta mentre il gate
+  # la verificava (due correzioni di testo in un minuto). Il revisore ha dichiarato
+  # l'evidenza invalida e il verdetto e' stato ripetuto su una revisione congelata.
+  # La stessa lezione, imparata due volte: la finestra di congelamento manca.
+  - "11. Modelbel/Analisi-Prompt-Report/Evidenze/MBL-001-strategy.yaml"
+  - "11. Modelbel/Analisi-Prompt-Report/Milestone 1/Sprint 1/REPORT.md"

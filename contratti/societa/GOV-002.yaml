@@ -1,0 +1,73 @@
+# Contract operativo GOV-002
+
+task_id: GOV-002
+title: "La ricerca: il cervello impara a cercare e a verificare le fonti"
+domain: technical
+agent: platform
+task_type: shared_platform
+product: altro
+decision_record:
+
+objective: >
+  Dare al cervello una ricerca propria (SearxNG locale) e la capacita' di verificare
+  le fonti che cita. Oggi la ricerca e' dello strumento, non del sistema, e nessuna
+  fonte citata e' mai stata controllata: un indirizzo morto e' una prova che non si
+  puo' piu' verificare, ed e' peggio di una prova assente perche' sembra una prova.
+
+inputs:
+  - requirements
+  - plan
+
+acceptance_criteria:
+  - ricerca.py sa CERCARE su SearxNG, non solo leggere un indirizzo noto
+  - le categorie sono dichiarate, perche' 'general' senza motori permessi da' zero
+  - ricerca.py sa VERIFICARE gli indirizzi citati nei documenti e dice quali sono morti
+  - il controllo robots.txt e' nel tool e RIFIUTA, con la risposta (b) del CEO
+  - i motori vietati restano spenti nella configurazione, non nella memoria dell'agente
+  - la suite deterministica passa
+
+constraints:
+  - no production access
+  - do not edit this contract
+  - do not change own permissions
+  - la chiave Brave resta SPENTA: e' un'opzione documentata, non un lavoro
+  - nessun motore vietato viene acceso
+  - nessun progetto numerato si tocca
+
+outputs:
+  - code
+  - tests
+  - documentation
+  - evidence
+
+required_gates:
+  - Code Review
+
+approval:
+  human: true
+
+budget:
+  max_retries: 2
+
+priority: P0
+impact_forecast:
+  data: NONE
+  schema: NONE
+  auth: NONE
+  security: LOW
+  shared_platform: MED
+  product: NONE
+
+status: closed
+write_scope:
+  - ".brain/"
+  - "tools/"
+  - "piani/"
+  - "orchestrazione/"
+expires: "2026-11-08T00:00:00+01:00"
+
+# --- chiuso il 2026-10-13 ---
+# Il lavoro e' finito: `cerca`, `verifica` e il controllo `robots.txt` esistono e
+# funzionano (DEC-0053). E il raggio era **largo** — `tools/` intero — mentre i file
+# toccati sono tre. Il lavoro nuovo va in GOV-004, con i **file**, come dice la
+# regola 3 di DEC-0054.

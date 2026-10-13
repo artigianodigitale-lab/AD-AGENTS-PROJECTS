@@ -1,0 +1,18 @@
+{
+  "note": "Snapshot di integrità dei documenti canonici della root di AD Projects. Rigenerare solo con un Decision Record approvato: python3 tests/test_strategic_memory.py --update",
+  "documents": {
+    "AGENT-CARDS-BUSINESS.md": "47cf4c18d083bd57e91d3f0cf1b506a75f1a7fd18ef22b5bde39d2803cf5a457",
+    "AGENT-CARDS-V2.md": "f472b9b93340174cc1844572995a8899e7990a665790f8e73391c7fd7f89a5ae",
+    "AGENT-PROMPT-TEMPLATE.md": "0748648097cabeee43c64e34af4e0a7e0caeeaa363e0ccbef190b980e1c5a07c",
+    "AGENTI-V2.md": "8cf4312fb1e978eefd47b0b54b1bafb2b502eef93103efab33df41d4fa43a121",
+    "AGENTS.md": "643edea1ce4847e0cd2ac22cb62350991d239144b1dd756dbed1181c87c9c53b",
+    "COMMUNICATION.md": "17545af69ddb3cada49e4ba22b63cccfbd65dcf4884f8333f3c52c8a3711e50b",
+    "GOVERNANCE-AZIENDALE.md": "976af22d9e929de1918c5b76822ca2803d7d06a35f229e065651bf9e387aa705",
+    "MODEL-ROUTING.md": "db386c73a4dd5c0f1066f96ec4a9764888ca160cdd988115e17674089998e26e",
+    "QUALITY-GATES.md": "18a3f96f33f2f9e4293bdd126181082bed3a4bf2982a5abab36d36d4c7462a51",
+    "RUNTIME.md": "37f59c94b3de0fdeebe1fc8267420a1ee1d5043b96d7718bd00cc38773440625",
+    "SPECIALIZATION.md": "b0db29b87771c50c1cbbce97cab32474f268c32098b49ebf83640cacc340c900",
+    "STRATEGIC-MEMORY.md": "00f051cdab8cdcadda209b1e10848b656bb696a20fb5fb8de16898fefe342b9f",
+    "TASK-CONTRACTS.md": "2154296c54191efd3085ebfc408eb056ee2bea00183cb6c04bc1ad123893f2b1"
+  }
+}

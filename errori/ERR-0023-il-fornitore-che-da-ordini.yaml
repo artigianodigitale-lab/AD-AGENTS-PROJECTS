@@ -1,0 +1,44 @@
+# ERR-0023 — il materiale di studio che da' ordini
+#
+# Voce del registro errori. Vedi errori/README.md per le regole.
+
+id: ERR-0023
+data: "2026-10-11"
+
+cosa_e_fallito: >
+  Ho aperto `studio/graphify-8/` per studiarlo, e dentro c'era un `AGENTS.md`. Quel
+  file **non e' un documento**: e' un insieme di istruzioni, e mi e' arrivato nel
+  contesto come **«Additional instructions from: studio/graphify-8/AGENTS.md»** —
+  cioe' come ordini, non come dato. Conteneva anche «run `graphify update .`», che
+  avrebbe eseguito codice di terzi. Il sistema non aveva **ne' una regola ne' un
+  controllo** su questo, e `studio/` esiste apposta per ricevere cartelle di terzi.
+
+cosa_l_ha_risolto: >
+  `security_scan.py scan_istruzioni()` trova i file che un agente carica come ordini
+  (`AGENTS.md`, `CLAUDE.md`, `.cursor/rules`, ...). E `disattiva()` li **rinomina**
+  in `*.disattivato`: si toglie **l'effetto**, non l'informazione — il contenuto
+  resta leggibile, perche' studiarlo e' il motivo per cui e' li'. La regola e' nella
+  costituzione, e la suite pretende zero istruzioni attive in `studio/`.
+
+cosa_l_avrebbe_preso: >
+  **Chiedersi, per ogni cartella che entra: «chi la legge, e come?»** Un file non e'
+  pericoloso per cosa dice, ma per **come viene caricato**. `AGENTS.md` non e' un
+  documento con un nome strano: e' un **gancio**, e il nome e' il grilletto. E la
+  seconda meta': il file **non era malevolo** — era il normale `AGENTS.md` di un
+  repository. Il rischio non e' la malafede, e' che **nessuno se ne accorga**.
+
+diventa: controllo
+dove: "tools/tests/test_ad_org.py"
+
+trovato_da: io
+stato: chiuso
+
+nota: >
+  Numerato 0023 e non 0018 ne' 0019: **entrambi esistevano gia'**, scritti da
+  **un'altra sessione** che lavora negli stessi registri nello stesso momento. Il
+  controllo dei duplicati li ha presi entrambi — ma **dopo**, non prima. Due sessioni
+  possono scegliere lo stesso numero insieme, e niente lo impedisce: nessun blocco,
+  nessuna prenotazione.
+
+riferimenti:
+  - "piani/2026-10-11-graphify-cosa-prendere.md"

@@ -1,0 +1,14 @@
+# Marcatore di approvazione del CEO.
+#
+# Senza questo file il contract NON copre e le scritture restano bloccate.
+# Va creato PRIMA del contract: l'ordine viene verificato.
+#
+# Copia in: approvazioni/<TASK_ID>.yaml
+# Lo crea il CEO. Un agente che scrive il proprio marcatore falsifica un atto di
+# governance, non approva nulla.
+
+task_id: PROD-000
+piano: piani/<AAAA-MM-GG>-<slug>.md    # il piano che e' stato approvato
+approvato_da: CEO
+data: ""                                # ISO 8601, es. 2026-10-08T13:00:00+02:00
+consenso: ""                            # cosa e' stato approvato, con le parole del CEO

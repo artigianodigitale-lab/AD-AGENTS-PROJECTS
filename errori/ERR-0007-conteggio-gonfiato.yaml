@@ -1,0 +1,25 @@
+# ERR-0007 — conteggio gonfiato
+#
+# Voce del registro errori. Vedi errori/README.md per le regole.
+# Le tre domande: cosa e' fallito, cosa l'ha risolto, cosa lo avrebbe preso.
+
+id: ERR-0007
+data: "2026-10-08"
+
+cosa_e_fallito: >
+  Ho riportato «~3.500 etichette» in un audit. Erano circa 2.950: 550 erano i valori di un enum di prodotto, non etichette. Il numero era tecnicamente vero e praticamente falso.
+
+cosa_l_ha_risolto: >
+  Ricontato escludendo l'enum, e l'errore dichiarato al CEO.
+
+cosa_l_avrebbe_preso: >
+  Guardare COSA si sta contando prima di contarlo. Non e' meccanizzabile: nessun controllo sa cosa intendevo contare. Resta una nota, ed e' onesto dire che questa si puo' ripetere.
+
+diventa: nota
+dove: "errori/README.md"
+
+trovato_da: io
+stato: chiuso
+
+riferimenti:
+  []

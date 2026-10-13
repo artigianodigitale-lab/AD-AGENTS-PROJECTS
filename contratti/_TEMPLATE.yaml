@@ -1,0 +1,76 @@
+# Contract operativo. E' il task contract di TASK-CONTRACTS.md piu' i campi che il
+# layer di enforcement usa per decidere cosa si puo' scrivere.
+#
+# Copia in:    contratti/<TASK_ID>.yaml
+# Valida con:  python3 tools/validate_contract.py contratti/<TASK_ID>.yaml
+# Verifica:    python3 tools/contract_scope.py check "<percorso da scrivere>"
+#
+# Un contract si scrive SOLO dopo la ricerca, la risposta al CEO e il suo consenso
+# (skill ad-kickoff, passi 1-6).
+
+task_id: PROD-000
+title: ""
+domain: technical          # technical | business
+agent: ""                  # id di una card del registry: python3 tools/cards.py list
+task_type: ""              # deve stare in authorized_task_types di quella card
+product: altro             # artigiano-digitale | ad-stock-tracker | biocimatica | altro
+decision_record: ""        # obbligatorio per decisioni di Livello 2 o 3
+
+objective: >
+  Cosa deve esistere alla fine, in una frase con esito misurabile.
+
+inputs:
+  - requirements
+
+acceptance_criteria:
+  - criterio osservabile e verificabile
+
+constraints:
+  - no production access
+  - do not edit this contract
+  - do not change own permissions
+
+outputs:
+  - code
+  - tests
+  - evidence
+
+required_gates:
+  - QA
+
+approval:
+  human: false
+
+budget:
+  max_retries: 2
+
+# Priorita': P0 | P1 | P2 | P3 | P4. Se la modifica tocca piu' livelli vale il massimo:
+# un impatto HIGH impone P0, anche se il resto e' banale (DEC-0012).
+priority: P2
+
+# Dovere di previsione: cosa puo' rompersi, PRIMA del diff.
+# Livelli: NONE | LOW | MED | HIGH | UNKNOWN. "UNKNOWN" e' ammesso e onesto.
+impact_forecast:
+  data: NONE
+  schema: NONE
+  auth: NONE
+  security: NONE
+  shared_platform: NONE
+  product: LOW
+
+# Obbligatori quando write_scope tocca una cartella prodotto (invariante 13).
+# Lo sprint deve essere APERTO: Milestone N/Sprint M/PROMPT.md deve esistere.
+milestone: 1
+sprint: 1
+
+# --- campi del layer di enforcement -----------------------------------------
+# status diverso da active/attivo/approvato NON copre: le scritture restano bloccate.
+status: draft              # passa a: active
+
+# Dove questo task puo' scrivere: prefissi di directory o file, relativi alla root
+# di AD Projects. E' il confine reale: tutto cio' che sta fuori viene bloccato.
+write_scope:
+  - ""
+
+# Opzionale: dopo questa data il contract non copre piu'.
+expires: ""

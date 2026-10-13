@@ -1,0 +1,52 @@
+task_id: BIO-142
+title: Endpoint di lettura
+domain: technical
+agent: backend
+task_type: api_implementation
+product: biocimatica
+
+objective: >
+  Esporre l'endpoint descritto nel contratto API, senza cambiare lo schema di
+  produzione.
+
+inputs:
+  - requirements
+  - api_specification
+  - architecture
+
+acceptance_criteria:
+  - endpoint disponibile nel percorso concordato
+  - validazione degli input
+  - test automatizzati presenti
+
+constraints:
+  - no production access
+  - existing API compatibility
+  - do not edit this contract
+  - do not change own permissions
+
+outputs:
+  - code
+  - tests
+  - evidence
+
+required_gates:
+  - QA
+  - Architecture
+
+permissions:
+  production: write
+
+approval:
+  human: false
+
+budget:
+  max_retries: 2
+priority: P2
+impact_forecast:
+  data: NONE
+  schema: NONE
+  auth: NONE
+  security: NONE
+  shared_platform: NONE
+  product: LOW

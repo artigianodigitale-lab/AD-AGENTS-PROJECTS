@@ -1,0 +1,40 @@
+task_id: STR-002
+title: Piano marketing assegnato alla card sbagliata
+domain: business
+agent: lb-strategy
+task_type: marketing_plan
+product: altro
+
+objective: >
+  Verificare che un task di marketing non possa essere assegnato alla card
+  Strategy: nessuna card lo autorizza sotto questo nome.
+
+inputs:
+  - decision_record
+
+acceptance_criteria:
+  - il validatore rifiuta l'assegnazione
+
+constraints:
+  - do not edit this contract
+  - do not change own permissions
+
+outputs:
+  - evidence
+
+required_gates:
+  - Strategy
+
+approval:
+  human: false
+
+budget:
+  max_retries: 2
+priority: P2
+impact_forecast:
+  data: NONE
+  schema: NONE
+  auth: NONE
+  security: NONE
+  shared_platform: NONE
+  product: LOW

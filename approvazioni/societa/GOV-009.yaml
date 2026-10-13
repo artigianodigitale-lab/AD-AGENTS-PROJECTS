@@ -1,0 +1,13 @@
+# Marcatore di approvazione del CEO.
+
+task_id: GOV-009
+piano: piani/2026-10-13-la-ricerca.md
+approvato_da: CEO
+data: "2026-10-13T10:17:12+02:00"
+fonte: "all'avvio del comando AGENTS.md l'AI non deve cercare il progetto, deve rispondere che ha capito come si comportera' e chiedere subito se iniziare un nuovo progetto o collegarne uno esistente"
+fonte_delega: "forse e' meglio che non generi io un marcatore ma che lo generi tu se ti serve. Prima passi da me e io ti approvo e tu continui"
+consenso: >-
+  Approvato l'ingresso di AAP: NON si cerca un progetto. Si dichiara di aver capito come
+  ci si comportera', si dichiara che AAP e' il comportamento da quel momento, e si chiede
+  subito se l'utente vuole un progetto NUOVO (cartella numerata) o collegarne uno
+  ESISTENTE (importando una cartella numerata col nome del progetto).

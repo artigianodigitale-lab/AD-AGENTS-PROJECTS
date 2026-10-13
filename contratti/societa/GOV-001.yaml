@@ -1,0 +1,84 @@
+# Contract operativo GOV-001 — vedi contratti/_TEMPLATE.yaml per i campi.
+
+task_id: GOV-001
+title: "Un solo motore di scrittura: DSH esegue, Cursor legge"
+domain: technical
+agent: platform
+task_type: shared_platform
+product: altro
+decision_record: DECISIONI/DEC-0038-un-solo-motore-di-scrittura.md
+
+objective: >
+  Rendere impossibile la scrittura fuori dal cancello: i falsi allarmi di sicurezza
+  smettono di spegnere il controllo, il plugin diventa fail-closed selettivo, e
+  Cursor perde la capacita' di mutare AD Projects. Un solo motore, una sola verita'.
+
+inputs:
+  - requirements
+  - decision_record
+  - plan
+
+acceptance_criteria:
+  - security_scan.py esce 1 solo su segnali plausibili, non su forme da fixture
+  - le 3 vulnerabilita' vere di 3. AD-Marketing-Factory restano visibili nel verdetto
+  - il plugin, con il checker assente, NEGA la scrittura su .brain/, tools/ e cartelle numerate
+  - il plugin, con il checker assente, lascia passare la scrittura fuori da quei percorsi
+  - test_ad_org.py e il test del plugin passano
+  - MODEL-ROUTING.md dichiara Cursor strumento di lettura, fuori dal perimetro, per scelta
+  - la costituzione e il glossario dicono la stessa cosa del codice
+
+constraints:
+  - no production access
+  - do not edit this contract
+  - do not change own permissions
+  - capability token FUORI ambito (rimandati a dopo le metriche P0)
+  - P2 FUORI ambito
+  - nessun progetto numerato si tocca nel merito
+
+outputs:
+  - code
+  - tests
+  - documentation
+  - evidence
+
+required_gates:
+  - Code Review
+  - Security
+
+approval:
+  human: true
+
+budget:
+  max_retries: 2
+
+priority: P0
+impact_forecast:
+  data: NONE
+  schema: NONE
+  auth: NONE
+  security: HIGH
+  shared_platform: HIGH
+  product: NONE
+
+status: closed
+write_scope:
+  - ".brain/"
+  - "tools/"
+  - "MODEL-ROUTING.md"
+  - "TASK-CONTRACTS.md"
+  - "RUNTIME.md"
+  - "contratti/_TEMPLATE.yaml"
+  - "drift/README.md"
+  - "piani/"
+  - "orchestrazione/"
+  - "evals/"
+  - "evidenze/"
+expires: "2026-11-08T00:00:00+01:00"
+
+# --- chiuso il 2026-10-13 ---
+# Il lavoro si e' diviso: la parte Cursor e' decaduta con DEC-0039, e quel che resta — il fail-closed selettivo — va in GOV-003, con un raggio **stretto** invece di `.brain/` e `tools/` interi. Il raggio largo era la causa della sovrapposizione.
+#
+# Un agente puo' CHIUDERE il proprio contract: chiudere **toglie** autorita', non ne
+# da'. Non puo' allargarlo, prorogarlo o cambiarne i criteri (invariante 7) — e la
+# differenza e' tutta li'. Senza questa possibilita' i permessi si accumulano, e un
+# percorso finisce con cinque titolari: vedi DRIFT-018.

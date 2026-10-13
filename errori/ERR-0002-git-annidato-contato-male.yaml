@@ -1,0 +1,25 @@
+# ERR-0002 — git annidato contato male
+#
+# Voce del registro errori. Vedi errori/README.md per le regole.
+# Le tre domande: cosa e' fallito, cosa l'ha risolto, cosa lo avrebbe preso.
+
+id: ERR-0002
+data: "2026-10-08"
+
+cosa_e_fallito: >
+  Ho dichiarato «l'unico .git annidato della super cartella» avendo cercato solo con `find -type d`. Ne esisteva un quattordicesimo, che non e' una cartella ma un FILE: un worktree in 9. WEB-Biocimatica/.kilo/worktrees/. L'affermazione era falsa alla lettera.
+
+cosa_l_ha_risolto: >
+  Il revisore indipendente ha cercato anche i file. Corretto in DEC-0026, nel piano e nel rapporto dello sprint.
+
+cosa_l_avrebbe_preso: >
+  Cercare `.git` senza `-type`, cioe' sia file sia cartelle. Ma la lezione vera e' un'altra: **un'affermazione assoluta («l'unico») pretende una ricerca esaustiva, e `find` con un filtro non lo e'.**
+
+diventa: nota
+dove: "errori/README.md"
+
+trovato_da: revisore
+stato: chiuso
+
+riferimenti:
+  - "DECISIONI/DEC-0026-riordino-repository-annidato.md"

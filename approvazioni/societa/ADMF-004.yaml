@@ -1,0 +1,28 @@
+# Marcatore di approvazione del CEO.
+#
+# Riguarda due difetti della macchina di governance, trovati durante il kickoff
+# della milestone 3 e registrati in errori/ERR-0026 e errori/ERR-0027.
+#
+# `approval.human: true` nel contract: la riparazione tocca la macchina che giudica
+# tutti i lavori, e un difetto li' produce verdetti falsi su lavori veri — come e'
+# infatti successo. ACCEPT del gate non e' il rilascio: dopo il gate decide il CEO.
+#
+# `data` e' il momento in cui il sistema ha REGISTRATO l'autorizzazione, non l'ora
+# della conversazione: il contract deve essere piu' recente dell'approvazione, e un
+# contract retrodatato non copre. Il consenso del CEO resta quello delle 17:00,
+# dichiarato in `fonte`.
+
+task_id: ADMF-004
+piano: piani/2026-10-11-ad-marketing-factory-milestone-3.md
+approvato_da: CEO
+data: "2026-10-11T17:50:00+02:00"
+fonte: "Sì: riparali tutti e tre nello sprint 2 (Consigliato) — risposta del CEO alle 17:00"
+consenso: >-
+  Approvata la riparazione dei controlli della macchina. Due sono codice e stanno in
+  questo contract: la guardia di ambito, perche' sia chiamata da ogni strumento che
+  scrive e non da uno solo (ERR-0026), e la scelta dell'evidenza di un gate, perche'
+  filtri per task_id prima di scegliere per data (ERR-0027 — 6 permessi su 7
+  risultano oggi falliti pur avendo la loro revisione valida). Il terzo, il divieto
+  di modificare un artefatto mentre il gate lo verifica (ERR-0028), tocca
+  QUALITY-GATES.md, che e' un documento normativo: si propone a parte con il suo
+  Decision Record, e non e' compreso in questa approvazione.

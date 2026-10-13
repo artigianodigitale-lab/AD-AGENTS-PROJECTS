@@ -1,0 +1,72 @@
+# Contract operativo GOV-005 — il cancello diventa affidabile
+
+task_id: GOV-005
+title: "Il cancello affidabile: fail-closed selettivo, e un percorso con un titolare solo"
+domain: technical
+agent: platform
+task_type: shared_platform
+product: altro
+decision_record: DECISIONI/DEC-0054-un-percorso-un-titolare.md
+
+objective: >
+  Due cose che rendono il cancello degno di fiducia, e che toccano gli stessi file —
+  quindi un contract solo. (1) FAIL-CLOSED SELETTIVO: se contract_scope non risponde,
+  la scrittura passa anche su .brain/, su tools/ e dentro un progetto. Deve BLOCCARE
+  dove conta. (2) UN PERCORSO, UN TITOLARE: oggi due permessi attivi possono dichiarare
+  lo stesso percorso e il cancello lascia passare entrambi, perche' entrambi sono
+  validi. Il 2026-10-13 erano cinque su `tools/`.
+
+inputs:
+  - requirements
+  - decision_record
+
+acceptance_criteria:
+  - con il checker assente o in timeout, la scrittura su .brain/, tools/ e cartelle numerate e' NEGATA
+  - con il checker assente, la scrittura FUORI da quei percorsi passa come oggi
+  - validate_contract rifiuta un contract che dichiara un percorso GIA' di un contract attivo
+  - e AVVISA, senza rifiutare, quando un percorso sta DENTRO quello di un altro
+  - il test prova i casi con il difetto iniettato, non solo il caso buono
+  - la suite deterministica e il test del plugin passano
+
+constraints:
+  - no production access
+  - do not edit this contract
+  - do not change own permissions
+  - RAGGIO: cinque file e una cartella. Non `tools/` intero — e' la regola 3 di DEC-0054
+
+outputs:
+  - code
+  - tests
+  - evidence
+
+required_gates:
+  - Code Review
+
+approval:
+  human: true
+
+budget:
+  max_retries: 2
+
+priority: P0
+impact_forecast:
+  data: NONE
+  schema: NONE
+  auth: NONE
+  security: HIGH
+  shared_platform: HIGH
+  product: NONE
+
+status: closed
+aperto: "2026-10-13"
+write_scope:
+  - ".brain/plugin/enforce-contract/"
+  - "tools/ad_scope.py"
+  - "tools/ad_contract.py"
+  - "tools/validate_contract.py"
+  - "tools/tests/test_ad_org.py"
+expires: "2026-11-08T00:00:00+01:00"
+
+# --- chiuso il 2026-10-13 ---
+# Il fail-closed e' iniziato ma non finito, e il lavoro «l'engine diventa un prodotto» tocca
+# gli stessi file: `tools/ad_scope.py`, il plugin, i test. Con la regola in vigore si apre UNO.

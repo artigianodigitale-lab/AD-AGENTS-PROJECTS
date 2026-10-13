@@ -1,0 +1,64 @@
+# Contract operativo GOV-009 — l'ingresso: si adotta, e si chiede
+
+task_id: GOV-009
+title: "L'ingresso di AAP: dichiarare di aver capito, e chiedere cosa fare"
+domain: technical
+agent: platform
+task_type: shared_platform
+product: altro
+decision_record: DECISIONI/DEC-0055-lengine-diventa-un-prodotto.md
+
+objective: >
+  All'avvio del comando AGENTS.md l'AI non deve cercare un progetto. Deve rispondere di
+  aver capito come si comportera', dichiarare che da quel momento AAP e' il suo
+  comportamento, e chiedere subito se l'utente vuole iniziare un nuovo progetto
+  (creando una cartella numerata) o collegarne uno esistente importando una cartella
+  numerata con il nome del progetto.
+
+inputs:
+  - requirements
+
+acceptance_criteria:
+  - la costituzione dice che all'avvio NON si cerca un progetto
+  - dice che si risponde di aver capito e che AAP diventa il comportamento
+  - dice che si chiede subito: nuovo progetto o progetto esistente
+  - ad-avvio descrive i due percorsi, con il numero di progetto
+  - l'import di una cartella non numerata viene rifiutato, con il numero suggerito
+  - la suite deterministica passa
+
+constraints:
+  - no production access
+  - do not edit this contract
+  - do not change own permissions
+  - nessun progetto numerato si tocca: si crea o si collega su richiesta del CEO
+  - RAGGIO: i file elencati, non le cartelle
+
+outputs:
+  - code
+  - documentation
+
+required_gates:
+  - Code Review
+
+approval:
+  human: true
+
+budget:
+  max_retries: 2
+
+priority: P0
+impact_forecast:
+  data: NONE
+  schema: NONE
+  auth: NONE
+  security: LOW
+  shared_platform: HIGH
+  product: HIGH
+
+status: active
+aperto: "2026-10-13"
+write_scope:
+  - ".brain/COSTITUZIONE.md"
+  - ".brain/skills/ad-avvio/SKILL.md"
+  - ".brain/skills/ad-kickoff/SKILL.md"
+expires: "2026-11-08T00:00:00+01:00"

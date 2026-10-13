@@ -1,0 +1,14 @@
+# La configurazione locale: chi e' il CEO e dove stanno i progetti.
+# Non e' codice, e' di chi usa il motore. Si versiona solo l'esempio.
+sede.yaml
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Cache degli strumenti
+*.tmp
+*.log
+.DS_Store

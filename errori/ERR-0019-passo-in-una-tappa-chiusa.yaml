@@ -1,0 +1,31 @@
+# ERR-0019 — un passo aperto dentro una tappa gia' chiusa
+#
+# Voce del registro errori. Vedi errori/README.md per le regole.
+# Le tre domande: cosa e' fallito, cosa l'ha risolto, cosa lo avrebbe preso.
+
+id: ERR-0019
+data: "2026-10-11"
+
+cosa_e_fallito: >
+  Ho aperto un passo con `milestone.py new-sprint ... 2`, indicando la tappa 2 — ma la tappa 2 era
+  stata **aperta e chiusa da un'altra sessione** mentre scrivevo il contract. Il passo e' nato dentro
+  la storia chiusa di un'altra tappa, e la tappa nuova e' diventata la 3, non la 2.
+
+cosa_l_ha_risolto: >
+  Ho rimosso il passo estraneo, corretto il numero della tappa **nel contract, prima di qualunque
+  esecuzione**, e aperto il passo nella tappa giusta.
+
+cosa_l_avrebbe_preso: >
+  **Guardare la numerazione prima di aprire**: `milestone.py check` lo diceva, e l'output del comando
+  era li'. Meccanizzabile: `new-sprint` dovrebbe **rifiutare** di aprire un passo in una tappa che ha
+  gia' il suo rapporto di chiusura. Non e' costruito: richiede una modifica a `tools/`, quindi un
+  contract sul cervello e il marcatore del CEO.
+
+diventa: controllo
+dove: "tools/ad_milestone.py"
+
+trovato_da: io
+stato: aperto
+
+riferimenti:
+  - "17. Michele Clementi Project/Analisi-Prompt-Report/Milestone 5/Sprint 1/REPORT.md"

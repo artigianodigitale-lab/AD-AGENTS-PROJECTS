@@ -1,0 +1,69 @@
+# Contract di MANUTENZIONE — per una modifica al repository, non al prodotto.
+#
+# Quando si usa questo modello: quando la modifica tocca SOLO igiene del
+# repository (`.gitignore`, `.gitattributes`, licenza, `SECURITY.md`) e nessun file
+# di prodotto. `python3 tools/validate_contract.py` lo dice con il verdetto
+# «catena-sproporzionata».
+#
+# **Non e' una scorciatoia.** La tappa e il passo restano obbligatori (invariante 13):
+# `TASK-CONTRACTS.md` dice perche' — «le sanatorie di un solo file entrano nella
+# storia del progetto come sprint, invece di restare interventi isolati». Questo
+# modello toglie il lavoro di **composizione**, non la storia.
+#
+# Ordine: si scrive PRIMA della tappa. `contratti/` e' libero apposta, e il permesso
+# copre la cartella della tappa finche' il passo non e' aperto.
+
+task_id: MAN-001                    # <-- e' un id: chiedilo, non sceglierlo
+title: "Escludere .tmp/ dal versionamento"
+domain: technical
+agent: platform
+task_type: shared_platform
+product: altro
+decision_record:                    # obbligatorio se e' una decisione di Livello 2 o 3
+
+objective: >
+  Una riga: cosa cambia, e perche'. Il verdetto di proporzione lo dira' comunque.
+
+inputs:
+  - requirements
+
+acceptance_criteria:
+  - <la verifica esatta: comando, file, o stato atteso. Deve essere rifacibile da un altro>
+  - <...>
+
+constraints:
+  - no production access
+  - do not edit this contract
+  - do not change own permissions
+  - non si tocca nient'altro del progetto
+
+outputs:
+  - code
+  - evidence                        # senza evidenze il lavoro non e' DONE
+
+required_gates:
+  - Code Review
+
+approval:
+  human: true
+
+budget:
+  max_retries: 1
+
+priority: P0
+impact_forecast:
+  data: NONE
+  schema: NONE
+  auth: NONE
+  security: LOW
+  shared_platform: LOW
+  product: NONE
+
+milestone: 1                        # obbligatori: e' la storia del progetto
+sprint: 1
+
+status: active
+write_scope:
+  - "<progetto>/.gitignore"                      # <-- solo cio' che cambia davvero
+  - "<progetto>/Analisi-Prompt-Report/"          # <-- la cerimonia, dichiarata come tale
+expires: "<AAAA-MM-GG>T00:00:00+02:00"           # e' un id, e' una data: chiedile

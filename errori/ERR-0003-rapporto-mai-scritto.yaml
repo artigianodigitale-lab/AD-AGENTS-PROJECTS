@@ -1,0 +1,25 @@
+# ERR-0003 — rapporto mai scritto
+#
+# Voce del registro errori. Vedi errori/README.md per le regole.
+# Le tre domande: cosa e' fallito, cosa l'ha risolto, cosa lo avrebbe preso.
+
+id: ERR-0003
+data: "2026-10-10"
+
+cosa_e_fallito: >
+  Ho chiuso il permesso ORD-001 e dato per finito il riordino del Marketing Factory senza mai scrivere il rapporto del passo. Per due giorni la storia del progetto ha detto «passo mai chiuso» mentre il permesso diceva «chiuso»: guardavo il permesso, non la tappa.
+
+cosa_l_ha_risolto: >
+  `milestone.py check` l'ha segnalato. Il rapporto e' stato scritto il 2026-10-10 sotto ORD-003, e la tappa compilata.
+
+cosa_l_avrebbe_preso: >
+  Un controllo che, alla chiusura di un permesso, verifichi che la storia del progetto sia completa. **E' stato costruito**: e' il terzo controllo di tools/post-execute, e ha la sua prova nei 36 controlli del plugin.
+
+diventa: controllo
+dove: ".brain/plugin/enforce-contract/index.mjs"
+
+trovato_da: controllo
+stato: chiuso
+
+riferimenti:
+  - "DECISIONI/DEC-0028-controllo-dopo-la-scrittura.md"

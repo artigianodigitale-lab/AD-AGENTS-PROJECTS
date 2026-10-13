@@ -1,0 +1,36 @@
+# ERR-0012 — trenta affermazioni scritte a mano, zero derivate
+#
+# Voce del registro errori. Vedi errori/README.md per le regole.
+
+id: ERR-0012
+data: "2026-10-10"
+
+cosa_e_fallito: >
+  Il generatore del Blueprint conteneva **30 affermazioni scritte come stringhe
+  fisse**, e **zero derivate** dai dati. Tre righe erano gia' sbagliate o lo
+  sarebbero diventate: «Letto dai registri: ...» non nominava `errori`; «se il
+  blocco e' cambiato e' un errore» era falso da DEC-0033, che aveva introdotto
+  «indietro» come NON-errore; «distingue tre casi» mentre i verdetti erano
+  diventati cinque.
+
+cosa_l_ha_risolto: >
+  Le due righe con una fonte ora si **derivano** da dichiarazioni (`FONTI`,
+  `NON_LETTE`, `VERDETTI`). E i verdetti passano da `_verdetto()`, che **rifiuta**
+  un verdetto non dichiarato: aggiungerne uno senza scriverlo e' diventato
+  impossibile. Piu' un controllo che ogni sezione del Blueprint dichiari la sua
+  fonte: una sezione nuova senza dichiarazione fa fallire la suite.
+
+cosa_l_avrebbe_preso: >
+  La domanda, per ogni frase del generatore: **«da dove viene questo fatto?»** Se
+  non viene da un'espressione, e' un letterale — e un letterale **non ha nessuna
+  dipendenza dalla cosa che descrive**: quando la cosa cambia, il letterale resta,
+  compila, si stampa, e nessuno se ne accorge. Fonte: https://hexisteme.github.io/notes/your-reports-numbers-are-computed-its-sentences-are-not.html
+
+diventa: controllo
+dove: "tools/tests/test_ad_org.py"
+
+trovato_da: io
+stato: chiuso
+
+riferimenti:
+  - "DECISIONI/DEC-0035-il-letterale-e-il-difetto.md"

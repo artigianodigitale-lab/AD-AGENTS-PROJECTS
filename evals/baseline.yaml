@@ -1,0 +1,21 @@
+nota: 'Esito atteso delle prove comportamentali. Si aggiorna con `python3 tools/comportamento.py
+  check --update` **dopo aver guardato** cosa e'' cambiato: aggiornare senza guardare
+  cancella la regressione.'
+prove:
+  B1: true
+  B2: true
+  B3: false
+  B4: true
+  B5: true
+  B6: false
+  B7: true
+dettagli:
+  B1: 'tutti in ordine · 43 non dichiarano quando sono stati aperti: [''CBG-001'',
+    ''MBL-001'', ''MBL-002'', ''MBL-003''] — non si accusa, ma vanno messi in regola'
+  B2: nessuna data nel futuro
+  B3: 'progetti con storia incompleta sotto un permesso: [''11. Modelbel'', ''3. AD-Marketing-Factory'']'
+  B4: ogni voce ha la sua difesa
+  B5: solo i documenti normativi
+  B6: 'Blueprint da sistemare: [''17. Michele Clementi Project (indietro dopo una
+    tappa chiusa)'']'
+  B7: ogni record nel suo gruppo

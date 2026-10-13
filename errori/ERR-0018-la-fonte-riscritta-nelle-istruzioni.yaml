@@ -1,0 +1,36 @@
+# ERR-0018 — la fonte passata al revisore l'ho riscritta io
+#
+# Voce del registro errori. Vedi errori/README.md per le regole.
+# Le tre domande: cosa e' fallito, cosa l'ha risolto, cosa lo avrebbe preso.
+
+id: ERR-0018
+data: "2026-10-11"
+
+cosa_e_fallito: >
+  Al revisore indipendente del gate QA ho passato come «fonte» la trascrizione delle risposte di
+  Michele, e dentro quella trascrizione avevo **normalizzato una parola**: «questa fase» invece di
+  «questo fase». Il revisore ha bocciato una citazione che era fedele. Un giro intero di lavoro
+  bruciato su un falso positivo — e il rischio, molto peggiore, che qualcuno «correggesse» la
+  citazione per far passare il controllo.
+
+cosa_l_ha_risolto: >
+  Ho rimesso nella fonte la parola originale, ho aggiunto al documento un'**appendice con la
+  trascrizione integrale e non normalizzata**, e ho fatto rifare la verifica dichiarando anche la
+  storia dell'errore. Il secondo revisore ha confermato la fedelta' con un confronto carattere per
+  carattere e ha annullato il falso positivo.
+
+cosa_l_avrebbe_preso: >
+  **Passare la fonte integrale, mai riscritta — e metterla dentro l'artefatto.** Se il testo di
+  confronto vive nell'artefatto, chi verifica lo legge da li' invece di fidarsi di quello che gli
+  racconto. Meccanizzabile in parte: un documento che contiene citazioni fra virgolette dovrebbe
+  portare in appendice la fonte da cui sono tratte, e il confronto e' rifacibile da chiunque.
+
+diventa: nota
+dove: ""
+
+trovato_da: io
+stato: aperto
+
+riferimenti:
+  - "17. Michele Clementi Project/Analisi-Prompt-Report/04-Risposte-Michele.md"
+  - "17. Michele Clementi Project/Analisi-Prompt-Report/Milestone 5/Sprint 1/REPORT.md"

@@ -1,0 +1,78 @@
+# ERR-0026 — una guardia importata e mai chiamata
+
+id: ERR-0026
+data: "2026-10-11"
+
+# --- le tre domande ---------------------------------------------------------
+
+cosa_e_fallito: >
+  `tools/blueprint.py` **importa** l'autorita' di ambito (`ad_scope`) ma non la
+  **interroga** prima di scrivere: la funzione di guardia esiste, ed e' chiamata
+  solo da `ad_milestone.py` (`_guard`, righe 260 e 297). Ho scritto in un file di
+  progetto che il mio contract non copre — `Analisi-Prompt-Report/BLUEPRINT.md`,
+  mentre `ADMF-001` copre `Milestone 3/` e `Evidenze/`. Il comando e' passato:
+  `contract_scope.py check` su quel percorso esce **1** («Nessun task contract
+  copre»), eppure la scrittura e' avvenuta (mtime 17:09, impronta nuova
+  `12f6d7703941`). La cosa che pesa e' che il principio violato e' **gia'
+  scritto**: `DEC-0008` dice «gli strumenti si rifiutano di scrivere in una
+  cartella prodotto non coperta da un contract approvato: le scritture fatte da
+  uno script non passano dall'euristica della shell del plugin, quindi la guardia
+  sta dentro lo strumento». In `blueprint.py` la guardia **non sta**. E il
+  docstring di `ad_milestone._guard` dice «Un varco negli strumenti sarebbe un
+  varco nell'enforcement» — in un modulo che il varco ce l'ha. Una difesa
+  promessa e non implementata e' peggio di una difesa assente: fa smettere di
+  guardare.
+
+cosa_l_ha_risolto: >
+  **Riparato da `ADMF-004`** (sprint 2 della milestone 3), in due tempi. Primo
+  tempo: la guardia e' **una sola**, `ad_scope.guard`, e la chiama ogni strumento
+  che scrive — `ad_milestone` (tappa e passo), `blueprint.py`, `stato.py`,
+  `comportamento.py`, `security_scan.py` e `ad_docs.prenota_id`, che e' il punto in
+  cui `verbali.py` ed `errori.py` prenotano un id e quindi scrivono. La copia
+  privata `ad_milestone._guard` non esiste piu', e una prova della suite legge
+  l'albero sintattico di `tools/*.py`: una seconda definizione di `guard` fa
+  fallire il controllo. Il contenuto scritto quel giorno era legittimo, ma non era
+  quello il punto: una difesa scritta in un posto solo viene dimenticata nel posto
+  successivo.
+  Secondo tempo, dopo il **FAIL del primo Code Review**: la guardia era cieca su
+  tutto cio' che sta **fuori** dall'albero di autorita'. `python3 tools/verbali.py
+  nuovo --root /tmp/x` scriveva `DECISIONI/DEC-0001-x.md` senza incontrare nessun
+  contract, perche' `evaluate` risponde `allowed` a un percorso fuori dalla root e
+  la guardia ereditava quell'uscita. Ora `guard` **rifiuta**: fuori dall'albero
+  nessun contract puo' coprire, e la richiesta e' un errore di chi invoca, non un
+  permesso da concedere. `evaluate` resta com'e', perche' «non e' protetto» e' la
+  risposta giusta alla domanda che fa `contract_scope.py`. La prova esegue i cinque
+  strumenti con `--root` fuori dall'albero (exit 2, nessun file e nessuna cartella),
+  e la suite stessa ora scrive solo dentro l'albero. Una scrittura resta fuori per
+  scelta dichiarata: la cache di `ricerca.py`, che e' stato del processo e non una
+  carta — li' la domanda e' quella di `evaluate`, e una cache puntata dentro un
+  progetto resta rifiutata.
+
+cosa_l_avrebbe_preso: >
+  **Una riga.** La stessa `_guard(target)` di `ad_milestone.py`, chiamata prima
+  della scrittura: `ad_scope.evaluate(target)` e, se `allowed` e' falso,
+  `PermissionError`. Il rimedio non va scritto una seconda volta in un secondo
+  file — altrimenti la prossima volta che serve si dimentica di nuovo. Va estratto
+  **una volta** in un modulo condiviso che ogni strumento di scrittura chiama, con
+  una prova che verifica il rifiuto su un percorso non coperto. La generalizzazione
+  e' il punto: `DEC-0008` ha fissato il principio, non l'ha meccanizzato, e un
+  principio non meccanizzato e' tornato a mancare **lo stesso giorno** in cui e'
+  stato scritto il primo strumento che lo dimenticava.
+
+# --- cosa ne facciamo -------------------------------------------------------
+
+diventa: controllo
+dove: "tools/ad_scope.py"
+
+# --- come e' stato trovato --------------------------------------------------
+
+trovato_da: io
+stato: chiuso
+
+# --- collegamenti -----------------------------------------------------------
+
+riferimenti:
+  - "DECISIONI/DEC-0008-milestone-e-sprint.md"
+  - "tools/ad_milestone.py"
+  - "tools/blueprint.py"
+  - "contratti/societa/ADMF-004.yaml"

@@ -1,0 +1,39 @@
+# ERR-0024 — ho usato `mv` per una prova, e il ripristino ha sbagliato
+
+id: ERR-0024
+data: "2026-10-11"
+
+cosa_e_fallito: >
+  Per dimostrare che la sequenza della costituzione non e' eseguibile — dice tappa
+  prima, permesso dopo, e il cancello pretende il contrario — ho **spostato via**
+  la cartella `Analisi-Prompt-Report` di un progetto, ho rifatto il comando, e l'ho
+  rimessa. Il ripristino era sbagliato: `mv /tmp/apr-backup "…/Analisi-Prompt-Report"`
+  ha messo la cartella **dentro** invece di sostituirla. Risultato: i file veri del
+  progetto sono finiti in `apr-backup/`, e al loro posto c'era una **bozza vuota**
+  generata dal comando di prova. Per un momento la storia di quel progetto e' stata
+  una bozza, e il rapporto vero era in una sottocartella con un nome mio.
+
+cosa_l_ha_risolto: >
+  Ho verificato **prima di riparare**: elencato cosa c'era, confrontato il backup con
+  la bozza, letto il rapporto vero per essere sicuro che fosse quello con
+  `stato: chiusa`. Poi: via la bozza (una riga, non una cartella), i file veri al
+  loro posto uno per uno, e la cartella di appoggio rimossa. `milestone.py check`
+  dice di nuovo **storia completa**.
+
+cosa_l_avrebbe_preso: >
+  **Non si sposta una cartella di progetto per fare una prova — e se si sposta, il
+  ripristino si VERIFICA, non si spera.** Due regole, e la seconda e' quella che mi
+  ha fregato: `mv` verso una cartella che esiste **annida**, non sostituisce. E la
+  prima: su una cartella di progetto, un'operazione distruttiva si fa **su una copia**
+  o **non si fa**. La prova che volevo era gia' scritta nel codice —
+  `ad_contract.py` rifiuta un permesso di progetto senza tappa — e non serviva
+  smontare niente.
+
+diventa: nota
+dove: ""
+
+trovato_da: io
+stato: chiuso
+
+riferimenti:
+  - "DECISIONI/DEC-0041-la-sequenza-e-il-permesso.md"

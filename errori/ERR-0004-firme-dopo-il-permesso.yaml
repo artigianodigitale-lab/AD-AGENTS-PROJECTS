@@ -1,0 +1,33 @@
+# ERR-0004 — firme dopo il permesso
+#
+# Voce del registro errori. Vedi errori/README.md per le regole.
+# Le tre domande: cosa e' fallito, cosa l'ha risolto, cosa lo avrebbe preso.
+
+id: ERR-0004
+data: "2026-10-10"
+
+cosa_e_fallito: >
+  Le firme di SEC-002 e REL-001 erano datate DOPO il permesso che autorizzano: 17:25 contro 17:18, e 17:55 contro 17:21. L'ordine consenso -> autorizzazione risultava invertito.
+
+cosa_l_ha_risolto: >
+  Ricostruite a un minuto prima del permesso, con la ricostruzione DICHIARATA dentro il record: l'orario vero non e' recuperabile e inventarne un altro sarebbe stato rifare l'errore.
+
+cosa_l_avrebbe_preso: >
+  Il controllo dell'ordine, che ora esiste. Ma la causa vera e' un'altra e va scritta: **riscrivere un record di governo ne cambia l'mtime, e l'ordine si legge dagli mtime.** Correggere una data senza rimettere l'mtime rompe l'ordine — ed e' quello che era successo.
+
+diventa: controllo
+dove: ".brain/plugin/enforce-contract/index.mjs"
+
+trovato_da: controllo
+stato: chiuso
+
+riferimenti:
+  - "drift/README.md"
+  - "DECISIONI/DEC-0028-controllo-dopo-la-scrittura.md"
+  # Seconda occorrenza, 12 ottobre 2026: il marcatore MBL-002 e' stato riscritto dopo il
+  # contract (la data dichiarata era sbagliata di un giorno), e l'ordine firma -> permesso
+  # e' risultato invertito sul filesystem. Preso dal controllo B1 di `comportamento.py`,
+  # non dal plugin: la difesa dichiarata qui sopra non copre le riscritture dei marcatori.
+  # Rimediato riscrivendo il contract, senza cambiare il contenuto.
+  - "contratti/11-modelbel/MBL-002.yaml"
+  - "approvazioni/11-modelbel/MBL-002.yaml"

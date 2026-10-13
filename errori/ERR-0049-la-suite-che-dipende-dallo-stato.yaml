@@ -1,0 +1,41 @@
+# ERR-0049 — Una suite che dipende dallo stato non prova un motore nuovo
+
+id: ERR-0049
+data: "2026-10-13"
+
+cosa_e_fallito: >
+  La versione vergine di AAP si ferma nella suite: `AssertionError: rm su progetto ->
+  bloccato: condizione falsa`. E prima ancora su `contract_scope.py check tools/x.py`.
+
+  **La ragione non e' un difetto del codice**: e' che alcune prove **presuppongono che il
+  mondo esista**. Una pretende di bloccare un `rm` su una cartella di progetto — e in un
+  motore vergine **progetti non ce ne sono**. Un'altra pretende che i verbali superino una
+  soglia, e dopo la potatura dei registri sono 34 invece di 56.
+
+cosa_l_ha_risolto: >
+  **Niente, ed e' dichiarato.** La correzione vera e' far si' che ogni prova si **costruisca
+  il proprio caso** in una root temporanea invece di leggerlo dal mondo — che e' esattamente
+  cio' che la maggior parte di queste prove gia' fa (`rompi()`, `scratch_root()`).
+
+  E' un lavoro sulla macchina, non sulla copia: si fa una volta, e vale per tutte e due.
+
+cosa_l_avrebbe_preso: >
+  **La stessa domanda di ERR-0047, fatta prima:** *da cosa dipende questa prova?* Se la
+  risposta e' «da cio' che esiste», allora non prova un motore nuovo — **prova questo
+  computer**.
+
+  Ed e' la **terza volta in un giorno** che questa forma si presenta:
+  `ERR-0047` (la prova di `setup.py` che cercava un progetto esistente), il conflitto su
+  `tools/` in `test_ad_org` (che presupponeva un secondo titolare), e ora la suite intera.
+
+  **La forma, in una riga: una prova che non si costruisce il proprio caso prova il mondo,
+  non il codice.**
+
+diventa: nota
+dove: "tools/tests/test_ad_org.py"
+
+trovato_da: controllo
+stato: aperto
+
+riferimenti:
+  - "errori/ERR-0047-la-prova-che-aveva-bisogno-di-un-progetto.yaml"

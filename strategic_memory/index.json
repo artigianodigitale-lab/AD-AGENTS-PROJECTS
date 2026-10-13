@@ -1,0 +1,513 @@
+[
+  {
+    "id": "cialdini",
+    "author": "Robert Cialdini",
+    "area": "sales",
+    "topics": [
+      "influence",
+      "persuasion",
+      "reciprocity",
+      "commitment",
+      "social-proof",
+      "authority",
+      "liking",
+      "scarcity",
+      "unity"
+    ],
+    "path": "strategic_memory/sales/cialdini.md"
+  },
+  {
+    "id": "pnl",
+    "author": "PNL",
+    "area": "sales",
+    "topics": [
+      "communication",
+      "framing",
+      "rapport",
+      "language",
+      "questioning",
+      "goals"
+    ],
+    "path": "strategic_memory/sales/pnl.md"
+  },
+  {
+    "id": "girard",
+    "author": "Joe Girard",
+    "area": "sales",
+    "topics": [
+      "relationship-selling",
+      "follow-up",
+      "referrals",
+      "repeat-business"
+    ],
+    "path": "strategic_memory/sales/girard.md"
+  },
+  {
+    "id": "belfort",
+    "author": "Jordan Belfort",
+    "area": "sales",
+    "topics": [
+      "sales-structure",
+      "qualification",
+      "objections",
+      "closing"
+    ],
+    "path": "strategic_memory/sales/belfort.md"
+  },
+  {
+    "id": "cardone",
+    "author": "Grant Cardone",
+    "area": "sales",
+    "topics": [
+      "prospecting",
+      "follow-up",
+      "persistence",
+      "activity"
+    ],
+    "path": "strategic_memory/sales/cardone.md"
+  },
+  {
+    "id": "rackham",
+    "author": "Neil Rackham",
+    "area": "sales",
+    "topics": [
+      "spin",
+      "situation",
+      "problem",
+      "implication",
+      "need-payoff",
+      "b2b",
+      "discovery"
+    ],
+    "path": "strategic_memory/sales/rackham.md"
+  },
+  {
+    "id": "tracy",
+    "author": "Brian Tracy",
+    "area": "sales",
+    "topics": [
+      "goals",
+      "prioritization",
+      "productivity",
+      "closing"
+    ],
+    "path": "strategic_memory/sales/tracy.md"
+  },
+  {
+    "id": "ziglar",
+    "author": "Zig Ziglar",
+    "area": "sales",
+    "topics": [
+      "value-selling",
+      "needs",
+      "objections",
+      "relationships"
+    ],
+    "path": "strategic_memory/sales/ziglar.md"
+  },
+  {
+    "id": "voss",
+    "author": "Chris Voss",
+    "area": "sales",
+    "topics": [
+      "negotiation",
+      "empathy",
+      "calibrated-questions",
+      "listening"
+    ],
+    "path": "strategic_memory/sales/voss.md"
+  },
+  {
+    "id": "gitomer",
+    "author": "Jeffrey Gitomer",
+    "area": "sales",
+    "topics": [
+      "trust",
+      "referrals",
+      "customer-experience"
+    ],
+    "path": "strategic_memory/sales/gitomer.md"
+  },
+  {
+    "id": "drucker",
+    "author": "Peter Drucker",
+    "area": "management",
+    "topics": [
+      "effectiveness",
+      "objectives",
+      "customer",
+      "responsibility"
+    ],
+    "path": "strategic_memory/management/drucker.md"
+  },
+  {
+    "id": "collins",
+    "author": "Jim Collins",
+    "area": "management",
+    "topics": [
+      "discipline",
+      "culture",
+      "long-term",
+      "focus"
+    ],
+    "path": "strategic_memory/management/collins.md"
+  },
+  {
+    "id": "peters",
+    "author": "Tom Peters",
+    "area": "management",
+    "topics": [
+      "excellence",
+      "execution",
+      "customer",
+      "action"
+    ],
+    "path": "strategic_memory/management/peters.md"
+  },
+  {
+    "id": "covey",
+    "author": "Stephen R. Covey",
+    "area": "management",
+    "topics": [
+      "principles",
+      "prioritization",
+      "trust",
+      "effectiveness"
+    ],
+    "path": "strategic_memory/management/covey.md"
+  },
+  {
+    "id": "kotter",
+    "author": "John Kotter",
+    "area": "management",
+    "topics": [
+      "change",
+      "urgency",
+      "coalition",
+      "communication"
+    ],
+    "path": "strategic_memory/management/kotter.md"
+  },
+  {
+    "id": "blanchard",
+    "author": "Ken Blanchard",
+    "area": "management",
+    "topics": [
+      "situational-leadership",
+      "delegation",
+      "performance"
+    ],
+    "path": "strategic_memory/management/blanchard.md"
+  },
+  {
+    "id": "carnegie",
+    "author": "Dale Carnegie",
+    "area": "management",
+    "topics": [
+      "relationships",
+      "communication",
+      "empathy",
+      "conflict"
+    ],
+    "path": "strategic_memory/management/carnegie.md"
+  },
+  {
+    "id": "welch",
+    "author": "Jack Welch",
+    "area": "management",
+    "topics": [
+      "performance",
+      "accountability",
+      "execution"
+    ],
+    "path": "strategic_memory/management/welch.md"
+  },
+  {
+    "id": "goldsmith",
+    "author": "Marshall Goldsmith",
+    "area": "coaching",
+    "topics": [
+      "behavior-change",
+      "feedback",
+      "accountability"
+    ],
+    "path": "strategic_memory/coaching/goldsmith.md"
+  },
+  {
+    "id": "sugars",
+    "author": "Brad Sugars",
+    "area": "coaching",
+    "topics": [
+      "systems",
+      "growth",
+      "delegation",
+      "leverage"
+    ],
+    "path": "strategic_memory/coaching/sugars.md"
+  },
+  {
+    "id": "chandler-litvin",
+    "author": "Steve Chandler e Rich Litvin",
+    "area": "coaching",
+    "topics": [
+      "coaching",
+      "action",
+      "leadership"
+    ],
+    "path": "strategic_memory/coaching/chandler-litvin.md"
+  },
+  {
+    "id": "whitmore",
+    "author": "Sir John Whitmore",
+    "area": "coaching",
+    "topics": [
+      "grow",
+      "goal",
+      "reality",
+      "options",
+      "will"
+    ],
+    "path": "strategic_memory/coaching/whitmore.md"
+  },
+  {
+    "id": "stanier",
+    "author": "Michael Bungay Stanier",
+    "area": "coaching",
+    "topics": [
+      "questions",
+      "curiosity",
+      "advice"
+    ],
+    "path": "strategic_memory/coaching/stanier.md"
+  },
+  {
+    "id": "bardolla",
+    "author": "Alfio Bardolla",
+    "area": "coaching",
+    "topics": [
+      "financial-education",
+      "mindset",
+      "objectives"
+    ],
+    "path": "strategic_memory/coaching/bardolla.md"
+  },
+  {
+    "id": "ruggeri",
+    "author": "Paolo Ruggeri",
+    "area": "coaching",
+    "topics": [
+      "entrepreneurship",
+      "sales",
+      "growth"
+    ],
+    "path": "strategic_memory/coaching/ruggeri.md"
+  },
+  {
+    "id": "cere",
+    "author": "Roberto Cerè",
+    "area": "coaching",
+    "topics": [
+      "leadership",
+      "performance",
+      "motivation"
+    ],
+    "path": "strategic_memory/coaching/cere.md"
+  },
+  {
+    "id": "belotti",
+    "author": "Claudio Belotti",
+    "area": "coaching",
+    "topics": [
+      "coaching",
+      "performance",
+      "leadership"
+    ],
+    "path": "strategic_memory/coaching/belotti.md"
+  },
+  {
+    "id": "kotler",
+    "author": "Philip Kotler",
+    "area": "marketing",
+    "topics": [
+      "segmentation",
+      "positioning",
+      "customer-value",
+      "marketing-mix",
+      "market"
+    ],
+    "path": "strategic_memory/marketing/kotler.md"
+  },
+  {
+    "id": "ries-trout",
+    "author": "Al Ries e Jack Trout",
+    "area": "marketing",
+    "topics": [
+      "positioning",
+      "category",
+      "differentiation"
+    ],
+    "path": "strategic_memory/marketing/ries-trout.md"
+  },
+  {
+    "id": "levitt",
+    "author": "Theodore Levitt",
+    "area": "marketing",
+    "topics": [
+      "customer-orientation",
+      "needs",
+      "marketing-myopia"
+    ],
+    "path": "strategic_memory/marketing/levitt.md"
+  },
+  {
+    "id": "ogilvy",
+    "author": "David Ogilvy",
+    "area": "marketing",
+    "topics": [
+      "advertising",
+      "copy",
+      "research",
+      "message",
+      "brand"
+    ],
+    "path": "strategic_memory/marketing/ogilvy.md"
+  },
+  {
+    "id": "godin",
+    "author": "Seth Godin",
+    "area": "marketing",
+    "topics": [
+      "permission",
+      "differentiation",
+      "audience",
+      "trust"
+    ],
+    "path": "strategic_memory/marketing/godin.md"
+  },
+  {
+    "id": "lindstrom",
+    "author": "Martin Lindstrom",
+    "area": "marketing",
+    "topics": [
+      "consumer-psychology",
+      "branding",
+      "behavior"
+    ],
+    "path": "strategic_memory/marketing/lindstrom.md"
+  },
+  {
+    "id": "vaynerchuk",
+    "author": "Gary Vaynerchuk",
+    "area": "marketing",
+    "topics": [
+      "social",
+      "content",
+      "attention",
+      "community"
+    ],
+    "path": "strategic_memory/marketing/vaynerchuk.md"
+  },
+  {
+    "id": "patel",
+    "author": "Neil Patel",
+    "area": "marketing",
+    "topics": [
+      "seo",
+      "content",
+      "acquisition",
+      "conversion",
+      "analytics"
+    ],
+    "path": "strategic_memory/marketing/patel.md"
+  },
+  {
+    "id": "handley",
+    "author": "Ann Handley",
+    "area": "marketing",
+    "topics": [
+      "content",
+      "writing",
+      "storytelling"
+    ],
+    "path": "strategic_memory/marketing/handley.md"
+  },
+  {
+    "id": "scott",
+    "author": "David Meerman Scott",
+    "area": "marketing",
+    "topics": [
+      "content",
+      "inbound",
+      "real-time",
+      "audience"
+    ],
+    "path": "strategic_memory/marketing/scott.md"
+  },
+  {
+    "id": "diegoli",
+    "author": "Gianluca Diegoli",
+    "area": "marketing",
+    "topics": [
+      "digital",
+      "ecommerce",
+      "customer-experience"
+    ],
+    "path": "strategic_memory/marketing/diegoli.md"
+  },
+  {
+    "id": "gallucci",
+    "author": "Francesco Gallucci",
+    "area": "marketing",
+    "topics": [
+      "neuromarketing",
+      "consumer-behavior"
+    ],
+    "path": "strategic_memory/marketing/gallucci.md"
+  },
+  {
+    "id": "tedeschi",
+    "author": "Piermario Tedeschi",
+    "area": "marketing",
+    "topics": [
+      "digital-business",
+      "communication"
+    ],
+    "path": "strategic_memory/marketing/tedeschi.md"
+  },
+  {
+    "id": "synthesis",
+    "author": "cross",
+    "area": "cross_framework",
+    "topics": [
+      "positioning",
+      "segmentation",
+      "customer-value",
+      "differentiation",
+      "b2b",
+      "discovery",
+      "persuasion",
+      "sales",
+      "marketing-strategy",
+      "synthesis"
+    ],
+    "path": "strategic_memory/cross_framework/synthesis.md"
+  },
+  {
+    "id": "business-overview",
+    "author": "business",
+    "area": "business",
+    "topics": [
+      "business-model",
+      "value-proposition",
+      "segment",
+      "offer",
+      "pricing",
+      "positioning",
+      "acquisition",
+      "retention",
+      "saas",
+      "b2b"
+    ],
+    "path": "strategic_memory/business/overview.md"
+  }
+]

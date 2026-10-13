@@ -1,0 +1,20 @@
+# Marcatore di approvazione del CEO.
+#
+# Scritto dall'agente su indicazione esplicita del CEO (2026-10-08): "forse e' meglio
+# che non generi io un marcatore ma che lo generi tu se ti serve. Prima passi da me e
+# io ti approvo e tu continui".
+#
+# Piu' debole di un atto scritto dal CEO: prova che l'agente ha eseguito un comando,
+# non che il CEO ha approvato. Il campo `fonte` cita la sua frase esatta, cosi' chi
+# rilegge puo' verificarla nella conversazione. Vedi DEC-0009.
+
+task_id: GOV-000
+piano: piani/2026-10-08-irrigidimento-governance.md
+approvato_da: CEO
+data: "2026-10-08T14:30:43+02:00"
+fonte: "ti approvo tutte e 4 le decisioni"
+fonte_delega: "forse e' meglio che non generi io un marcatore ma che lo generi tu se ti serve. Prima passi da me e io ti approvo e tu continui"
+consenso: >-
+  Approvate le quattro decisioni: protezione degli artefatti di governance,
+  chiusura delle sei vulnerabilita' di 3. AD-Marketing-Factory, installazione
+  degli scanner, trapianto dei meccanismi del Continuity Pack.

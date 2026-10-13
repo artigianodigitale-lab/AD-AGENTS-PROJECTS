@@ -1,0 +1,39 @@
+# ERR-0048 — Ho committato un file che non si caricava
+
+id: ERR-0048
+data: "2026-10-13"
+
+cosa_e_fallito: >
+  Aggiungendo l'esenzione dei documenti non normativi, ho inserito una costante a livello
+  di modulo **dentro una funzione**: il commento era a colonna zero, la costante pure, e il
+  corpo della funzione indentato. Risultato: `IndentationError`, e `ad_coherence.py` **non
+  si caricava piu'** — con lui la coerenza e la suite.
+
+  E l'ho **committato lo stesso**, senza guardare.
+
+cosa_l_ha_risolto: >
+  La costante spostata a livello di modulo, prima della funzione che la usa. E il commit
+  **corretto con `--amend`**, perche' quello rotto non era ancora andato da nessuna parte.
+
+cosa_l_avrebbe_preso: >
+  **Un solo comando, che non ho dato: `python3 -c "import ast; ast.parse(open(f).read())"`** —
+  o semplicemente **eseguire** la suite, che l'ha preso subito dopo. Il commit e' arrivato
+  **prima** della verifica, ed e' tutto li': **ho committato per primo e verificato dopo.**
+
+  Ed e' la stessa forma delle altre volte di oggi: `ERR-0047` (una prova che dipendeva da un
+  progetto esistente), `ERR-0045` (un 403 letto come morto), la baseline, il ramo sbagliato,
+  il grafo con la barra rovesciata. **Sempre: agisco su cio' che vedo, senza verificare di
+  averlo visto bene.**
+
+  La regola che ne esce, e che vale quanto un controllo: **un file si committa dopo averlo
+  eseguito, non prima.** Il commit e' una firma.
+
+diventa: controllo
+dove: "tools/ad_coherence.py"
+
+trovato_da: controllo
+stato: chiuso
+
+riferimenti:
+  - "errori/ERR-0047-la-prova-che-aveva-bisogno-di-un-progetto.yaml"
+  - "errori/ERR-0045-403-non-e-morto.yaml"

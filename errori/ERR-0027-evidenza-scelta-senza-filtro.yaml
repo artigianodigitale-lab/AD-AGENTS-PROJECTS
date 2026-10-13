@@ -1,0 +1,79 @@
+# ERR-0027 — l'evidenza scelta per data, senza guardare di chi e'
+
+id: ERR-0027
+data: "2026-10-11"
+
+# --- le tre domande ---------------------------------------------------------
+
+cosa_e_fallito: >
+  `tools/ad_evidence.py` sceglie l'evidenza di un gate in quest'ordine: filtra per
+  gate (riga 237-239), prende **la piu' recente per timestamp** (`_latest`, riga
+  250), e **solo dopo** verifica che il `task_id` combaci (`_validity_problem`,
+  riga 251). Se l'evidenza di un altro permesso ha un timestamp piu' nuovo, quella
+  del permesso giusto non viene nemmeno guardata: il gate risulta `INVALID` e il
+  verdetto e' `REJECT`. Provato: `ORD-001` ha la sua evidenza valida dal 2026-10-08
+  (`ORD-001-code-review.yaml`, `producer: review`, `outcome: PASS`), e oggi
+  `python3 tools/verdict.py --contract contratti/3-ad-marketing-factory/ORD-001.yaml
+  --evidence ".../Evidenze/"` risponde **REJECT** con «task_id 'ADMF-001' diverso dal
+  contract 'ORD-001': l'evidenza non conta». Lo stesso esito esce per `FIX-001`,
+  `SEC-001`, `REL-001` e `ORD-003`: quattro permessi chiusi e verificati che il
+  registro dei verdetti dichiara **falliti**. La conseguenza non e' cosmetica: il
+  verdetto e' cio' che decide se un lavoro e' ACCEPT, e da questa riga dipende la
+  lettura di tutto lo storico dei gate del progetto. La QA di `ADMF-001` l'ha
+  trovato mentre verificava `ORD-003`: il suo REJECT era vero, ma **per la ragione
+  sbagliata**, e la stessa ragione produceva quattro falsi REJECT che nessuno aveva
+  notato.
+
+cosa_l_ha_risolto: >
+  **Riparato da `ADMF-004`** (sprint 2 della milestone 3). In `ad_evidence.py` il
+  filtro per `task_id` e' **salito prima** della scelta per data: prima si tiene
+  solo cio' che appartiene al permesso, poi `_latest` sceglie fra le evidenze **di
+  quel permesso**. L'ordine era il difetto, non il criterio: il verdetto sui casi
+  legittimi non cambia — un gate senza evidenza propria resta un `REJECT`, e resta
+  un `MISSING`, perche' l'assenza non e' un'accusa e non va piu' scambiata per la
+  prova falsa di un altro. Quando le evidenze di altri permessi vengono escluse, il
+  verdetto lo **dichiara** invece di tacerlo. La prova che nessun test copriva e'
+  nella suite: due permessi che depositano lo stesso gate, con l'evidenza piu'
+  recente dell'**altro**, e ciascuno legge la propria. L'effetto si vede sui cinque
+  permessi che il difetto condannava: `ORD-001`, `FIX-001`, `SEC-001`, `REL-001` e
+  `ORD-004` rispondono **ACCEPT** invece di `INVALID`, con la loro evidenza scritta
+  giorni prima che la trappola si manifestasse.
+
+cosa_l_avrebbe_preso: >
+  **Un filtro spostato di una riga**, e una prova che oggi non esiste. Prima di
+  scegliere, si tiene solo cio' che appartiene al contratto:
+
+  ```python
+  candidates = [
+      record for record in evidence
+      if ad_gates.canonical(record.gate) == gate
+      and record.task_id == task_id
+  ]
+  ```
+
+  Cosi' `_latest` sceglie fra le evidenze **di quel permesso** — che e' l'unica
+  cosa che la nota intendeva dire — e l'assenza resta un `MISSING` onesto invece di
+  diventare un `INVALID` che accusa il permesso sbagliato. Va aggiunto anche il
+  caso che oggi nessun test copre: **due permessi con lo stesso gate, la cui
+  evidenza piu' recente appartiene all'altro**. Senza quel test, la correzione non
+  e' verificabile e la regressione puo' tornare. Lezione generale: **un filtro
+  dimenticato non si comporta come un filtro severo, si comporta come un sorteggio**
+  — e un sorteggio, nei verdetti, si legge come un giudizio.
+
+# --- cosa ne facciamo -------------------------------------------------------
+
+diventa: controllo
+dove: "tools/ad_evidence.py"
+
+# --- come e' stato trovato --------------------------------------------------
+
+trovato_da: revisore
+stato: chiuso
+
+# --- collegamenti -----------------------------------------------------------
+
+riferimenti:
+  - "tools/ad_evidence.py"
+  - "errori/ERR-0026-blueprint-senza-guardia.yaml"
+  - "3. AD-Marketing-Factory/Analisi-Prompt-Report/Evidenze/ADMF-001-qa.yaml"
+  - "contratti/societa/ADMF-004.yaml"

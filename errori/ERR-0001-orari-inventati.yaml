@@ -1,0 +1,26 @@
+# ERR-0001 — orari inventati
+#
+# Voce del registro errori. Vedi errori/README.md per le regole.
+# Le tre domande: cosa e' fallito, cosa l'ha risolto, cosa lo avrebbe preso.
+
+id: ERR-0001
+data: "2026-10-08"
+
+cosa_e_fallito: >
+  Ogni prova e ogni marcatore scritti quel giorno dichiarava un orario NEL FUTURO rispetto all'ora vera di scrittura: da 20 minuti a un'ora e mezza. Dieci record su dieci, tutti nello stesso verso. Non era una svista isolata: era il modo in cui scrivevo le date.
+
+cosa_l_ha_risolto: >
+  Il revisore indipendente di ORD-002 se n'e' accorto confrontando la data dichiarata con l'mtime del file. Diciotto record riportati all'ora vera di scrittura.
+
+cosa_l_avrebbe_preso: >
+  Un confronto fra le date dichiarate e l'orologio. Nessuno lo faceva: erano numeri scritti a mano e nessun controllo li leggeva. Ora e' il primo controllo di tools/post-execute, piu' ad_coherence.orari_nel_futuro.
+
+diventa: controllo
+dove: ".brain/plugin/enforce-contract/index.mjs"
+
+trovato_da: revisore
+stato: chiuso
+
+riferimenti:
+  - "DECISIONI/DEC-0027-date-inventate.md"
+  - "drift/README.md"

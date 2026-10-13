@@ -1,0 +1,40 @@
+# ERR-0016 — un errore del programma e un rilievo di sicurezza uscivano uguali
+#
+# Voce del registro errori. Vedi errori/README.md per le regole.
+
+id: ERR-0016
+data: "2026-10-10"
+
+cosa_e_fallito: >
+  Migliorando lo scanner dei segreti l'ho rotto, e **non me ne sono accorto**:
+  passavo la voce grezza di gitleaks a una funzione che si aspettava i nomi
+  normalizzati, quindi lo script **andava in errore** su ogni progetto. Un'eccezione
+  non catturata esce **1**, esattamente come un rilievo trovato. Ho misurato «quanti
+  progetti escono 1» — 15 — e ho concluso che il filtro non funzionava, quando invece
+  il programma **non stava guardando niente**.
+
+cosa_l_ha_risolto: >
+  Tre difetti distinti, tutti della stessa famiglia: (1) l'errore e il positivo ora
+  escono diversi — **2 = non ho potuto guardare**, 1 = ho guardato e ho trovato;
+  (2) `--json` stampava anche la riga finale, quindi chi leggeva con un parser
+  falliva, e io riportavo «scansione non riuscita» per tutti: ora `--json` e' JSON
+  puro; (3) il valore lo fornisce gitleaks nel campo `Secret`, e la mia estrazione
+  dalla riga sbagliava sulle righe CSV — ora si usa quello.
+
+cosa_l_avrebbe_preso: >
+  **Distinguere «non ho potuto» da «non ho trovato».** Un programma che esce 1 sia
+  quando fallisce sia quando trova rende impossibile misurare se sta funzionando:
+  il suo codice di uscita non e' un'informazione, e' un rumore. Ed e' la stessa
+  forma di ERR-0011 (un controllo che non poteva fallire) e del suo specchio (un
+  controllo che fallisce sempre): **il codice di uscita deve voler dire una cosa
+  sola.** E la seconda meta': ho misurato il **sintomo** (l'uscita) invece della
+  **causa** (cosa conteneva l'uscita). Sesta volta in tre giorni.
+
+diventa: controllo
+dove: "tools/tests/test_ad_org.py"
+
+trovato_da: io
+stato: chiuso
+
+riferimenti:
+  - "DECISIONI/DEC-0038-un-solo-motore-di-scrittura.md"

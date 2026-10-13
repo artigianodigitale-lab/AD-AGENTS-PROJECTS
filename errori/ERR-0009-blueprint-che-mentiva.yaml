@@ -1,0 +1,32 @@
+# ERR-0009 — un record che esiste non e' un record chiuso
+#
+# Voce del registro errori. Vedi errori/README.md per le regole.
+
+id: ERR-0009
+data: "2026-10-10"
+
+cosa_e_fallito: >
+  Il generatore del Blueprint decideva lo stato di una tappa guardando se il suo
+  rapporto ESISTEVA. Ma `new-milestone` crea il rapporto come modello, con
+  `stato: aperta`: risultato, una tappa appena aperta veniva dichiarata «chiusa».
+  Il difetto l'ho visto guardando il primo Blueprint vero, riga 34 della tabella.
+
+cosa_l_ha_risolto: >
+  Lo stato ora si legge dal campo `stato:` DICHIARATO dentro il record, non dalla
+  presenza del file. Rigenerato, la tappa 2 risulta «aperta».
+
+cosa_l_avrebbe_preso: >
+  Una prova che verifichi la differenza fra «il file esiste» e «il file dichiara di
+  essere chiuso» — che e' la stessa distinzione di ERR-0003 (permesso chiuso non e'
+  passo chiuso) e di ERR-0005 (assente non e' tutto a posto). **Tre errori diversi,
+  la stessa forma: confondere l'esistenza con lo stato.** La prova ora esiste in
+  tools/tests/test_ad_org.py.
+
+diventa: controllo
+dove: "tools/tests/test_ad_org.py"
+
+trovato_da: io
+stato: chiuso
+
+riferimenti:
+  - "DECISIONI/DEC-0030-blueprint.md"

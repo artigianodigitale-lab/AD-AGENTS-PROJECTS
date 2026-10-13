@@ -1,0 +1,64 @@
+# Contract operativo ORG-001 — vedi contratti/_TEMPLATE.yaml per i campi.
+
+task_id: ORG-001
+title: "L'analisi di un progetto e' una milestone: insegnarlo al cervello"
+domain: technical
+agent: platform
+task_type: shared_platform
+product: altro
+decision_record: DECISIONI/DEC-0018-analisi-come-milestone.md
+
+objective: >
+  Rendere impossibile aprire un contract su un progetto senza che lo sprint sia
+  aperto con il suo PROMPT.md, e mettere la sequenza milestone nel livello di
+  istruzioni che si carica sempre.
+
+inputs:
+  - requirements
+  - decision_record
+  - plan
+
+acceptance_criteria:
+  - la costituzione elenca 12 passi e include ANALISI DI AVVIO, MILESTONE, SPRINT
+  - la costituzione porta l'invariante 13
+  - TASK-CONTRACTS.md dichiara milestone e sprint obbligatori per i contract di progetto
+  - validate_contract.py rifiuta un contract di progetto senza milestone, senza sprint, o con lo sprint non aperto
+  - la skill ad-kickoff ha il consenso sulle milestone
+  - il test negativo e' nella suite deterministica
+
+constraints:
+  - no production access
+  - do not edit this contract
+  - do not change own permissions
+  - nessuna modifica ai contract esistenti
+  - nessun tocco ai progetti
+
+outputs:
+  - code
+  - tests
+  - evidence
+
+required_gates:
+  - Code Review
+
+approval:
+  human: true
+
+budget:
+  max_retries: 2
+
+priority: P0
+
+impact_forecast:
+  data: NONE
+  schema: NONE
+  auth: NONE
+  security: NONE
+  shared_platform: HIGH
+  product: NONE
+
+status: chiuso
+write_scope:
+  - ".brain/"
+  - "tools/"
+expires: "2026-11-08T00:00:00+01:00"

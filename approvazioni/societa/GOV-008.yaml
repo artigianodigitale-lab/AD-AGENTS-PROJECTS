@@ -1,0 +1,13 @@
+# Marcatore di approvazione del CEO.
+
+task_id: GOV-008
+piano: piani/2026-10-13-la-ricerca.md
+approvato_da: CEO
+data: "2026-10-13T10:12:54+02:00"
+fonte: "vediamo di finire la cartella di backup AAP correttamente"
+fonte_delega: "forse e' meglio che non generi io un marcatore ma che lo generi tu se ti serve. Prima passi da me e io ti approvo e tu continui"
+consenso: >-
+  Approvato il completamento di AD-AGENTS-PROJECTS come motore finito. AIOS si affronta
+  dopo; l'analisi di AIOS per prendere cio' che serve ad AAP e' autorizzata, ma dopo.
+  Il pezzo che manca e' uno solo: il motore cerca i progetti nella propria cartella, e
+  quindi non e' portabile. sede.yaml dichiara gia' il campo `progetti`: va letto.

@@ -1,0 +1,69 @@
+# ERR-0029 — lo strumento che legge il web risponde meno di quanto sa
+
+id: ERR-0029
+data: "2026-10-11"
+
+# --- le tre domande ---------------------------------------------------------
+
+cosa_e_fallito: >
+  `tools/ricerca.py`, riga 256: `print(esito.get("testo", "")[:4000])`. La via a
+  riga di comando **tronca in silenzio il testo a 4.000 caratteri**, e il testo
+  intero resta raggiungibile solo con `--json`. Non c'e' nessun avviso: l'output
+  finisce, e chi legge crede di aver visto tutto. La conseguenza non e' teorica ed
+  e' accaduta: il **gate `Strategy` di `ADMF-005`** ha concluso e scritto in una
+  evidenza che «il testo dell'art. 59 del Codice del Consumo non e' estraibile da
+  Normattiva». **E' falso**: l'articolo si legge (`--forza --json` → 14.774
+  caratteri), e comincia all'**offset 8.807** — cioe' 4.807 caratteri **oltre** il
+  limite del troncamento. Il verificatore ha usato lo strumento prescritto, ha
+  ricevuto meno di quanto lo strumento aveva, e ha tratto una conclusione che il
+  documento poi ha dovuto correggere. E' la stessa famiglia di `ERR-0025` (lo
+  scanner che rispondeva «nessuna dipendenza» avendo escluso tutto) e di `ERR-0026`
+  (la guardia importata e mai chiamata): **uno strumento che risponde meno di quanto
+  sa, senza dirlo.**
+  Nota: l'effetto e' **asimmetrico e insidioso** — un troncamento che taglia *prima*
+  della risposta giusta produce «non c'e'», non «c'e' ma non l'ho vista». Chi legge
+  non ha modo di distinguere le due cose.
+
+cosa_l_ha_risolto: >
+  **Niente, e non l'ho corretto io.** `tools/` e' un artefatto di governance: serve
+  un contract col proprio `write_scope` (`, che c'e' — `GOV-000`) e la riparazione
+  va assegnata. Il difetto e' stato **aggirato** dal rework di `ADMF-005`, che ha
+  usato `--json` e ha portato la prova: il documento ora cita l'articolo e dichiara
+  la causa della svista. Ma lo strumento e' **ancora com'e'**: il prossimo che legge
+  una pagina lunga prende la stessa conclusione sbagliata, e non lo sapra'.
+
+cosa_l_avrebbe_preso: >
+  **Una riga, e la stessa che ha reso visibile `ERR-0025`: dichiarare cosa si e'
+  letto.** Due possibili difese, e non sono alternative:
+  1. **il troncamento si dichiara**: quando l'output viene tagliato, lo strumento
+     **scrive che l'ha tagliato** e dice quanto — «testo troncato a 4.000 caratteri
+     su 14.774: usa `--json` per il testo intero». Una riga, e la conclusione falsa
+     non si forma;
+  2. **il limite non serve**: alzarlo o toglierlo, e stampare tutto. Ma il limite
+     esiste per una ragione (non inondare il contesto di un agente), quindi la
+     difesa giusta e' **(1)**: si tiene il limite, si dice che c'e'.
+  Il controllo che lo rende impossibile invece che sconsigliato: una prova che
+  legge una pagina **piu' lunga del limite** e verifica che l'output **dichiari** il
+  troncamento. Senza quella prova, la riparazione non e' verificabile — ed e' la
+  lezione di stanotte: **una prova che non fallisce sul difetto non prova niente.**
+  Da notare, perche' e' la parte che vale: il difetto e' stato trovato **da un
+  verificatore che ha contraddetto se stesso**, non da un controllo. Nessuno dei 314
+  controlli lo prende.
+
+# --- cosa ne facciamo -------------------------------------------------------
+
+diventa: controllo
+dove: "tools/ricerca.py"
+
+# --- come e' stato trovato --------------------------------------------------
+
+trovato_da: revisore
+stato: aperto
+
+# --- collegamenti -----------------------------------------------------------
+
+riferimenti:
+  - "tools/ricerca.py"
+  - "errori/ERR-0025-git-init-spegne-un-controllo.yaml"
+  - "errori/ERR-0026-blueprint-senza-guardia.yaml"
+  - "3. AD-Marketing-Factory/Analisi-Prompt-Report/Evidenze/ADMF-005-strategy.yaml"
