@@ -132,7 +132,15 @@ def problemi(base: Path | None = None) -> list[str]:
 
 
 def statistiche(base: Path | None = None) -> dict:
-    """Il numero che conta: quanto stiamo imparando e quanto stiamo avendo fortuna."""
+    """Il numero che conta: quanto stiamo imparando e quanto stiamo avendo fortuna.
+
+    E la **metrica della maturita'**: quante cicatrici sono diventate un controllo,
+    su quante ne sono nate. Sale quando il sistema impara, **scende quando si sbaglia
+    di nuovo** — cioe' si comporta come una misura, non come un trofeo.
+
+    E non si puo' gonfiare: ogni voce `diventa: controllo` dichiara il **file** che
+    la attua, e quel file deve esistere (`check` lo pretende).
+    """
     voci = [v["dati"] for v in carica(base) if v["dati"]]
     per_trovato: dict[str, int] = {}
     for voce in voci:
@@ -143,6 +151,14 @@ def statistiche(base: Path | None = None) -> dict:
     per_fortuna = sum(per_trovato.get(chiave, 0) for chiave in FORTUNA)
     totale = len(voci)
     aperti = sum(1 for v in voci if v.get("stato") == "aperto")
+
+    # La metrica: quante cicatrici sono diventate **codice**.
+    per_diventa: dict[str, int] = {}
+    for voce in voci:
+        chiave = str(voce.get("diventa", "?"))
+        per_diventa[chiave] = per_diventa.get(chiave, 0) + 1
+    diventate_controllo = per_diventa.get("controllo", 0)
+    maturita = (diventate_controllo / totale) if totale else 0.0
 
     if totale == 0:
         giudizio = "registro vuoto: non sappiamo niente di come impariamo"
@@ -159,6 +175,10 @@ def statistiche(base: Path | None = None) -> dict:
         "dal_controllo": dal_controllo,
         "per_fortuna": per_fortuna,
         "aperti": aperti,
+        "per_diventa": per_diventa,
+        "diventate_controllo": diventate_controllo,
+        "maturita": round(maturita, 4),
+        "maturita_percento": round(maturita * 100),
         "giudizio": giudizio,
     }
 
@@ -231,6 +251,11 @@ def main(argv: list[str] | None = None) -> int:
         for chiave, quante in sorted(dati["per_trovato_da"].items()):
             print(f"    {chiave:14} {quante}")
         print(f"  ancora aperte:   {dati['aperti']}")
+        print()
+        print("  ── maturita': quante cicatrici sono diventate CODICE")
+        print(f"  diventate controllo: {dati['diventate_controllo']} su {dati['totale']}"
+              f"   ->  {dati['maturita_percento']}%")
+        print("  (sale quando il sistema impara, scende quando si sbaglia di nuovo)")
         print(f"\n  {dati['giudizio']}")
         return 0
 
