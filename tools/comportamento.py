@@ -153,6 +153,10 @@ def _b5(base: Path) -> tuple[bool, str]:
         # Il grafo e la documentazione tecnica: non sono regole, sono la
         # spiegazione del motore. Vedi DOCUMENTI_NON_NORMATIVI in ad_coherence.
         "GRAFO.md",
+        # I documenti legali: Apache-2.0 chiede il testo, e l'attribuzione
+        # a DSH sta nel NOTICE. Non sono regole, ma devono stare qui.
+        "LICENSE",
+        "NOTICE",
         "DOCUMENTAZIONE-TECNICA.md",
         # Chi e' il CEO, e come si chiama questa macchina. Il nome sta in UN posto.
         "sede.yaml",
