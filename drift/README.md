@@ -17,7 +17,10 @@ Una chiusura senza Decision Record non e' una chiusura: e' una modifica silenzio
 
 ## Perche' esiste, con gli occhi aperti
 
-Anche il Continuity Pack di `3. AD-Marketing-Factory` — che e' un corpus serio — ha il proprio registro drift **gia' invecchiato**: `DRIFT-102` documenta che `middleware.ts` e' citato da 18 documenti ed e' stato migrato a `proxy.ts` con Next 16, e non e' stato corretto. Un registro che nessuno legge diventa un'illusione di controllo.
+Anche un **corpus serio di terzi che abbiamo studiato** ha il proprio registro drift **gia'
+invecchiato**: una voce documenta che un file e' citato da diciotto documenti ed e' stato
+migrato con un altro nome, e non e' stato corretto. Un registro che nessuno legge diventa
+un'illusione di controllo.
 
 Quindi: **questo registro ha bisogno di un lettore.** Va riletto nella revisione dei 30 giorni e nella review strategia del primo lunedi' del mese, insieme a `ad-evolution`. Se non viene riletto, va cancellato: un registro morto e' peggio di nessun registro.
 
@@ -36,7 +39,7 @@ python3 tools/drift.py list
 > **Alcune voci non ci sono piu', e i loro numeri nemmeno si riusano.**
 > Questa e' la versione che si distribuisce: le divergenze che riguardavano i
 > progetti della macchina da cui e' stata ricavata sono rimaste **li'**, dove sono
-> successe. Gli id tolti (DRIFT-001, DRIFT-003, DRIFT-004, DRIFT-012, DRIFT-016, DRIFT-017) **non si riassegnano**:
+> successe. Gli id tolti (DRIFT-001, DRIFT-003, DRIFT-004, DRIFT-011, DRIFT-012, DRIFT-013, DRIFT-014, DRIFT-016, DRIFT-017) **non si riassegnano**:
 > un identificatore non si riusa, come non si sceglie.
 
 ## DRIFT-002 — Il campo `product` elenca 3 prodotti, le cartelle numerate sono 17
@@ -127,48 +130,6 @@ python3 tools/drift.py list
 | **Decisione** | DEC-0024 |
 | **Nota di chiusura** | il confine e' **dove si scrive**: finche' il passo dichiarato non e' aperto, il contract copre solo la cartella di quel passo. Il validatore avvisa invece di rifiutare. Quattro asserzioni nuove nella suite |
 | **Evidenza** | `tools/ad_milestone.py:193-209` (`_guard`); `tools/ad_scope.py:310-364` (`evaluate`); `python3 tools/validate_contract.py contratti/NLT-001.yaml` prima e dopo l'apertura dello sprint |
-
-## DRIFT-011 — La suite deterministica pretende che nessun contract apra una cartella prodotto
-
-| Campo | Valore |
-|---|---|
-| **Severita'** | MEDIUM |
-| **Documento dice** | `tools/tests/test_ad_org.py:286` — controllo *«nessun contract apre una cartella prodotto»*: nella root reale nessun `write_scope` deve cadere dentro una cartella numerata |
-| **Realta' dice** | il sistema milestone introdotto da DEC-0018 prevede che **ogni** lavoro su un progetto sia uno sprint dentro la cartella del progetto: il primo contract di progetto apre quindi per forza una cartella prodotto. Con `NLT-001` (`17. Michele Clementi Project/Milestone 1/`, `.../Studio/`) il controllo fallisce, e la suite si interrompe su quell'asserzione: i gruppi successivi — milestone, evidenze, drift, invariante 13, coerenza, dipendenze — **non vengono piu' eseguiti** |
-| **Rischio** | il gate deterministico del sistema e' rosso per costruzione appena un progetto viene aperto, e smette in silenzio di verificare tutto il resto. Chi lo vede rosso impara a ignorarlo: e' il modo in cui un controllo muore |
-| **Stato** | FIXED |
-| **Chiuso** | 2026-10-08 |
-| **Decisione** | DEC-0023 |
-| **Nota di chiusura** | il test ora asserisce la regola dell'invariante 13 sui contract **reali** — ogni contract di progetto dichiara milestone e sprint, e lo sprint e' aperto — invece di un fatto sullo stato del workspace. La suite arriva in fondo: 166 controlli |
-| **Evidenza** | `python3 tools/tests/test_ad_org.py` esce 1 con `AssertionError: nessun contract apre una cartella prodotto` su `test_scope`; esecuzione morbida degli altri gruppi: **1 fallimento su 107 controlli**. Misurato il 2026-10-08 |
-
-## DRIFT-013 — Un permesso resta attivo dopo che la sua tappa e' chiusa
-
-| Campo | Valore |
-|---|---|
-| **Severita'** | MEDIUM |
-| **Documento dice** | l'invariante 13 lega il lavoro al passo aperto, e il passo si chiude con il suo rapporto. La tappa si chiude quando tutti i passi sono chiusi |
-| **Realta' dice** | `NLT-001` e `NLT-002` sono rimasti `active` mentre `Milestone 1` e i suoi due passi erano **chiusi** e i gate superati. Un permesso che resta aperto tiene il progetto **scrivibile per sempre** — e la tappa chiusa dice che non c'e' piu' niente da scrivere |
-| **Rischio** | nessuno di sicurezza: i due permessi erano approvati e limitati al progetto. Il rischio e' che «chiuso» e «scrivibile» dicano due cose diverse, e che il prossimo che legge non sappia quale credere |
-| **Stato** | OPEN |
-| **Nota** | chiusi a mano il 2026-10-08 da `ORD-002` (DEC-0026). **Aggiornamento 2026-10-10**: la cucitura ora ha un controllo — `tools/post-execute` blocca la chiusura di un permesso se la storia del progetto non e' completa (DEC-0028). Resta scoperto il verso opposto: una tappa chiusa con permessi ancora aperti non viene segnalata |
-| **Evidenza** | `contratti/17-michele-clementi-project/NLT-00*.yaml`; `17. Michele Clementi Project/Analisi-Prompt-Report/Milestone 1/REPORT.md` |
-
-## DRIFT-014 — Gli orari dichiarati nei record erano inventati, e nessuno li confrontava
-
-| Campo | Valore |
-|---|---|
-| **Severita'** | HIGH |
-| **Documento dice** | ogni record di governo porta la data e l'ora dell'evento: il marcatore dice quando il CEO ha approvato, l'evidenza quando il gate e' stato eseguito |
-| **Realta' dice** | il 2026-10-08 **ogni** prova e **ogni** marcatore scritti quel giorno dichiarava un orario **nel futuro** rispetto al momento in cui il file era stato scritto: da 20 minuti (`GOV-000`, dichiarato 14:50, scritto 14:30) a un'ora e mezza (`ORG-001-code-review`, dichiarato 19:05, scritto 17:32) |
-| **Rischio** | un registro di governo in cui le date sono inventate non ordina piu' niente: serve a ricostruire **chi ha deciso cosa, e quando**. E l'ordine approvazione -> permesso si basa sugli orari |
-| **Causa** | nessuno confrontava le date dichiarate con l'orologio. Erano numeri scritti a mano, e nessun controllo li leggeva |
-| **Stato** | FIXED |
-| **Chiuso** | 2026-10-08 |
-| **Decisione** | DEC-0027 |
-| **Nota di chiusura** | le date dichiarate ora corrispondono all'mtime reale dei file; `tools/coherence.py` verifica che nessun record dichiari un orario non ancora arrivato, escludendo `expires` che **deve** essere nel futuro. Trovato dal revisore indipendente di ORD-002, non da me |
-| **Evidenza** | `approvazioni/societa/GOV-000.yaml`, `evidenze/ORG-001-code-review.yaml`, `17. Michele Clementi Project/Analisi-Prompt-Report/Evidenze/ORD-002-code-review.yaml` — mtime contro data dichiarata |
-| **Trappola scoperta riparando** | riscrivere un file di governo ne cambia l'mtime, e il controllo dell'ordine (approvazione prima del permesso) legge gli mtime: correggere una data **dentro** un record senza rimettere l'mtime **rompe l'ordine** e blocca ogni scrittura coperta dal permesso. Va sempre ripristinato |
 
 ## DRIFT-015 — Due firme risultavano date dopo il loro permesso
 

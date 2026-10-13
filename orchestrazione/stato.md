@@ -7,7 +7,7 @@ Vista umana dello stato. Non viene caricata automaticamente nel contesto del mod
 **aggiornato**, **indietro** (autentica ma di registri piu' vecchi) o **manomesso**.
 
 <!-- generato:inizio -->
-> **Vista generata dai registri.** impronta: `9708a3377584`
+> **Vista generata dai registri.** impronta: `5da26264715b`
 > Il controllo la rigenera e confronta. **Autentica non vuol dire giusta**: il sigillo protegge dall'alterazione, non dall'errore.
 
 ## Permessi attivi
@@ -34,7 +34,6 @@ Vista umana dello stato. Non viene caricata automaticamente nel contesto del mod
 - Discrepanza aperta **DRIFT-002** (MEDIUM) — Il campo `product` elenca 3 prodotti, le cartelle numerate sono 17
 - Discrepanza aperta **DRIFT-005** (LOW) — I contatori del pack sono superati
 - Discrepanza aperta **DRIFT-009** (LOW) — I contract del 2026-10-08 non soddisfano l'invariante 13
-- Discrepanza aperta **DRIFT-013** (MEDIUM) — Un permesso resta attivo dopo che la sua tappa e' chiusa
 - Discrepanza aperta **DRIFT-018** (HIGH) — Cinque permessi sullo stesso percorso: un percorso senza titolare
 - Discrepanza aperta **DRIFT-019** (LOW) — Un permesso scaduto resta scritto come attivo
 - Errore aperto **ERR-0018** — Al revisore indipendente del gate QA ho passato come «fonte» la trascrizione delle risposte di Michele, e dentro quella 
@@ -53,7 +52,7 @@ Nessun passo chiuso in nessun progetto.
 | Cosa | Quanti |
 |---|---|
 | Verbali (Decision Record) | 34 |
-| Discrepanze registrate | 13 |
+| Discrepanze registrate | 10 |
 | Errori registrati | 19 |
 | Skill del cervello | 9 |
 | Comandi nella fascia deterministica | 18 |
