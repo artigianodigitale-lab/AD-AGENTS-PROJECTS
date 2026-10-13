@@ -113,9 +113,14 @@ def problems(root: Path | str | None = None) -> list[str]:
 
     issues: list[str] = []
     ids = [entry.id for entry in entries]
-    expected = [f"DRIFT-{number:03d}" for number in range(1, len(entries) + 1)]
-    if ids != expected:
-        issues.append(f"ID non contigui o fuori ordine: trovati {ids}, attesi {expected}")
+    # Gli id non si rinumerano: una voce tolta **lascia il suo numero**, come gli id
+    # atomici non si riusano (2026-10-13). Quindi si pretende che **crescano**, non che
+    # siano contigui — altrimenti togliere una voce obbligherebbe a riscrivere i numeri,
+    # e ogni citazione a un id diventerebbe falsa. Il 2026-10-13 ho tolto da questa
+    # versione le voci che riguardavano mondi che non esistono qui, e due di quelle
+    # citazioni (`DRIFT-010`) restano valide proprio grazie a questa regola.
+    if ids != sorted(ids) or len(set(ids)) != len(ids):
+        issues.append(f"ID fuori ordine o duplicati: trovati {ids}")
 
     for entry in entries:
         for name in REQUIRED_FIELDS:

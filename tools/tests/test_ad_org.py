@@ -1163,8 +1163,11 @@ def test_drift() -> None:
     reali = ad_drift.load()
     check("il registro ha voci", len(reali) > 0, str(len(reali)))
     check(
-        "gli ID sono contigui da DRIFT-001",
-        [entry.id for entry in reali] == [f"DRIFT-{n:03d}" for n in range(1, len(reali) + 1)],
+        "gli ID crescono e non si ripetono (non si rinumerano)",
+        (lambda ids: ids == sorted(ids) and len(set(ids)) == len(ids))(
+            [entry.id for entry in reali]
+        ),
+        str([entry.id for entry in reali]),
     )
 
     def voce(numero: int, stato: str = "OPEN", extra: str = "") -> str:
@@ -1188,9 +1191,25 @@ def test_drift() -> None:
             return ad_drift.problems(root)
 
     check("una voce completa non segnala nulla", registro(voce(1)) == [], str(registro(voce(1))))
+    # Un buco **non** e' piu' un errore: gli id non si rinumerano, quindi una voce tolta
+    # lascia il suo numero (2026-10-13). Serve la prova opposta: il buco **passa**, e
+    # l'ordine sbagliato **non** passa. Senza questa coppia, il controllo potrebbe
+    # accettare qualunque cosa e nessuno se ne accorgerebbe.
     check(
-        "un buco nella numerazione e' segnalato",
-        any("contigui" in issue for issue in registro(voce(1), voce(3))),
+        "un buco nella numerazione NON e' piu' segnalato: un id tolto non si riusa",
+        registro(voce(1), voce(3)) == [],
+        str(registro(voce(1), voce(3))),
+    )
+    check(
+        "un ID fuori ordine e' segnalato",
+        any("ordine" in issue for issue in registro(voce(3), voce(1))),
+        str(registro(voce(3), voce(1))),
+    )
+    check(
+        "un ID duplicato e' segnalato",
+        any("duplicati" in issue or "ordine" in issue
+            for issue in registro(voce(1), voce(1))),
+        str(registro(voce(1), voce(1))),
     )
     senza_campo = voce(1).replace("| **Evidenza** | e |\n", "")
     check(

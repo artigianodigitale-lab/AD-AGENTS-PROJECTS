@@ -32,19 +32,12 @@ python3 tools/drift.py list
 
 ---
 
-## DRIFT-001 — `.cursor/rules/*.mdc` citato e inesistente
 
-| Campo | Valore |
-|---|---|
-| **Severita'** | LOW |
-| **Documento dice** | `MODEL-ROUTING.md:28` — «**Cursor** (IDE): regole di progetto in `.cursor/rules/*.mdc`; le regole marcate `alwaysApply: true` valgono per ogni sessione» |
-| **Realta' dice** | la cartella `.cursor/` **non esiste** in `AD Projects`, e Cursor e' stato esplicitamente deprioritizzato come superficie di lavoro |
-| **Rischio** | un agente cerca regole che non ci sono, e crede che una superficie dismessa sia attiva |
-| **Stato** | FIXED |
-| **Chiuso** | 2026-10-08 |
-| **Decisione** | DEC-0019 |
-| **Nota di chiusura** | `MODEL-ROUTING.md` dichiara ora DSH come superficie operativa e Cursor come non in uso, con la regola che se si riattiva va allineato al cervello invece di duplicarlo |
-| **Evidenza** | `ls -d .cursor` → assente; `grep -n "cursor/rules" MODEL-ROUTING.md` |
+> **Alcune voci non ci sono piu', e i loro numeri nemmeno si riusano.**
+> Questa e' la versione che si distribuisce: le divergenze che riguardavano i
+> progetti della macchina da cui e' stata ricavata sono rimaste **li'**, dove sono
+> successe. Gli id tolti (DRIFT-001, DRIFT-003, DRIFT-004, DRIFT-012, DRIFT-016, DRIFT-017) **non si riassegnano**:
+> un identificatore non si riusa, come non si sceglie.
 
 ## DRIFT-002 — Il campo `product` elenca 3 prodotti, le cartelle numerate sono 17
 
@@ -56,28 +49,6 @@ python3 tools/drift.py list
 | **Rischio** | il campo e' inutilizzabile per l'analisi per prodotto: quasi tutto finisce in `altro`, e il valore informativo e' zero |
 | **Stato** | OPEN |
 | **Evidenza** | `ls -d [0-9]*/` → 17; `contratti/_TEMPLATE.yaml:16` |
-
-## DRIFT-003 — Il pack dichiara «CI assenti», la CI esiste
-
-| Campo | Valore |
-|---|---|
-| **Severita'** | LOW |
-| **Documento dice** | `3. AD-Marketing-Factory/docs/MARKETING_FACTORY_AI_CONTINUITY_INDEX.md:86` — «CI workflows \| **assenti** \| VERIFIED» |
-| **Realta' dice** | `.github/workflows/verify.yml` esiste, e il suo stesso commento dice: *«the gate that was missing. Before this workflow the project had no CI, so two commits on 2026-10-03 broke typecheck, lint and build unnoticed»* |
-| **Rischio** | un agente che si fida del pack crede che non esista alcun gate automatico, e non lo usa |
-| **Stato** | OPEN |
-| **Evidenza** | `find .github -type f` sul progetto; indice riga 86 |
-
-## DRIFT-004 — `middleware.ts` non esiste: il file e' `proxy.ts`
-
-| Campo | Valore |
-|---|---|
-| **Severita'** | MEDIUM |
-| **Documento dice** | il Continuity Pack cita `middleware.ts` come «Auth edge \| Gate deploy», in 18 documenti |
-| **Realta' dice** | `middleware.ts` **non esiste**; il file e' `proxy.ts`. Next.js 16 ha rinominato la convenzione |
-| **Rischio** | un agente cerca il gate di autenticazione nel file sbagliato, o conclude che non esiste |
-| **Stato** | OPEN |
-| **Evidenza** | `ls middleware.ts` → assente; `proxy.ts` presente; `next: ^16.3.4` in `package.json`. Gia' registrato dal loro `DRIFT-102`, non corretto |
 
 ## DRIFT-005 — I contatori del pack sono superati
 
@@ -171,21 +142,6 @@ python3 tools/drift.py list
 | **Nota di chiusura** | il test ora asserisce la regola dell'invariante 13 sui contract **reali** — ogni contract di progetto dichiara milestone e sprint, e lo sprint e' aperto — invece di un fatto sullo stato del workspace. La suite arriva in fondo: 166 controlli |
 | **Evidenza** | `python3 tools/tests/test_ad_org.py` esce 1 con `AssertionError: nessun contract apre una cartella prodotto` su `test_scope`; esecuzione morbida degli altri gruppi: **1 fallimento su 107 controlli**. Misurato il 2026-10-08 |
 
-## DRIFT-012 — I documenti di un progetto vivono dentro il progetto, non in `piani/` e `REQUISITI/`
-
-| Campo | Valore |
-|---|---|
-| **Severita'** | LOW |
-| **Documento dice** | `piani/README.md`: «Un file per richiesta: `piani/<AAAA-MM-GG>-<slug>.md`», e `REQUISITI/`: un file per requisito, entrambi nella radice di `AD Projects` |
-| **Realta' dice** | su indicazione del CEO (2026-10-08), i documenti del progetto Nautilus — analisi e piano, requisiti di Michele, valutazione Ghostfolio — sono stati **spostati dentro** `17. Michele Clementi Project/Analisi-Prompt-Report/`, e le copie in `piani/` e `REQUISITI/` sono state rimosse. Effetto collaterale: il contract `NLT-001` e il marcatore `NLT-001` citano i percorsi vecchi (`Studio/README.md`, `piani/2026-10-08-...`), che non esistono piu'. La mappa vecchio→nuovo e' in `17. Michele Clementi Project/Analisi-Prompt-Report/00-INDICE.md` |
-| **Rischio** | chi cerca i documenti di un progetto nelle cartelle di servizio non li trova; e i riferimenti nei verbali gia' firmati puntano a percorsi inesistenti. Non e' un errore da correggere: e' una scelta di organizzazione che sposta il baricentro dal sistema al progetto |
-| **Stato** | FIXED |
-| **Chiuso** | 2026-10-08 |
-| **Decisione** | DEC-0024 |
-| **Nota di chiusura** | diventa la regola (invariante 15): le carte di un progetto vivono in `<progetto>/Analisi-Prompt-Report/`, e `milestone.py` ci crea dentro le tappe |
-| **Nota di accettazione** | decisione del CEO, non una svista. Le cartelle `piani/` e `REQUISITI/` restano valide per gli altri lavori; contract, marcatori ed evidenze restano invece nella radice di `AD Projects`, perche' il meccanismo di enforcement li legge da percorsi fissi. Se in futuro si vuole spostare anche quelli, serve un Decision Record e la modifica di `tools/` |
-| **Evidenza** | `find "17. Michele Clementi Project" -maxdepth 2`; `ls piani REQUISITI`; `17. Michele Clementi Project/Analisi-Prompt-Report/00-INDICE.md`, sezione «Mappa dei percorsi vecchi». Misurato il 2026-10-08 |
-
 ## DRIFT-013 — Un permesso resta attivo dopo che la sua tappa e' chiusa
 
 | Campo | Valore |
@@ -229,37 +185,6 @@ python3 tools/drift.py list
 | **Decisione** | DEC-0028 |
 | **Nota di chiusura** | orario **ricostruito** a un minuto prima del permesso, e il record lo dichiara nel campo `nota`. L'orario vero non e' recuperabile: e' stato distrutto dal mio ripristino, e inventarne un altro sarebbe stato rifare l'errore che ha causato tutto questo |
 | **Evidenza** | `approvazioni/3-ad-marketing-factory/SEC-002.yaml`, `.../REL-001.yaml` |
-
----
-
-## DRIFT-016 — Un rapporto di progetto nomina un registro che non c'e' piu'
-
-| Campo | Valore |
-|---|---|
-| **Severita'** | LOW |
-| **Documento dice** | `17. Michele Clementi Project/Analisi-Prompt-Report/00-INDICE.md` nomina `EVOLUZIONE/` come il posto dove va una proposta di metodo |
-| **Realta' dice** | `EVOLUZIONE/` non esiste piu': rimosso con DEC-0036. Il dovere di analisi evolutiva resta, ma la proposta si porta **al CEO**, e se diventa lavoro entra in `piani/` |
-| **Causa** | conseguenza **voluta** di DEC-0036, non un incidente. Il registro era vuoto da sempre e duplicava `piani/` |
-| **Chi l'ha trovato** | il controllo completo della super cartella, cercando chi nominasse `EVOLUZIONE/` prima di rimuoverlo |
-| **Rischio** | basso. Sono rapporti di passi **chiusi**, e chi li rilegge capisce dal contesto. Il rischio vero sarebbe l'opposto: correggerli toccando due cartelle progetto senza un permesso su quei progetti |
-| **Stato** | OPEN |
-| **Decisione** | DEC-0036 |
-| **Evidenza** | `17. Michele Clementi Project/Analisi-Prompt-Report/00-INDICE.md:58` |
-| **Nota** | si chiude alla prossima lavorazione di quel progetto, da chi ha il permesso. La frase diventa «va al CEO come proposta di metodo». **Non si chiude da sola, e va bene cosi': una divergenza dichiarata e aperta e' meglio di due cartelle progetto toccate a sproposito**. **Aggiornamento 2026-10-12**: la meta' che riguardava Modelbel e' chiusa — alla chiusura dello Sprint 1 il rapporto e' stato riscritto e non nomina piu' `EVOLUZIONE/`; la proposta di metodo si porta al CEO. Resta aperta la meta' su `17. Michele Clementi Project`, fuori dal permesso di questo progetto |
-
-## DRIFT-017 — La scheda del modulo di Modelbel rimanda a un'evidenza superata
-
-| Campo | Valore |
-|---|---|
-| **Severita'** | LOW |
-| **Documento dice** | `11. Modelbel/Analisi-Prompt-Report/Milestone 1/Sprint 1/Raccolta-Dati/README.md` indica `MBL-001-strategy-2.yaml` come evidenza del gate Strategy per i byte consegnati |
-| **Realta' dice** | l'evidenza valida per quei byte e' `MBL-001-strategy-3.yaml`: la `-2` descrive tre hash di una versione precedente, superata dalla correzione di una frase di apertura |
-| **Causa** | il puntatore e' stato scritto quando la `-2` era l'ultima evidenza; la revisione successiva ha cambiato i byte senza toccare la scheda |
-| **Chi l'ha trovato** | il revisore indipendente del gate Strategy (difetto D5 dichiarato nell'evidenza `-3`) |
-| **Rischio** | basso: le due evidenze stanno nella stessa cartella e il rapporto di sprint dichiara qual e' quella valida. Il rischio vero e' l'opposto — correggere la scheda **dopo** il verdetto invaliderebbe i byte verificati |
-| **Stato** | OPEN |
-| **Evidenza** | `11. Modelbel/Analisi-Prompt-Report/Milestone 1/Sprint 1/REPORT.md` (nota di tracciabilita'), `11. Modelbel/Analisi-Prompt-Report/Evidenze/MBL-001-strategy-3.yaml` |
-| **Nota** | si chiude al prossimo tocco della scheda, insieme agli altri punti aperti dello sprint. **Un documento di manutenzione che rimanda a un file che cambia a ogni tentativo e' una trappola**: il rimando va tenuto generico, oppure aggiornato insieme all'artefatto e non dopo |
 
 ---
 
