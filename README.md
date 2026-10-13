@@ -1,91 +1,95 @@
 # AD-AGENTS-PROJECTS
 
-**Un motore che dà a un agente AI le regole di una casa — e la forza di rispettarle.**
+**An engine that gives an AI agent the rules of a house — and the force to respect them.**
 
-Colleghi questa cartella al tuo programma, scrivi `AGENTS.md`, e da quel momento l'agente
-lavora con permessi, consenso, prove e memoria: non con la buona volontà.
+You link this folder to your program, type `AGENTS.md`, and from that moment the agent works
+with permissions, consent, evidence and memory: not with good will.
 
-Non è un prompt più lungo. È un sistema che **si installa**, e dove può **blocca**.
+It is not a longer prompt. It is a system that **installs itself**, and where it can, it
+**blocks**.
 
-> **Questa è la versione vergine**: nessun progetto, nessuna carta di progetto. Si collega a un
-> programma che sa leggere le regole, e da lì si comincia.
-
----
-
-## Il lavoro per cui ti assume
-
-Non «un agente che scrive codice». Il lavoro è questo:
-
-> **Far lavorare un agente su cose che contano — soldi, clienti, dati di altre persone — senza
-> doverti fidare della sua buona educazione.**
-
-È un lavoro di **fiducia**. Ed è l'unico lavoro in cui un prompt non basta: un prompt è una
-richiesta, non un confine. Un agente che *dovrebbe* non scrivere in produzione è un agente che
-ci scriverà, il giorno in cui gli sembrerà una buona idea.
-
-**Qui la differenza è una parola:** altrove è **sconsigliato**, qui — dove esiste un gancio — è
-**impossibile**. E dove non è impossibile, **è scritto che non lo è**.
+> **This is the virgin version**: no projects, no project papers. It links to a program that
+> knows how to read the rules, and from there you begin.
 
 ---
 
-## Cosa riesce a fare
 
-**Chiudere le porte.** Una scrittura in una cartella di progetto senza un permesso attivo
-**viene rifiutata**, e il rifiuto dice **cosa manca e come rimediare**. Il permesso è un file:
-dichiara chi scrive, dove, e per quale tappa.
+> **Italiano?** [Leggi questo documento in italiano](README.it.md).
 
-**Far decidere una persona prima che si cominci.** Nessun lavoro parte senza il consenso
-scritto di chi ha l'autorità — e l'ordine conta: **prima il consenso, poi il permesso**. Un
-permesso retrodatato non copre niente, e il sistema se ne accorge **leggendo le date dichiarate
-nei documenti**, non gli orari dei file: una copia li azzera, e un controllo che accusa
-innocenti insegna a ignorarlo.
+## The job you hire it for
 
-**Ricordare.** Ogni decisione è un verbale con le opzioni, **le fonti** e — obbligatoriamente —
-la voce *«non fare nulla»*. Ogni errore è una cicatrice con tre domande: cosa è fallito, cosa
-l'ha risolto, e **cosa lo avrebbe preso**.
+Not "an agent that writes code". The job is this:
 
-**Accorgersi di essere peggiorato.** Sette prove comportamentali girano contro una baseline
-salvata e rispondono a una domanda sola: **è peggiorato qualcosa?** Aggiornarla è una firma,
-non un tasto.
+> **Making an agent work on things that matter — money, clients, other people's data — without
+> having to trust its good manners.**
 
-**Fotografare, e non poter mentire.** Il documento d'ingresso di un progetto è metà scritto a
-mano e metà **generato dai registri**, sigillato con un'impronta. Il controllo distingue
-**vecchio** da **falso** — due cose che, senza sigillo, si assomigliano.
+It is a job of **trust**. And it is the only job where a prompt is not enough: a prompt is a
+request, not a boundary. An agent that *should not* write to production is an agent that will
+write to it, the day it seems like a good idea.
 
-**Controllare sé stesso.** Un comando confronta le regole scritte con ciò che il sistema è
-davvero: skill, comandi, passi, cartelle, documenti. Se la descrizione diverge, **lo dice** —
-perché un agente che legge una descrizione sbagliata **segue quella**.
-
-**Fare i conti senza spendere.** Diciannove comandi eseguono la governance **senza consumare
-token**: validano, verificano, fotografano, misurano. L'intelligenza si usa dove serve.
+**Here the difference is one word:** elsewhere it is **advised against**, here — where a hook
+exists — it is **impossible**. And where it is not impossible, **it is written that it is not**.
 
 ---
 
-## La prova, non la promessa
+## What it can do
 
-I numeri di oggi, e si possono rifare — sono nel repository:
+**Close the doors.** A write into a project folder without an active permission **is refused**,
+and the refusal says **what is missing and how to fix it**. The permission is a file: it
+declares who writes, where, and for which stage.
+
+**Make a person decide before anything starts.** No work starts without the written consent of
+whoever has the authority — and the order matters: **first the consent, then the permission**. A
+backdated permission covers nothing, and the system notices by **reading the dates declared in
+the documents**, not the file timestamps: a copy resets those, and a check that accuses
+innocents teaches you to ignore it.
+
+**Remember.** Every decision is a record with the options, **the sources** and — mandatory —
+the entry *"do nothing"*. Every error is a scar with three questions: what failed, what fixed
+it, and **what would have caught it**.
+
+**Notice that it has got worse.** Seven behavioural tests run against a saved baseline and
+answer one question only: **has anything got worse?** Updating it is a signature, not a button.
+
+**Take a picture, and be unable to lie.** A project's entry document is half written by hand
+and half **generated from the registers**, sealed with a fingerprint. The check tells **old**
+apart from **fake** — two things that, without a seal, look alike.
+
+**Check itself.** One command compares the written rules with what the system actually is:
+skills, commands, steps, folders, documents. If the description diverges, **it says so** —
+because an agent that reads a wrong description **follows that one**.
+
+**Do the maths without spending.** Nineteen commands run the governance **without consuming
+tokens**: they validate, verify, photograph, measure. Intelligence is used where it is needed.
+
+---
+
+## The proof, not the promise
+
+Today's numbers, and they can be redone — they are in the repository:
 
 | | |
 |---|---|
-| **464** controlli deterministici | girano in pochi secondi, senza rete |
-| **36** controlli del cancello | modalità, classi di percorso, esiti di guasto |
-| **19** comandi · **9** procedure · **12** passi | la banda deterministica e il processo |
-| **0** permessi in conflitto | due contratti sullo stesso percorso: nessuno |
-| **47 → 17** cicatrici | **un registro che si accorcia sta diventando codice** |
+| **464** deterministic checks | they run in a few seconds, without network |
+| **36** gate checks | modes, path classes, failure outcomes |
+| **19** commands · **9** procedures · **12** steps | the deterministic band and the process |
+| **0** conflicting permissions | two contracts on the same path: none |
+| **47 → 17** scars | **a register that gets shorter is becoming code** |
 
-E la cosa che vale più di tutte, perché è la più facile da gonfiare e la più difficile da fare:
+And the thing worth more than all of them, because it is the easiest to inflate and the hardest
+to do:
 
-> **I controlli si verificano iniettando il difetto.** Non «il controllo esiste»: il controllo
-> **si rompe** quando qualcuno sbaglia. Un controllo che non può fallire non è un controllo — e
-> qui è scritto anche questo.
+> **Checks are verified by injecting the defect.** Not "the check exists": the check **breaks**
+> when someone gets it wrong. A check that cannot fail is not a check — and here that is
+> written down too.
 
 ---
 
-## Per chi è
+## Who it is for
 
-**Queste sono ipotesi, non ricerca.** È la prima cosa che questo sistema insegna sul dire le
-cose: una persona che non è stata intervistata è una **persona inventata**, e va dichiarata
-come tale.
+**These are hypotheses, not research.** It is the first thing this system teaches about saying
+things: a person who has not been interviewed is an **invented person**, and must be declared
+as such.
 
 ```yaml
 - ipotesi: "Chi mette un agente su un lavoro vero ha gia' provato, e si e' spaventato almeno una volta"
@@ -95,42 +99,46 @@ come tale.
   validata: no
 ```
 
-**Chi lo sta cercando adesso:** chi ha già un agente che lavora su più progetti e non sa più
-cosa ha toccato; chi deve far entrare un collaboratore — o un agente — in un lavoro con dei
-confini; chi ha bisogno di raccontare a qualcun altro **perché** una cosa è stata decisa.
+The comment inside the block is the whole point of this section: *no interview was done, so this is a hypothesis, and it says so.*
 
-**Chi non lo sta cercando:** chi vuole un agente che faccia tutto da solo. Questo motore fa
-l'opposto: **rallenta dove una decisione non è stata presa**, ed è progettato per quello.
+**Who is looking for it now:** whoever already has an agent working across several projects and
+no longer knows what it has touched; whoever has to bring a collaborator — or an agent — into a
+job with boundaries; whoever needs to tell someone else **why** something was decided.
 
----
-
-## In che spazio si muove
-
-Non è solo. Accanto ci sono cose serie, e più mature:
-
-- **I sistemi di permessi degli assistenti di codice** — chiedono il consenso al momento. Sono
-  ottimi dove sono, ma quel consenso vale **per una volta sola**: non c'è memoria di ciò che è
-  stato autorizzato ieri.
-- **I framework per agenti** — orchestrano passi e strumenti. Il confine, però, di solito è
-  **convenzione**: gli agenti *dovrebbero* rispettarlo.
-- **Le piattaforme di valutazione** — misurano se l'agente fa bene un compito. Non se **ha il
-  diritto** di farlo.
-- **I sistemi di governance aziendale** — esistono, sono seri, e non parlano con un agente.
-
-**Il posto vuoto è l'incrocio**: un permesso che **vive con il progetto**, un controllo che
-**impedisce** invece di consigliare, e una memoria che sopravvive alla sessione.
+**Who is not looking for it:** whoever wants an agent that does everything on its own. This
+engine does the opposite: **it slows down where a decision has not been made**, and it is
+designed for that.
 
 ---
 
-## Il posizionamento
+## The space it moves in
 
-> **Per chi mette un agente AI su un lavoro che conta, AD-AGENTS-PROJECTS è il motore che
-> trasforma le regole in confini — perché dove un controllo è possibile, la disciplina non
-> serve più.**
+It is not alone. Next to it there are serious things, and more mature ones:
 
-**E la prova dal lato di chi lo usa.** Questa è la parte che conta, e l'unico modo onesto di
-dirla è lasciarla leggere: guarda cosa risponde il motore a chi prova a scrivere dove non può.
-Non dice *«attenzione, non dovresti»*. Dice:
+- **Code assistants' permission systems** — they ask for consent at the moment. They are
+  excellent where they are, but that consent holds **for one time only**: there is no memory of
+  what was authorised yesterday.
+- **Agent frameworks** — they orchestrate steps and tools. The boundary, though, is usually a
+  **convention**: agents *should* respect it.
+- **Evaluation platforms** — they measure whether the agent does a task well. Not whether it
+  **has the right** to do it.
+- **Corporate governance systems** — they exist, they are serious, and they do not talk to an
+  agent.
+
+**The empty place is the crossing**: a permission that **lives with the project**, a check that
+**prevents** instead of advising, and a memory that survives the session.
+
+---
+
+## The positioning
+
+> **For whoever puts an AI agent on a job that matters, AD-AGENTS-PROJECTS is the engine that
+> turns rules into boundaries — because where a check is possible, discipline is no longer
+> needed.**
+
+**And the proof from the side of whoever uses it.** This is the part that matters, and the only
+honest way to say it is to let it be read: look at what the engine answers to whoever tries to
+write where they cannot. It does not say *"careful, you should not"*. It says:
 
 ```text
 "IlMioProgetto" non e' una cartella di macchina, e non e' numerata.
@@ -140,12 +148,14 @@ un'approvazione.
 Rimedio: rinominala in **1. IlMioProgetto**. Il prossimo numero libero e' 1.
 ```
 
-**Un divieto senza il rimedio è un vicolo cieco.** E quello che un sistema dice quando ti ferma
-è tutto ciò che devi sapere su come è stato pensato.
+*(original in Italian)*
+
+**A prohibition without the remedy is a dead end.** And what a system says when it stops you is
+everything you need to know about how it was thought through.
 
 ---
 
-## Come si usa
+## How it is used
 
 ```text
 1.  Copia la cartella dove vuoi che viva il motore.
@@ -157,57 +167,58 @@ Rimedio: rinominala in **1. IlMioProgetto**. Il prossimo numero libero e' 1.
 5.  Lavora. Il motore si occupa dei permessi, delle prove e della memoria.
 ```
 
-**Se il programma ha un gancio** (DSH, Claude Code, Codex, Antigravity), una volta sola:
+**If the program has a hook** (DSH, Claude Code, Codex, Antigravity), once only:
 
 ```sh
 python3 tools/setup.py            # collega il cancello, la costituzione e le skill
 python3 tools/setup.py --check    # e dimmi se e' a posto, senza scrivere niente
 ```
 
-**Se non ce l'ha** (Cursor, o un'applicazione qualsiasi): `AGENTS.md` **è la porta**, e basta
-dirgli di leggerlo. **Le regole viaggiano; il cancello no** — vedi sotto.
+**If it does not have one** (Cursor, or any application): `AGENTS.md` **is the door**, and it is
+enough to tell it to read it. **The rules travel; the gate does not** — see below.
 
-**La prima volta** chiede due cose: **come ti chiami** (diventa il CEO, cioè chi approva) e il
-**permesso di installare** ciò che serve. Poi **prova** che il cancello blocca: crea una
-cartella di progetto, verifica che la scrittura venga **rifiutata**, e la cancella anche se
-qualcosa va storto.
+**The first time** it asks two things: **what your name is** (it becomes the CEO, that is,
+whoever approves) and the **permission to install** what is needed. Then it **proves** that the
+gate blocks: it creates a project folder, verifies that the write **is refused**, and deletes it
+even if something goes wrong.
 
-**Non si dichiara installato: si prova che rifiuta.**
+**It does not declare itself installed: it proves that it refuses.**
 
 ---
 
-## Cosa c'è dentro
+## What is inside
 
 | | |
 |---|---|
-| `AGENTS.md` | **la porta**: è la costituzione, ed è il file che il programma legge da solo quando colleghi la cartella |
-| `.brain/` | il cervello: costituzione, 9 procedure, il plugin che blocca le scritture |
-| `tools/` | **19 comandi**, che lavorano senza consumare token |
-| `sede.yaml` | **chi è il CEO** e **dove sono i progetti** (non si versiona: è tuo) |
-| `contratti/`, `approvazioni/` | il registro delle autorizzazioni |
-| `DECISIONI/`, `errori/`, `drift/`, `piani/` | la memoria |
-| `milestone/`, `orchestrazione/` | i modelli e la vista operativa |
+| `AGENTS.md` | **the door**: it is the constitution, and it is the file the program reads by itself when you link the folder |
+| `.brain/` | the brain: constitution, 9 procedures, the plugin that blocks writes |
+| `tools/` | **19 commands**, which work without consuming tokens |
+| `sede.yaml` | **who the CEO is** and **where the projects are** (not versioned: it is yours) |
+| `contratti/`, `approvazioni/` | the register of authorisations |
+| `DECISIONI/`, `errori/`, `drift/`, `piani/` | the memory |
+| `milestone/`, `orchestrazione/` | the templates and the operational view |
 
-## Cosa è portabile, e cosa no
+## What is portable, and what is not
 
-Verificato il 2026-10-13, **spostando davvero il motore** e facendo girare tutto da lì.
+Verified on 2026-10-13, **actually moving the engine** and running everything from there.
 
-| | Portabile? |
+| | Portable? |
 |---|---|
-| Le **regole** | **sì, sempre** — sono un documento che il programma legge |
-| I **comandi** | **sì, sempre** — li esegue chiunque abbia Python |
-| I **registri** | **sì** — sono file |
-| La **ricerca web** | con SearXNG: è un servizio, non un file |
-| Il **cancello che blocca** | **solo se il programma lo chiama.** È un plugin, e vive nel profilo del programma |
+| The **rules** | **yes, always** — they are a document the program reads |
+| The **commands** | **yes, always** — anyone with Python can run them |
+| The **registers** | **yes** — they are files |
+| **Web research** | with SearXNG: it is a service, not a file |
+| The **gate that blocks** | **only if the program calls it.** It is a plugin, and it lives in the program's profile |
 
-> **La differenza fra «sconsigliato» e «impossibile» è tutto quello che questo sistema ha
-> imparato. Non si cancella per far contenta una tabella.**
+> **The difference between "advised against" and "impossible" is everything this system has
+> learned. It is not deleted to keep a table happy.**
 
-## Vedere il cancello in azione
+## Seeing the gate in action
 
-I permessi in questa cartella sono **tutti chiusi**, ed è voluto: *un permesso aperto in una
-copia non è un esempio, è un permesso* — darebbe autorità sulla sede da cui la copia viene.
-Il cancello si dimostra **creando il permesso al momento**. Due file, dieci righe, e si vede.
+The permissions in this folder are **all closed**, and that is deliberate: *an open permission
+in a copy is not an example, it is a permission* — it would give authority over the seat the
+copy comes from. The gate is demonstrated **by creating the permission at the moment**. Two
+files, ten lines, and you can see it.
 
 ```text
 # 1. senza permesso: rifiutato
@@ -243,87 +254,94 @@ Il contract DEMO-001 e' stato scritto PRIMA dell'approvazione (2026-10-13).
 L'ordine e' ricerca -> risposta -> consenso -> contract: un contract retrodatato non copre.
 ```
 
-**Il quarto passo è il motivo per cui questa dimostrazione esiste.** Scrivendola, il 2026-10-13,
-ha risposto **OK** dove doveva rispondere **NO** — perché la condizione dell'ordine era
-**invertita**. Nella macchina da cui viene questa copia non si vedeva: i permessi veri hanno
-consenso e apertura **lo stesso giorno**, e il difetto restava nascosto. Vedi `ERR-0052`.
+**The fourth step is the reason this demonstration exists.** Writing it, on 2026-10-13, it
+answered **OK** where it should have answered **NO** — because the condition of the order was
+**inverted**. On the machine this copy comes from it was not visible: real permissions have
+consent and opening **on the same day**, and the defect stayed hidden. See `ERR-0052`.
 
-> **Una prova che passa non dimostra che la regola sia giusta: dimostra che il codice fa quello
-> che il codice fa.** Se la prova è scritta guardando il codice, il difetto è invisibile.
+> **A test that passes does not prove that the rule is right: it proves that the code does what
+> the code does.** If the test is written by looking at the code, the defect is invisible.
 
-## Cosa manca — da leggere prima di fidarsi
+## What is missing — to be read before trusting it
 
-Il motore **dichiara i propri limiti**, e questa sezione non è una formalità: un sistema che
-nasconde cosa non sa fare è un sistema di cui non puoi fidarti su nient'altro.
+The engine **declares its own limits**, and this section is not a formality: a system that hides
+what it cannot do is a system you cannot trust on anything else.
 
-1. **Il cancello non si acquisisce: si installa.** Collegare la cartella dà **le regole**; per
-   il cancello che **blocca** serve `setup.py`, una volta. Dove il programma non ha un gancio,
-   **si dice** che non c'è.
-2. **Gli adattatori per gli altri programmi sono dichiarati, non provati.** Claude Code, Codex
-   e Antigravity non sono su questa macchina, e **non si dice che funzionino**.
-3. **Il consenso è imposto solo se qualcuno esegue il validatore.** Il cancello blocca le
-   *scritture*, non l'assenza di consenso: è una divergenza **dichiarata**, non nascosta.
-4. **L'analisi dei comandi di shell è un'euristica.** Un comando che cambia cartella e poi
-   scrive in modo relativo può sfuggirgli. Il confine affidabile resta il permesso scritto.
-5. **La ricerca web vuole SearxNG**, che è un servizio locale: senza, il motore legge solo gli
-   indirizzi che gli dai.
-6. **La suite si ferma su un motore appena scaricato.** Alcune prove presuppongono che il mondo
-   esista. È un difetto **dichiarato** con la sua correzione (`errori/ERR-0049`).
-7. **Il registro delle cicatrici è curato, non completo.** E lo dichiara.
+1. **The gate is not acquired: it is installed.** Linking the folder gives you **the rules**;
+   for the gate that **blocks** you need `setup.py`, once. Where the program has no hook, **it
+   is said** that there is none.
+2. **The adapters for other programs are declared, not tested.** Claude Code, Codex and
+   Antigravity are not on this machine, and **it is not said that they work**.
+3. **Consent is enforced only if someone runs the validator.** The gate blocks *writes*, not
+   the absence of consent: it is a divergence that is **declared**, not hidden.
+4. **The analysis of shell commands is a heuristic.** A command that changes folder and then
+   writes with a relative path can slip past it. The reliable boundary remains the written
+   permission.
+5. **Web research wants SearxNG**, which is a local service: without it, the engine reads only
+   the addresses you give it.
+6. **The suite stops on a freshly downloaded engine.** Some tests presuppose that the world
+   exists. It is a defect that is **declared** with its fix (`errori/ERR-0049`).
+7. **The register of scars is curated, not complete.** And it says so.
 
-**In una riga**: il motore funziona da solo, e le due cose che non fa da solo sono
-**installarsi** e **funzionare su un programma senza gancio**.
+**In one line**: the engine works on its own, and the two things it does not do on its own are
+**installing itself** and **working on a program without a hook**.
 
 ---
 
-## Perché è fatto così
+## Why it is built this way
 
-È nato in **cinque giorni**, e la forma della curva non è casuale:
+It was born in **five days**, and the shape of the curve is not random:
 
-| Giorno | Verbali | Cicatrici | |
+| Day | Records | Scars | |
 |---|---|---|---|
-| 08/10 | 27 | 6 | la governance |
-| 10/10 | 11 | 10 | il cervello |
-| **11/10** | 14 | **25** | **il giorno peggiore** |
-| 12/10 | 0 | 3 | i progetti |
-| 13/10 | 4 | 4 | la portabilità |
+| 08/10 | 27 | 6 | the governance |
+| 10/10 | 11 | 10 | the brain |
+| **11/10** | 14 | **25** | **the worst day** |
+| 12/10 | 0 | 3 | the projects |
+| 13/10 | 4 | 4 | portability |
 
-**Venticinque cicatrici in un giorno**, quasi tutte della stessa famiglia: *qualcosa scritto a
-mano che poteva essere controllato*. E il modello dei verbali seguito **3 volte su 36**, perché
-nessuno lo verificava.
+**Twenty-five scars in one day**, almost all of the same family: *something written by hand that
+could have been checked*. And the record template followed **3 times out of 36**, because nobody
+verified it.
 
-Da lì nasce la regola che governa ogni pezzo nuovo:
+From there comes the rule that governs every new piece:
 
-> **Se puoi meccanizzarlo, fallo adesso. Altrimenti scrivi perché non puoi.**
+> **If you can mechanise it, do it now. Otherwise write why you cannot.**
 
-**E la regola si applica anche a sé stessa**: il registro delle cicatrici **si è accorciato**
-quando le sue voci sono diventate controlli. **Un registro che si allunga è un registro che non
-sta diventando codice.**
+**And the rule applies to itself too**: the register of scars **has got shorter** when its
+entries became checks. **A register that gets longer is a register that is not becoming code.**
 
 ---
 
-## La documentazione
+## The documentation
 
-| File | Cosa contiene |
+| File | What it contains |
 |---|---|
-| **[GRAFO.md](GRAFO.md)** | **sette diagrammi** che spiegano il funzionamento; GitHub li disegna da solo. Comincia da qui |
-| **[DOCUMENTAZIONE-TECNICA.md](DOCUMENTAZIONE-TECNICA.md)** | **per developer**: architettura, modello di autorizzazione, il cancello, i 19 comandi coi codici di uscita, il modello dati, la strategia di prova — **e le divergenze trovate** |
-| **`AGENTS.md`** | la porta: è la costituzione |
-| **`.brain/`** | la costituzione, le 9 procedure, il plugin |
-| **`tools/README.md`** | il **registro**: l'unico posto dove i comandi sono dichiarati |
+| **[GRAFO.md](GRAFO.md)** | **seven diagrams** that explain how it works; GitHub draws them by itself. Start here |
+| **[DOCUMENTAZIONE-TECNICA.md](DOCUMENTAZIONE-TECNICA.md)** | **for developers**: architecture, authorisation model, the gate, the 19 commands with their exit codes, the data model, the testing strategy — **and the divergences found** |
+| **`AGENTS.md`** | the door: it is the constitution |
+| **`.brain/`** | the constitution, the 9 procedures, the plugin |
+| **`tools/README.md`** | the **register**: the only place where the commands are declared |
 
-**Tre cose che questo sistema pretende da chi lo legge, e le mantiene su di sé:** ogni
-affermazione ha una verifica; ogni limite è dichiarato; ogni numero si può rifare.
-
----
-
-## Licenza
-
-**Apache-2.0.** Il motore nasce dentro il *DeepSeek Harness* (DSH), che è **MIT**: il merito di
-quella parte resta suo, ed è scritto qui.
+**Three things this system demands of whoever reads it, and keeps on itself:** every statement
+has a verification; every limit is declared; every number can be redone.
 
 ---
 
-> **Una regola scritta non cambia il comportamento. Un controllo che fallisce sì.**
+## Credit
+
+**Conceived and created by Luca / Artigiano Digitale.**
+Built **with** the [DeepSeek Harness](https://github.com/deepseek-ai) (DSH, MIT): the credit for that part stays with its authors, and it is written in the `NOTICE` file.
+
+The project is open to the world: **[CONTRIBUTING.md](CONTRIBUTING.md)** is the door. You do not need to know the code — the system gives you the document to fill in.
+
+## Licence
+
+**Apache-2.0.** The engine was born inside the *DeepSeek Harness* (DSH), which is **MIT**: the
+credit for that part remains its own, and it is written here.
+
+---
+
+> **A written rule does not change behaviour. A check that fails does.**
 >
-> Tutto il resto di questo repository è la conseguenza di quella frase.
+> Everything else in this repository is the consequence of that sentence.

@@ -42,6 +42,7 @@ insieme.
 | `cards.py` | **chi sa fare cosa**: cerca il mestiere giusto per un lavoro, e tiene in ordine l'elenco dei mestieri | `python3 tools/cards.py match <task-type>` (o `list`, `show`, `check`) |
 | `coherence.py` | **il controllo di coerenza**: verifica che il regolamento descriva il sistema vero, e non una versione vecchia | `python3 tools/coherence.py` |
 | `comportamento.py` | **le prove sull'agente**: dice se un cambiamento ci ha reso peggiori, confrontando l'esito con la misura di partenza | `python3 tools/comportamento.py check` |
+| `contributo.py` | Il documento per raccontare un problema: lo **genera** il sistema, con le domande dentro, in italiano e inglese. Chi arriva non deve sapere niente di questo motore per contribuire. | `python3 tools/contributo.py nuovo` |
 | `contract_scope.py` | **il controllo del perimetro**: dice se un posto si puo' scrivere, e il controllore lo interroga prima di ogni scrittura | `python3 tools/contract_scope.py check <path>` |
 | `drift.py` | **le discrepanze**: tiene l'elenco dei punti in cui i documenti dicono una cosa e la realta' un'altra | `python3 tools/drift.py check` |
 | `errori.py` | **le cicatrici**: ogni sbaglio con scritto accanto cosa lo avrebbe fermato, e se stiamo imparando o avendo fortuna | `python3 tools/errori.py check` (o `stats`, `nuovo`) |

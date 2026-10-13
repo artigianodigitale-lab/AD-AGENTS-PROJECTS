@@ -419,6 +419,7 @@ CARTELLE_MACCHINA = frozenset(
         "approvazioni",
         "comunicazioni",
         "contratti",
+        "contributi",
         "drift",
         "errori",
         "evals",
