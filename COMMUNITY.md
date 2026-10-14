@@ -178,7 +178,30 @@ one who uses it.**
 
 ## Dove siamo / Where we are
 
+**La pagina della community: [community.artigianodigitale.me](https://community.artigianodigitale.me)**
+
+Qui si arriva per **due motivi diversi**, e i due canali non si sostituiscono:
+
+| | A cosa serve | Dove |
+|---|---|---|
+| **Un problema** | raccontare cosa non ha funzionato, con la scheda che il sistema ti dà | **email**, come dice [CONTRIBUTING.md](CONTRIBUTING.md) |
+| **Lavorarci insieme** | iscriversi a un progetto aperto e partecipare mentre si costruisce | **Discord**, dalla pagina del progetto |
+
+**Perché due canali e non uno.** Un problema ha bisogno di **un documento** — datato, numerato,
+citabile, che resta. Un progetto ha bisogno di **una stanza** — dove si parla, si decide e ci si
+conosce. **Mettere un problema in una chat lo fa sparire; mettere un progetto in un modulo lo fa
+morire.**
+
+*Un problema: un documento. Un progetto: una stanza.*
+
+*The community page: [community.artigianodigitale.me](https://community.artigianodigitale.me).*
+*A problem goes by **email** as a dated document; a project is joined on **Discord**, from the
+project's own page. A problem in a chat disappears; a project in a form dies.*
+
+
+
 - **Il motore / The engine**: [github.com/artigianodigitale-lab/AD-AGENTS-PROJECTS](https://github.com/artigianodigitale-lab/AD-AGENTS-PROJECTS)
+- **La community / The community**: [community.artigianodigitale.me](https://community.artigianodigitale.me)
 - **Come contribuire / How to contribute**: [CONTRIBUTING.md](CONTRIBUTING.md)
 - **Il formato, per chi vuole implementarlo / The format, for whoever wants to implement it**: [FORMATO.md](FORMATO.md)
 - **Scrivici / Write to us**: `artigianodigitale.me@gmail.com`

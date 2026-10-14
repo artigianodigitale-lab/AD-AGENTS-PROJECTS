@@ -362,6 +362,8 @@ Built **with** the [DeepSeek Harness](https://github.com/deepseek-ai) (DSH, MIT)
 
 The project is open to the world: The project is open to the world: **[COMMUNITY.md](COMMUNITY.md)** is the place, and **[CONTRIBUTING.md](CONTRIBUTING.md)** is the door.
 
+**[community.artigianodigitale.me](https://community.artigianodigitale.me)** is where the community lives: a problem goes by email as a document, a project is joined on Discord from the project's page.
+
 ## Licence
 
 **Apache-2.0.** The engine was born inside the *DeepSeek Harness* (DSH), which is **MIT**: the

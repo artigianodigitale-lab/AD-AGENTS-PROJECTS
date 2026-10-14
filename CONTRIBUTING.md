@@ -53,6 +53,20 @@ lascia più sbagliare — **il tuo nome resta scritto lì**. Nel registro delle 
 il numero e la data. È il modo in cui questo sistema ricorda, e non dimentica chi l'ha
 aiutato.
 
+### E se invece vuoi LAVORARCI, non solo segnalare
+
+Il documento serve a **raccontare un problema**. Se quello che vuoi è **partecipare a un
+progetto aperto** — vedere come si costruisce, proporre, discutere — quello è un altro
+canale, ed è **Discord**:
+
+> **Discord si raggiunge dalla pagina del progetto**, su
+> [community.artigianodigitale.me](https://community.artigianodigitale.me).
+> Ogni progetto aperto ha la sua stanza.
+
+**Sono due cose diverse, e servono entrambe:** un problema ha bisogno di un **documento**
+(datato, numerato, che resta); un progetto ha bisogno di una **stanza** (dove si parla e ci si
+conosce). *Un problema in una chat sparisce; un progetto in un modulo muore.*
+
 ### Cosa succede da questa parte
 
 Il documento che hai mandato **non finisce in una casella**. Diventa una ** voce del registro
@@ -133,6 +147,20 @@ something legitimate, that is a defect **of the gate**, not of you.
 contribution becomes a **check** — something the system no longer lets anyone get wrong —
 **your name stays written there**. In the scar register, with its number and its date. That
 is how this system remembers, and it does not forget who helped it.
+
+### And if you want to WORK on it, not just report
+
+The document is for **telling us about a problem**. If what you want is to **take part in an
+open project** — watch it being built, propose, discuss — that is another channel, and it is
+**Discord**:
+
+> **Discord is reached from the project's page**, at
+> [community.artigianodigitale.me](https://community.artigianodigitale.me).
+> Every open project has its own room.
+
+**Two different things, and both are needed:** a problem needs a **document** (dated, numbered,
+it stays); a project needs a **room** (where people talk and meet). *A problem in a chat
+disappears; a project in a form dies.*
 
 ### What happens on our side
 
