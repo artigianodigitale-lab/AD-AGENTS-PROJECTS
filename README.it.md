@@ -327,7 +327,7 @@ affermazione ha una verifica; ogni limite è dichiarato; ogni numero si può rif
 **Ideato e creato da Luca / Artigiano Digitale.**
 Costruito **con** il [DeepSeek Harness](https://github.com/deepseek-ai) (DSH, MIT): il merito di quella parte resta ai suoi autori, ed e' scritto nel file `NOTICE`.
 
-Il progetto e' aperto al mondo: **[CONTRIBUTING.md](CONTRIBUTING.md)** e' la porta. Non serve conoscere il codice — il documento te lo da' il sistema.
+Il progetto e' aperto al mondo: Il progetto e' aperto al mondo: **[COMMUNITY.md](COMMUNITY.md)** e' il posto, e **[CONTRIBUTING.md](CONTRIBUTING.md)** e' la porta.
 
 ## Licenza
 

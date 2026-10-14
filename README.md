@@ -335,7 +335,7 @@ has a verification; every limit is declared; every number can be redone.
 **Conceived and created by Luca / Artigiano Digitale.**
 Built **with** the [DeepSeek Harness](https://github.com/deepseek-ai) (DSH, MIT): the credit for that part stays with its authors, and it is written in the `NOTICE` file.
 
-The project is open to the world: **[CONTRIBUTING.md](CONTRIBUTING.md)** is the door. You do not need to know the code — the system gives you the document to fill in.
+The project is open to the world: The project is open to the world: **[COMMUNITY.md](COMMUNITY.md)** is the place, and **[CONTRIBUTING.md](CONTRIBUTING.md)** is the door.
 
 ## Licence
 
