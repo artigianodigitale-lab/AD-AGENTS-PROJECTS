@@ -288,6 +288,24 @@ consent and opening **on the same day**, and the defect stayed hidden. See `ERR-
 > **A test that passes does not prove that the rule is right: it proves that the code does what
 > the code does.** If the test is written by looking at the code, the defect is invisible.
 
+## Updating
+
+If you cloned this folder, one command tells you when there is a new version, and updates
+**the engine** without touching **your data**:
+
+```sh
+python3 tools/aggiorna.py check      # is there a new version?
+python3 tools/aggiorna.py mostra     # what would change, file by file
+python3 tools/aggiorna.py applica    # updates, after a backup
+```
+
+**Your data is never touched**: contracts, approvals, scars, records, plans. *An engine is code
+and gets updated; your data is yours and it is kept.*
+
+**If you downloaded a folder instead of cloning**, there is no command to run — hand
+**[AGGIORNAMENTO.md](AGGIORNAMENTO.md)** to your agent: it is the procedure, written for an agent
+that finds an old folder and a new one. Then the new folder can be deleted.
+
 ## What is missing — to be read before trusting it
 
 The engine **declares its own limits**, and this section is not a formality: a system that hides

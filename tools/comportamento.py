@@ -155,6 +155,9 @@ def _b5(base: Path) -> tuple[bool, str]:
         "GRAFO.md",
         # I documenti legali: Apache-2.0 chiede il testo, e l'attribuzione
         # a DSH sta nel NOTICE. Non sono regole, ma devono stare qui.
+        # La versione del motore: un file, una riga. Non e' un documento,
+        # ma sta nella radice perche' `aggiorna.py` la confronta.
+        "VERSION",
         "LICENSE",
         "NOTICE",
         "DOCUMENTAZIONE-TECNICA.md",
@@ -162,6 +165,7 @@ def _b5(base: Path) -> tuple[bool, str]:
         "CONTRIBUTING.md",
         "COMMUNITY.md",
         "GLOSSARY.md",
+        "AGGIORNAMENTO.md",
         "README.it.md",
         # Chi e' il CEO, e come si chiama questa macchina. Il nome sta in UN posto.
         "sede.yaml",

@@ -40,6 +40,7 @@ insieme.
 | `blueprint.py` | **la carta d'identita' di un progetto**: dice cos'e' e a che punto e', e non puo' mentire perche' e' sigillato con un'impronta | `python3 tools/blueprint.py render "<progetto>"` (o `check`) |
 | `camoufox_ponte.py` | **il ponte verso il browser vero**: si usa quando una pagina non si lascia leggere, e non si chiama da solo — lo chiama `ricerca.py` | `python3 tools/camoufox_ponte.py "<url>"` |
 | `cards.py` | **chi sa fare cosa**: cerca il mestiere giusto per un lavoro, e tiene in ordine l'elenco dei mestieri | `python3 tools/cards.py match <task-type>` (o `list`, `show`, `check`) |
+| `aggiorna.py` | **C'e' una versione nuova?** Confronta il motore con la versione pubblica e lo aggiorna **senza toccare i tuoi dati** — contratti, approvazioni, cicatrici, verbali. Fa un backup prima, e non sovrascrive i file che hai modificato tu. | `python3 tools/aggiorna.py check` · `mostra` · `applica` |
 | `coherence.py` | **il controllo di coerenza**: verifica che il regolamento descriva il sistema vero, e non una versione vecchia | `python3 tools/coherence.py` |
 | `comportamento.py` | **le prove sull'agente**: dice se un cambiamento ci ha reso peggiori, confrontando l'esito con la misura di partenza | `python3 tools/comportamento.py check` |
 | `contributo.py` | Il documento per raccontare un problema: lo **genera** il sistema, con le domande dentro, in italiano e inglese. Chi arriva non deve sapere niente di questo motore per contribuire. | `python3 tools/contributo.py nuovo` · `importa <file>` |

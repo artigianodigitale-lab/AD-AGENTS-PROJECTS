@@ -483,7 +483,7 @@ def conteggi_delle_card(base: Path) -> list[str]:
 #:
 #: **Elenco dichiarato**, non dedotto: dedurlo («quelli che non sembrano regole»)
 #: vorrebbe dire accettare come non-normativo qualunque cosa qualcuno aggiunga.
-DOCUMENTI_NON_NORMATIVI = frozenset({"README.md", "GRAFO.md", "DOCUMENTAZIONE-TECNICA.md", "FORMATO.md", "CONTRIBUTING.md", "README.it.md", "COMMUNITY.md", "CONTRIBUTING.md", "README.it.md", "GLOSSARY.md"})
+DOCUMENTI_NON_NORMATIVI = frozenset({"README.md", "GRAFO.md", "DOCUMENTAZIONE-TECNICA.md", "FORMATO.md", "CONTRIBUTING.md", "README.it.md", "COMMUNITY.md", "CONTRIBUTING.md", "README.it.md", "GLOSSARY.md", "AGGIORNAMENTO.md"})
 
 
 def problemi(root: Path | str | None = None) -> list[str]:

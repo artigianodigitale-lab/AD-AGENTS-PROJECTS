@@ -276,6 +276,24 @@ consenso e apertura **lo stesso giorno**, e il difetto restava nascosto. Vedi `E
 > **Una prova che passa non dimostra che la regola sia giusta: dimostra che il codice fa quello
 > che il codice fa.** Se la prova è scritta guardando il codice, il difetto è invisibile.
 
+## Aggiornarsi
+
+Se hai clonato questa cartella, un comando ti dice quando c'e' una versione nuova, e aggiorna
+**il motore** senza toccare **i tuoi dati**:
+
+```sh
+python3 tools/aggiorna.py check      # c'e' una versione nuova?
+python3 tools/aggiorna.py mostra     # cosa cambierebbe, file per file
+python3 tools/aggiorna.py applica    # aggiorna, dopo un backup
+```
+
+**I tuoi dati non vengono toccati**: contratti, approvazioni, cicatrici, verbali, piani.
+*Il motore e' codice e si aggiorna; i tuoi dati sono tuoi e si tengono.*
+
+**Se invece hai scaricato una cartella** invece di clonarla, non c'e' un comando da eseguire:
+da' **[AGGIORNAMENTO.md](AGGIORNAMENTO.md)** al tuo agente. E' la procedura, scritta per un agente
+che trova una cartella vecchia e una nuova. Poi la cartella nuova si puo' cancellare.
+
 ## Cosa manca — da leggere prima di fidarsi
 
 Il motore **dichiara i propri limiti**, e questa sezione non è una formalità: un sistema che

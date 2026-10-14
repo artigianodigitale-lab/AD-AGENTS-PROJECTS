@@ -17,3 +17,6 @@ venv/
 .env
 .env.*
 !.env.example
+
+# Il backup locale degli aggiornamenti: e' tuo, non si versiona.
+.aggiornamento/
