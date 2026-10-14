@@ -6,6 +6,8 @@
 
 ---
 
+- **Le parole del sistema / The system's words**: [GLOSSARY.md](GLOSSARY.md)
+
 ## Italiano
 
 ### Cos'è

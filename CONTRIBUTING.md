@@ -6,6 +6,8 @@
 
 ---
 
+**Una parola che non capisci?** [GLOSSARY.md](GLOSSARY.md) — 25 termini, italiano e inglese, tre righe l'uno.
+
 ## Italiano
 
 ### Come si contribuisce, in quattro passi

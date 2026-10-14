@@ -343,6 +343,7 @@ entries became checks. **A register that gets longer is a register that is not b
 
 | File | What it contains |
 |---|---|
+| **[GLOSSARY.md](GLOSSARY.md)** | **start here if a word is unclear**: 25 terms, Italian and English, three lines each |
 | **[GRAFO.md](GRAFO.md)** | **seven diagrams** that explain how it works; GitHub draws them by itself. Start here |
 | **[DOCUMENTAZIONE-TECNICA.md](DOCUMENTAZIONE-TECNICA.md)** | **for developers**: architecture, authorisation model, the gate, the 19 commands with their exit codes, the data model, the testing strategy — **and the divergences found** |
 | **`AGENTS.md`** | the door: it is the constitution |

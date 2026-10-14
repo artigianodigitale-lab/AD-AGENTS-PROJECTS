@@ -331,6 +331,7 @@ sta diventando codice.**
 
 | File | Cosa contiene |
 |---|---|
+| **[GLOSSARY.md](GLOSSARY.md)** | **comincia da qui se una parola non e' chiara**: 25 voci, italiano e inglese, tre righe l'una |
 | **[GRAFO.md](GRAFO.md)** | **sette diagrammi** che spiegano il funzionamento; GitHub li disegna da solo. Comincia da qui |
 | **[DOCUMENTAZIONE-TECNICA.md](DOCUMENTAZIONE-TECNICA.md)** | **per developer**: architettura, modello di autorizzazione, il cancello, i 19 comandi coi codici di uscita, il modello dati, la strategia di prova — **e le divergenze trovate** |
 | **`AGENTS.md`** | la porta: è la costituzione |

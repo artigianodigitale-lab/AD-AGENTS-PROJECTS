@@ -473,7 +473,7 @@ def conteggi_delle_card(base: Path) -> list[str]:
 #: E' attrito, ed e' voluto — il controllo ha preso `DOCUMENTAZIONE-TECNICA.md`
 #: un minuto dopo che l'ho creato. Un elenco che cresce a mano e' meglio di una
 #: regola che accetta tutto, ma e' un attrito che va visto, non subito in silenzio.
-DOCUMENTI_NON_NORMATIVI = frozenset({"README.md", "GRAFO.md", "DOCUMENTAZIONE-TECNICA.md", "FORMATO.md", "CONTRIBUTING.md", "README.it.md", "COMMUNITY.md", "CONTRIBUTING.md", "README.it.md"})
+DOCUMENTI_NON_NORMATIVI = frozenset({"README.md", "GRAFO.md", "DOCUMENTAZIONE-TECNICA.md", "FORMATO.md", "CONTRIBUTING.md", "README.it.md", "COMMUNITY.md", "CONTRIBUTING.md", "README.it.md", "GLOSSARY.md"})
 
 
 def problemi(root: Path | str | None = None) -> list[str]:

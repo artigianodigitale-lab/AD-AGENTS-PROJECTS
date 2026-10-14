@@ -161,6 +161,7 @@ def _b5(base: Path) -> tuple[bool, str]:
         "FORMATO.md",
         "CONTRIBUTING.md",
         "COMMUNITY.md",
+        "GLOSSARY.md",
         "README.it.md",
         # Chi e' il CEO, e come si chiama questa macchina. Il nome sta in UN posto.
         "sede.yaml",
