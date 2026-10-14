@@ -350,7 +350,7 @@ Costruito **con** il [DeepSeek Harness](https://github.com/deepseek-ai) (DSH, MI
 
 Il progetto e' aperto al mondo: Il progetto e' aperto al mondo: **[COMMUNITY.md](COMMUNITY.md)** e' il posto, e **[CONTRIBUTING.md](CONTRIBUTING.md)** e' la porta.
 
-**[community.artigianodigitale.me](https://community.artigianodigitale.me)** e' dove vive la community: un problema va per email come documento, a un progetto ci si iscrive su Discord dalla pagina del progetto.
+**[community.artigianodigitale.me](https://community.artigianodigitale.me)** e' dove vive la community: vai sulla pagina, **scegli un progetto**, ed entri da li'. Un problema va per email, come documento.
 
 ## Licenza
 

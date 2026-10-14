@@ -182,21 +182,45 @@ one who uses it.**
 
 Qui si arriva per **due motivi diversi**, e i due canali non si sostituiscono:
 
-| | A cosa serve | Dove |
-|---|---|---|
-| **Un problema** | raccontare cosa non ha funzionato, con la scheda che il sistema ti dà | **email**, come dice [CONTRIBUTING.md](CONTRIBUTING.md) |
-| **Lavorarci insieme** | iscriversi a un progetto aperto e partecipare mentre si costruisce | **Discord**, dalla pagina del progetto |
+**Come si partecipa:**
 
-**Perché due canali e non uno.** Un problema ha bisogno di **un documento** — datato, numerato,
+1. **Vai sulla pagina**: [community.artigianodigitale.me](https://community.artigianodigitale.me)
+2. **Scegli un progetto** fra quelli aperti
+3. **Entra da lì** — dentro la pagina di quel progetto trovi Discord, e la stanza di quel
+   progetto
+
+**Si entra dai progetti che si scelgono.** Non c'è un invito unico: ogni progetto ha la sua
+stanza, ed è la pagina del progetto che ti ci porta. **Scegli una cosa, e quella cosa ha un
+posto dove parlarne.**
+
+**E se invece hai un problema da raccontare**, quello va **per email**, con la scheda che il
+sistema ti dà: vedi [CONTRIBUTING.md](CONTRIBUTING.md).
+
+**Perché due strade e non una.** Un problema ha bisogno di **un documento** — datato, numerato,
 citabile, che resta. Un progetto ha bisogno di **una stanza** — dove si parla, si decide e ci si
 conosce. **Mettere un problema in una chat lo fa sparire; mettere un progetto in un modulo lo fa
 morire.**
 
 *Un problema: un documento. Un progetto: una stanza.*
 
-*The community page: [community.artigianodigitale.me](https://community.artigianodigitale.me).*
-*A problem goes by **email** as a dated document; a project is joined on **Discord**, from the
-project's own page. A problem in a chat disappears; a project in a form dies.*
+---
+
+**How to take part:**
+
+1. **Go to the page**: [community.artigianodigitale.me](https://community.artigianodigitale.me)
+2. **Choose a project** among the open ones
+3. **Enter from there** — inside that project's page you find Discord, and that project's room
+
+**You enter through the projects you choose.** There is no single invite: every project has its
+own room, and it is the project's page that takes you there. **Choose a thing, and that thing
+has a place to talk about it.**
+
+**And if you have a problem to report**, that goes by **email**, with the sheet the system gives
+you: see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+*A problem needs a **document** — dated, numbered, citable, it stays. A project needs a
+**room** — where people talk and meet. A problem in a chat disappears; a project in a form
+dies.*
 
 
 

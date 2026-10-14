@@ -56,16 +56,14 @@ aiutato.
 ### E se invece vuoi LAVORARCI, non solo segnalare
 
 Il documento serve a **raccontare un problema**. Se quello che vuoi è **partecipare a un
-progetto aperto** — vedere come si costruisce, proporre, discutere — quello è un altro
-canale, ed è **Discord**:
+progetto aperto**, la strada è un'altra:
 
-> **Discord si raggiunge dalla pagina del progetto**, su
-> [community.artigianodigitale.me](https://community.artigianodigitale.me).
-> Ogni progetto aperto ha la sua stanza.
+1. **Vai sulla pagina**: [community.artigianodigitale.me](https://community.artigianodigitale.me)
+2. **Scegli un progetto** fra quelli aperti
+3. **Entra da lì** — dentro la pagina di quel progetto trovi Discord, e la stanza di quel progetto
 
-**Sono due cose diverse, e servono entrambe:** un problema ha bisogno di un **documento**
-(datato, numerato, che resta); un progetto ha bisogno di una **stanza** (dove si parla e ci si
-conosce). *Un problema in una chat sparisce; un progetto in un modulo muore.*
+**Si entra dai progetti che si scelgono:** non c'è un invito unico, ogni progetto ha la sua
+stanza. *Scegli una cosa, e quella cosa ha un posto dove parlarne.*
 
 ### Cosa succede da questa parte
 
@@ -151,16 +149,14 @@ is how this system remembers, and it does not forget who helped it.
 ### And if you want to WORK on it, not just report
 
 The document is for **telling us about a problem**. If what you want is to **take part in an
-open project** — watch it being built, propose, discuss — that is another channel, and it is
-**Discord**:
+open project**, the way in is different:
 
-> **Discord is reached from the project's page**, at
-> [community.artigianodigitale.me](https://community.artigianodigitale.me).
-> Every open project has its own room.
+1. **Go to the page**: [community.artigianodigitale.me](https://community.artigianodigitale.me)
+2. **Choose a project** among the open ones
+3. **Enter from there** — inside that project's page you find Discord, and that project's room
 
-**Two different things, and both are needed:** a problem needs a **document** (dated, numbered,
-it stays); a project needs a **room** (where people talk and meet). *A problem in a chat
-disappears; a project in a form dies.*
+**You enter through the projects you choose:** there is no single invite, every project has its
+own room. *Choose a thing, and that thing has a place to talk about it.*
 
 ### What happens on our side
 
