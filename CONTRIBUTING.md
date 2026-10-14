@@ -14,7 +14,7 @@
 # 1. Il sistema ti dà il documento, con le domande dentro
 python3 tools/contributo.py nuovo
 
-# 2. Rispondi alle 5 domande. Non serve essere ordinati: serve essere precisi.
+# 2. Rispondi alle 6 domande. Non serve essere ordinati: serve essere precisi.
 #    Se una domanda non ha risposta per te, scrivi "non lo so".
 #    «Non lo so» è un'informazione. Una risposta inventata per riempire lo spazio no.
 #    La sesta domanda chiede se vuoi essere RINGRAZIATO COL TUO NOME: decidi tu.
@@ -98,7 +98,7 @@ il merito di quella parte resta ai suoi autori, ed è scritto nel `NOTICE`.
 # 1. The system gives you the document, with the questions inside
 python3 tools/contributo.py nuovo
 
-# 2. Answer the 5 questions. You do not need to be tidy: you need to be precise.
+# 2. Answer the 6 questions. You do not need to be tidy: you need to be precise.
 #    If a question has no answer for you, write "I don't know".
 #    "I don't know" is information. An answer invented to fill the space is not.
 

@@ -1,6 +1,6 @@
 # AD-AGENTS-PROJECTS
 
-> Not a smarter prompt — a house with locks. Permissions that live with the work, consent before anything starts, memory that outlasts the chat. Where a check can fail, hope is no longer the security model. — Non un prompt più furbo: una casa con le serrature. Permessi legati al lavoro, consenso prima di partire, memoria che resta dopo la chat. Dove un controllo può fallire, la fiducia non è più un atto di fede.
+> Non un prompt più furbo: una casa con le serrature. Permessi legati al lavoro, consenso prima di partire, memoria che resta dopo la chat. Dove un controllo può fallire, la fiducia non è più un atto di fede. — *Not a smarter prompt — a house with locks…* (English in [README.md](README.md))
 
 **Un motore che dà a un agente AI le regole di una casa — e la forza di rispettarle.**
 
@@ -11,6 +11,26 @@ Non è un prompt più lungo. È un sistema che **si installa**, e dove può **bl
 
 > **Questa è la versione vergine**: nessun progetto, nessuna carta di progetto. Si collega a un
 > programma che sa leggere le regole, e da lì si comincia.
+
+## Provalo in due minuti
+
+```sh
+git clone https://github.com/artigianodigitale-lab/AD-AGENTS-PROJECTS.git
+cd AD-AGENTS-PROJECTS
+python3 tools/setup.py --check                        # cosa c'e' e cosa manca. Non scrive niente.
+#   -> su una copia appena scaricata dice DUE PROVE FALLITE: non c'e' ancora niente
+#      di installato. E' corretto, ed e' a questo che serve il passo dopo.
+python3 tools/contract_scope.py check ".brain/COSTITUZIONE.md"
+```
+
+**L'ultimo comando risponde `rifiutato`, ed e' il punto**: nessun permesso copre ancora quel
+file. Lo vedrai dire **cosa manca e come rimediare** — un rifiuto che porta con se' il proprio
+rimedio. E' tutta qui l'idea, e l'hai appena vista funzionare senza installare niente.
+
+**Un avviso, perche' non ti colga di sorpresa:** `python3 tools/coherence.py` segnalera' *«il
+plugin non risulta montato»* finche' non hai eseguito `python3 tools/setup.py` una volta. Quel
+messaggio e' **corretto** — ed e' la differenza fra le regole, che viaggiano, e il cancello,
+che va installato. Vedi [Cosa manca](#cosa-manca--da-leggere-prima-di-fidarsi).
 
 ---
 

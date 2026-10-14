@@ -13,6 +13,26 @@ It is not a longer prompt. It is a system that **installs itself**, and where it
 > **This is the virgin version**: no projects, no project papers. It links to a program that
 > knows how to read the rules, and from there you begin.
 
+## Try it in two minutes
+
+```sh
+git clone https://github.com/artigianodigitale-lab/AD-AGENTS-PROJECTS.git
+cd AD-AGENTS-PROJECTS
+python3 tools/setup.py --check                        # what is in place. Writes nothing.
+#   -> on a fresh copy it reports TWO FAILED PROOFS: nothing is installed yet.
+#      That is correct, and it is what the next step is for.
+python3 tools/contract_scope.py check ".brain/COSTITUZIONE.md"
+```
+
+**The last command answers `refused`, and that is the point**: nothing covers that file yet.
+You will see it say what is missing **and how to fix it** — a refusal that carries its own
+remedy. That is the whole idea, and you have just seen it work without installing anything.
+
+**One warning, so you are not surprised:** `python3 tools/coherence.py` will report *"the
+plugin is not mounted"* until you have run `python3 tools/setup.py` once. That message is
+**correct** — and it is the difference between the rules, which travel, and the gate, which
+must be installed. See [What is missing](#what-is-missing--to-be-read-before-trusting-it).
+
 ---
 
 
@@ -160,14 +180,18 @@ everything you need to know about how it was thought through.
 ## How it is used
 
 ```text
-1.  Copia la cartella dove vuoi che viva il motore.
-2.  Collegalo al tuo programma (DSH, Claude Code, Codex, Cursor...).
-3.  Scrivi:  AGENTS.md
-4.  Il motore dichiara come si comportera', e ti chiede:
-        un progetto NUOVO      -> crea una cartella numerata col nome del progetto
-        un progetto ESISTENTE  -> ne importa uno che hai gia', e lo sposta solo se glielo dici
-5.  Lavora. Il motore si occupa dei permessi, delle prove e della memoria.
+1.  Put the folder where you want the engine to live   (git clone, or download the ZIP)
+2.  Open your program IN that folder                    (that is what "link it" means:
+                                                         the program reads the folder you are in)
+3.  Type, in the chat:  AGENTS.md
+4.  The engine states how it will behave, and asks you:
+        a NEW project       -> it creates a numbered folder named after the project
+        an EXISTING one     -> it imports one you already have, and moves it only if you say so
+5.  Work. The engine takes care of permissions, evidence and memory.
 ```
+
+> `AGENTS.md` **already exists** in this folder: it is the constitution, and you do not
+> overwrite it. Typing `AGENTS.md` in the chat is how you **invoke** it.
 
 **If the program has a hook** (DSH, Claude Code, Codex, Antigravity), once only:
 
