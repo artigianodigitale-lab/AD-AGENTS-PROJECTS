@@ -214,7 +214,7 @@ si recuperano a chiamata, come impone `MODEL-ROUTING.md`.
 Le procedure operative sono nelle skill `ad-kickoff` (porta d'ingresso di ogni richiesta su
 un progetto), `ad-milestone` (milestone e sprint: il prompt prima, il report alla chiusura),
 `ad-evolution` (dovere di analisi evolutiva), `ad-agent-org`, `ad-agent-cards`,
-`ad-task-contract` e `ad-quality-gate`. Piu' `ad-brand-team`, la squadra di marca: si attiva **solo su chiamata del CEO**, lavora in fila, e non produce slide — produce un Blueprint di marca con i metodi e le fonti dentro.
+`ad-task-contract`, `ad-quality-gate` e `ad-integrazioni` (collegare un servizio esterno senza far finire le chiavi in git). Piu' `ad-brand-team`, la squadra di marca: si attiva **solo su chiamata del CEO**, lavora in fila, e non produce slide — produce un Blueprint di marca con i metodi e le fonti dentro.
 
 Usale invece di ricostruire le regole a memoria.
 

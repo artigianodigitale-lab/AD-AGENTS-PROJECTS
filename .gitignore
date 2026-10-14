@@ -12,3 +12,8 @@ venv/
 *.tmp
 *.log
 .DS_Store
+
+# Le chiavi dei servizi esterni: mai in git. Si versiona solo l'esempio.
+.env
+.env.*
+!.env.example
