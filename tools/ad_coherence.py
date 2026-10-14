@@ -235,7 +235,7 @@ def elenchi_duplicati(base: Path) -> list[str]:
     L'elenco vive in `tools/README.md`, e in un posto solo: se il vocabolario — o la
     costituzione, o una skill — tiene la sua copia, le due copie divergono, ed e'
     esattamente il difetto che ADMF-008 toglie. Il vocabolario resta il posto delle
-    **parole** (cosa significa «gate», come si dice «sprint» al CEO); il registro e'
+    **parole** (cosa significa «gate», come si dice «sprint» a Luca); il registro e'
     il posto dei **comandi**.
 
     La forma della dichiarazione e' la riga di tabella: citare un comando dentro una
@@ -321,7 +321,7 @@ def registro_problemi(base: Path) -> list[str]:
     """Ogni contract e ogni marcatore nel gruppo giusto?
 
     Il registro e' raggruppato per progetto: mescolare le lavorazioni di progetti
-    diversi nella stessa cartella e' cio' che il CEO ha chiesto di evitare. Il
+    diversi nella stessa cartella e' cio' che Luca ha chiesto di evitare. Il
     caricatore e' ricorsivo e funziona comunque — questo controllo rende visibile
     cio' che altrimenti sarebbe solo disordine.
     """
@@ -347,10 +347,25 @@ def registro_problemi(base: Path) -> list[str]:
                 continue
             atteso = attesi.get(percorso.stem, SOCIETA)
             if percorso.parent != cartella / atteso:
-                fuori.append(
-                    f"{registro}/{percorso.relative_to(cartella)} non e' raggruppato: "
-                    f"va in {registro}/{atteso}/"
-                )
+                # Il rimedio deve essere quello VERO. Se per questo id **non esiste un
+                # contract**, il gruppo atteso e' `societa` solo come ripiego — e dire
+                # "spostalo in societa/" manda a fare la cosa sbagliata. Il 2026-10-14 e'
+                # successo con `DAC-001`: il consenso c'era, il permesso no, e il messaggio
+                # suggeriva di spostare il consenso. Il rimedio vero era il passo 8.
+                if percorso.stem not in attesi:
+                    fuori.append(
+                        f"{registro}/{percorso.relative_to(cartella)} e' un sì senza il suo "
+                        f"permesso: non esiste un contract `{percorso.stem}` che dichiari a "
+                        "quale progetto appartiene.\n"
+                        "  Il rimedio NON e' spostare questo file: e' scrivere il contract "
+                        f"(passo 8 della sequenza), col `write_scope` del progetto. "
+                        "Il raggruppamento si sistema da solo quando il permesso esiste."
+                    )
+                else:
+                    fuori.append(
+                        f"{registro}/{percorso.relative_to(cartella)} non e' raggruppato: "
+                        f"va in {registro}/{atteso}/"
+                    )
         for sciolto in sorted(cartella.glob("*.yaml")):
             if not sciolto.name.startswith("_"):
                 fuori.append(
@@ -468,11 +483,6 @@ def conteggi_delle_card(base: Path) -> list[str]:
 #:
 #: **Elenco dichiarato**, non dedotto: dedurlo («quelli che non sembrano regole»)
 #: vorrebbe dire accettare come non-normativo qualunque cosa qualcuno aggiunga.
-#:
-#: **Il prezzo, dichiarato**: ogni documento non normativo nuovo vuole una riga qui.
-#: E' attrito, ed e' voluto — il controllo ha preso `DOCUMENTAZIONE-TECNICA.md`
-#: un minuto dopo che l'ho creato. Un elenco che cresce a mano e' meglio di una
-#: regola che accetta tutto, ma e' un attrito che va visto, non subito in silenzio.
 DOCUMENTI_NON_NORMATIVI = frozenset({"README.md", "GRAFO.md", "DOCUMENTAZIONE-TECNICA.md", "FORMATO.md", "CONTRIBUTING.md", "README.it.md", "COMMUNITY.md", "CONTRIBUTING.md", "README.it.md", "GLOSSARY.md"})
 
 
@@ -575,7 +585,7 @@ def problemi(root: Path | str | None = None) -> list[str]:
                         f"'{costituzione[numero]}', ad-kickoff dice '{skill[numero]}'"
                     )
 
-    # --- glossario: si sa spiegare tutto al CEO? (invariante 14) ----------
+    # --- glossario: si sa spiegare tutto a Luca? (invariante 14) ----------
     #
     # I **comandi** non si controllano piu' qui. La loro descrizione in parole
     # comprensibili vive nel registro, accanto al comando, ed e' li' che viene
@@ -584,7 +594,7 @@ def problemi(root: Path | str | None = None) -> list[str]:
     # una copia lo controlla `elenchi_duplicati()`.
     #
     # Le **cartelle** restano: il vocabolario spiega anche dove stanno le cose, e
-    # una cartella che compare nella costituzione senza una traduzione per il CEO e'
+    # una cartella che compare nella costituzione senza una traduzione per Luca e'
     # una parola che lui non puo' leggere.
     glossario = _testo(base / GLOSSARIO)
     if not glossario:
