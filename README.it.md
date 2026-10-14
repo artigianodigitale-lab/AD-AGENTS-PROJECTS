@@ -1,5 +1,7 @@
 # AD-AGENTS-PROJECTS
 
+> Not a smarter prompt — a house with locks. Permissions that live with the work, consent before anything starts, memory that outlasts the chat. Where a check can fail, hope is no longer the security model. — Non un prompt più furbo: una casa con le serrature. Permessi legati al lavoro, consenso prima di partire, memoria che resta dopo la chat. Dove un controllo può fallire, la fiducia non è più un atto di fede.
+
 **Un motore che dà a un agente AI le regole di una casa — e la forza di rispettarle.**
 
 Colleghi questa cartella al tuo programma, scrivi `AGENTS.md`, e da quel momento l'agente
