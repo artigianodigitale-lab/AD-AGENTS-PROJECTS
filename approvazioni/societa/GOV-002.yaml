@@ -1,0 +1,15 @@
+# Marcatore di approvazione del CEO.
+
+task_id: GOV-002
+piano: piani/2026-10-13-la-ricerca.md
+approvato_da: CEO
+data: "2026-10-13T07:17:40+02:00"
+fonte: "b e procedi"
+fonte_delega: "forse e' meglio che non generi io un marcatore ma che lo generi tu se ti serve. Prima passi da me e io ti approvo e tu continui"
+consenso: >-
+  Approvato il lavoro sulla ricerca. Decisioni: SearxNG con Docker (gia' acceso il
+  2026-10-12); Brave come OPZIONE pronta e spenta, nessuna chiave per ora; licenza
+  Apache-2.0; e sul robots.txt la risposta (b) — il tool RIFIUTA di leggere una pagina
+  vietata e PASSA IL LINK al CEO, perche' il divieto riguarda un cliente automatico e
+  non una persona. Ordine: verifica delle fonti, poi il controllo robots.txt, poi la
+  ricerca.

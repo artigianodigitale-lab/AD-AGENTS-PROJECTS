@@ -1,0 +1,106 @@
+# Contract operativo ENG-003 — chiudere ogni situazione aperta da ENG-002
+
+task_id: ENG-003
+title: "Chiusura dei residui di ENG-002 e prerequisiti della registrazione"
+domain: technical
+agent: platform
+task_type: shared_platform
+product: altro
+decision_record: DECISIONI/DEC-0057-superfici-di-esecuzione-portabili.md
+
+objective: >
+  ENG-002 si e' chiuso con REJECT: il server MCP funziona ed e' verificato, ma
+  restano due residui trovati dal quarto gate (byte NUL nel confine, percorsi vuoti
+  in ad_tree) e nessuna via di registrazione nei client. Questo contract chiude i
+  due residui, mette per iscritto la procedura di congelamento che ha fatto
+  funzionare il quarto gate, e prepara — senza eseguirla — la registrazione nei
+  cinque client, che e' bloccata da ADMF-008 (.brain/) e GOV-008 (setup.py).
+
+inputs:
+  - requirements
+  - decision_record
+  - plan
+
+acceptance_criteria:
+  - "un percorso con byte NUL risponde -32602 con `data.remediation` vere su TUTTI i tool che accettano percorsi (ad_contract_check, ad_evidence_check, ad_bundle, ad_unknowns, ad_tree, ad_contract_validate, ad_verdict); nessun -32603 'errore interno' e nessun rimedio falso"
+  - "`ad_tree` rifiuta `paths` con elementi vuoti o di soli spazi (`['']`, `['   ']`) con -32602; e `ad_evidence.tree_fingerprint` solleva TreeError per gli stessi input, cosi' anche il CLI li rifiuta (parita' provata)"
+  - "il server resta vivo dopo entrambi (il test lo prova con una richiesta successiva)"
+  - "`tools/tests/test_ad_mcp.py` passa con i casi nuovi (NUL su almeno 5 tool, paths vuoti, parita' CLI) e `tools/tests/test_evidenza.py` passa"
+  - "`tools/ad_mcp/README.md` dichiara: come si avvia il server, i 10 tool con cosa fanno, le ricette di registrazione per i cinque client (DSH, Cursor, Claude Code, Codex, Gemini CLI), e i limiti dichiarati (nessuna registrazione eseguita, DRIFT-026 aperto)"
+  - "`ERR-0057` chiuso: la procedura di congelamento (file delle impronte, verifica prima e dopo, divieto di scrittura a gate aperto) e' scritta in `tools/ad_mcp/README.md` e ha funzionato nel quarto gate (9/9 impronte, revisione immobile)"
+  - "`DRIFT-026` aggiornato: la riga di registro e' ancora bloccata da ADMF-008, e il drift dice dove andra' (ENG-004, quando il file sara' libero)"
+  - "`python3 tools/coherence.py` esce 0; `python3 tools/validate_contract.py contratti/societa/ENG-003.yaml` PASS senza violazioni"
+
+constraints:
+  - no production access
+  - do not edit this contract
+  - do not change own permissions
+  - "nessuna dipendenza nuova"
+  - "NESSUN file di altri titolari: non `.brain/` (ADMF-008), non `tools/setup.py` (GOV-008), non `tools/README.md` (ADMF-008). Un percorso, un titolare (DRIFT-018)"
+  - "nessuna registrazione nei client: solo ricette dichiarate nel README. La registrazione e' ENG-004, e richiede che ADMF-008 e GOV-008 siano chiusi"
+  - "nessuna scrittura fuori dalla macchina (i file di configurazione dei client stanno in ~/): si documenta, non si tocca"
+
+outputs:
+  - code
+  - tests
+  - documentation
+  - evidence
+
+required_gates:
+  - QA
+  - Code Review
+
+approval:
+  human: true
+
+budget:
+  max_retries: 2
+
+priority: P0
+
+impact_forecast:
+  data: NONE
+  schema: MED
+  auth: MED
+  security: HIGH
+  shared_platform: HIGH
+  product: NONE
+
+status: closed
+
+write_scope:
+  - "tools/ad_mcp/server.py"
+  - "tools/ad_mcp/README.md"
+  - "tools/tests/test_ad_mcp.py"
+  - "tools/ad_evidence.py"
+  - "tools/tests/test_evidenza.py"
+
+expires: "2026-11-18T00:00:00+01:00"
+
+# --- chiuso il 2026-10-18, ACCEPT (2o tentativo di budget.max_retries: 2) ---
+# Due gate indipendenti, produttori diversi dall'esecutore:
+#   evidenze/ENG-003-QA.yaml        (producer: qa,     coverage 8/8,  PASS)
+#   evidenze/ENG-003-CodeReview.yaml (producer: review, coverage 9/9,  PASS)
+# voce: ACCEPT, exit 0. Ma ACCEPT non e' il rilascio: approval.human decide.
+#
+# Il PRIMO gate e' stato NULLATO dalla violazione del congelamento: ho corretto il
+# difetto trovato (NUL dentro ad_tree.paths) mentre il revisore stava ancora
+# chiudendo. Il revisore ha visto il movimento (3/7 impronte cambiate, revisione
+# riscritta da R1 a R2, testimone ri-registrato) e ha rifiutato di certificare —
+# correttamente. E' una ricorrenza di ERR-0057, e la lezione e' scritta li'.
+#
+# Il SECONDO gate, su R2 congelata, ha verificato 7/7 impronte all'inizio e alla
+# fine (revisione immobile) e ha promosso: R2 chiude il NUL dentro paths, il
+# paths-su-check, e non fa tornare nessuno dei difetti dei sei gate precedenti.
+#
+# Rilievi NON bloccanti, rimandati a ENG-004 (nessuno tocca un criterio):
+#   - DRIFT-026 diceva «11 tool» (sono 10) e «ENG-003 lo monta» (e' ENG-004):
+#     corretto nella chiusura, perche' una dichiarazione falsa in un registro e'
+#     peggio di un registro incompleto;
+#   - ad_tree con un witness inesistente risponde -32603 con rimedio vero, non
+#     -32602: stessa classe «input invalido = errore interno», non bloccante;
+#   - _guard_write autorizza una destinazione se QUALUNQUE contract attivo la
+#     copre (limite noto del modello path-level, non per-task);
+#   - la ricetta DSH e' meno precisa delle altre quattro;
+#   - nessuna registrazione reale nei cinque client: e' ENG-004, con i blocchi
+#     ADMF-008 (.brain/) e GOV-008 (tools/setup.py).

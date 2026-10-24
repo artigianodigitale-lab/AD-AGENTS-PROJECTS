@@ -1,0 +1,64 @@
+# Contract operativo GOV-014 — si versionano i tre file di governance rimasti fuori dal commit.
+
+task_id: GOV-014
+title: "Governance: si versionano la regola del numero libero, il registro dei comandi e permessi.py"
+domain: technical
+agent: platform
+task_type: shared_platform
+product: altro
+decision_record: DECISIONI/DEC-0075-protocollo-multi-chat-e-permessi-appesi.md
+
+objective: >
+  Portare in git, con un contract e il marcatore del CEO, tre file di governance gia' presenti
+  sul disco e rimasti fuori dal commit dei registri: `.brain/skills/ad-avvio/SKILL.md` (il numero
+  del progetto lo assegna lo strumento, il primo libero, e la storia non si cancella quando un
+  numero viene riusato), `tools/README.md` (la riga di `permessi.py` nel registro dei comandi) e
+  `tools/permessi.py` (il controllo che trova i permessi attivi scaduti, senza marcatore, appesi a
+  un passo chiuso o su una cartella che non esiste). Non si cambia comportamento: si versiona
+  quello che esiste, e il contract e' la protezione richiesta per `.brain/` e `tools/`.
+
+inputs:
+  - ".brain/skills/ad-avvio/SKILL.md"
+  - "tools/README.md"
+  - "tools/permessi.py"
+
+acceptance_criteria:
+  - "tools/permessi.py e' nel repository, con il contract attivo che lo copre"
+  - "permessi.py e' dichiarato nel registro dei comandi e il suo autotest passa"
+  - "la regola del numero libero e la riga del registro restano coperte da ADMF-008"
+  - "la verifica dei contratti e dei permessi resta verde"
+
+constraints:
+  - "no production access"
+  - "do not edit this contract"
+  - "do not change own permissions"
+  - "nessuna modifica nuova di comportamento: si versiona lo stato gia' presente"
+  - "RAGGIO: i tre file elencati, non le cartelle"
+
+outputs:
+  - documentation
+  - code
+
+required_gates:
+  - Code Review
+
+approval:
+  human: true
+
+budget:
+  max_retries: 2
+
+priority: P2
+impact_forecast:
+  data: NONE
+  schema: NONE
+  auth: NONE
+  security: LOW
+  shared_platform: MED
+  product: NONE
+
+status: active
+aperto: "2026-10-24"
+write_scope:
+  - "tools/permessi.py"
+expires: "2026-11-24T00:00:00+01:00"

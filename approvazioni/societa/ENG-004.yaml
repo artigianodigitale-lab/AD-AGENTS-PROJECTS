@@ -1,0 +1,26 @@
+# Marcatore di approvazione del CEO — ENG-004.
+
+task_id: ENG-004
+piano: piani/2026-10-18-superfici-di-esecuzione-portabili.md
+decision_record: DECISIONI/DEC-0057-superfici-di-esecuzione-portabili.md
+approvato_da: CEO (il CEO)
+data: "2026-10-18T19:08:00+02:00"
+fonte: "dobbiamo risolvere ogni situazione"
+consenso: >-
+  Approvata l'apertura di ENG-004 per chiudere i rilievi non bloccanti di ENG-003
+  (test che dipende dallo stato, witness inesistente, messaggio di paths [], ricetta
+  DSH, limite di _guard_write) e per preparare la registrazione nei cinque client
+  con un generatore di configurazioni verificabile, senza scrivere fuori dalla
+  macchina e senza toccare i file di ADMF-008 e GOV-008.
+
+# --- estensione del budget di gate (2026-10-18, 20:13) ---
+# I due gate di ENG-004 hanno dato REJECT (il primo: blocco DSH sbagliato e suite
+# dipendente dallo stato; il secondo: validatore Codex troppo debole). Il budget
+# `max_retries: 2` era esaurito: la decisione di un terzo tentativo e' del CEO,
+# non dell'agente (invariante 7).
+estensione_budget:
+  approvato_da: CEO (il CEO)
+  data: "2026-10-18T20:13:00+02:00"
+  fonte: "A poi gate"
+  cosa: "un terzo tentativo di gate per ENG-004, su revisione congelata R4"
+  vincolo: "se il terzo gate e' REJECT, il lavoro resta aperto e la decisione torna al CEO"

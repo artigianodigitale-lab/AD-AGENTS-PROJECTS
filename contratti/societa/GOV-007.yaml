@@ -1,0 +1,101 @@
+# Contract operativo GOV-007 — l'engine diventa un prodotto
+
+task_id: GOV-007
+title: "L'engine diventa un prodotto: numeri, porta d'ingresso, primo avvio, il CEO come ruolo"
+domain: technical
+agent: platform
+task_type: shared_platform
+product: altro
+decision_record: DECISIONI/DEC-0054-un-percorso-un-titolare.md
+
+objective: >
+  Oggi questa e' l'installazione personale del CEO: «il CEO» e' scritto 63 volte, i
+  progetti si numerano per abitudine e non per regola, non c'e' porta d'ingresso, e
+  chi collega la cartella non ottiene niente. Il CEO ha descritto il prodotto: un utente
+  collega la cartella, l'AI chiede il nome, chiede il permesso di scaricare cio' che
+  serve, e da li' si lavora. Questo contract lo rende vero.
+
+inputs:
+  - requirements
+  - decision_record
+
+acceptance_criteria:
+  - una cartella di progetto SENZA numero viene RIFIUTATA, e il rifiuto dice quale numero usare
+  - la regola dei numeri e' scritta nella costituzione, non solo applicata
+  - AGENTS.md esiste nella radice, ed e' la porta d'ingresso che DSH legge da solo
+  - se manca sede.yaml, AGENTS.md dice che l'engine non e' avviato e come avviarlo
+  - sede.yaml dichiara il nome del CEO; il nome vive in UN posto
+  - il primo avvio chiede nome e permesso, installa e PROVA
+  - la suite e il plugin provano tutto, con il difetto iniettato
+
+constraints:
+  - no production access
+  - do not edit this contract
+  - do not change own permissions
+  - i 17 progetti NON si toccano: si leggono
+  - una cartella non numerata si BLOCCA e si spiega (scelta (a) del CEO, 2026-10-13)
+
+outputs:
+  - code
+  - tests
+  - documentation
+  - evidence
+
+required_gates:
+  - Code Review
+
+approval:
+  human: true
+
+budget:
+  max_retries: 2
+
+priority: P0
+impact_forecast:
+  data: NONE
+  schema: NONE
+  auth: NONE
+  security: HIGH
+  shared_platform: HIGH
+  product: MED
+
+status: closed
+aperto: "2026-10-13"
+write_scope:
+  # I FILE, non le cartelle. `tools/` e `.brain/` sono di ADMF-007 e ADMF-008, e la
+  # regola 3 di DEC-0054 dice di dichiarare i file: il primo tentativo dichiarava le
+  # cartelle, e il validatore l'ha preso. E' la regola che funziona.
+  - "AGENTS.md"
+  - "sede.yaml"
+  - "orchestrazione/stato.md"
+  - "GOVERNANCE-AZIENDALE.md"
+  - "MODEL-ROUTING.md"
+  - ".brain/COSTITUZIONE.md"
+  - ".brain/GLOSSARIO.md"
+  - ".brain/README.md"
+  - ".brain/plugin/enforce-contract/index.mjs"
+  - ".brain/skills/ad-agent-org/SKILL.md"
+  - ".brain/skills/ad-brand-team/SKILL.md"
+  - ".brain/skills/ad-evolution/SKILL.md"
+  - ".brain/skills/ad-kickoff/SKILL.md"
+  - ".brain/skills/ad-task-contract/SKILL.md"
+  - ".brain/skills/ad-avvio/SKILL.md"
+  - "tools/ad_coherence.py"
+  - "tools/ad_contract.py"
+  - "tools/ad_docs.py"
+  - "tools/ad_milestone.py"
+  - "tools/ad_scope.py"
+  - "tools/coherence.py"
+  - "tools/ricerca.py"
+  - "tools/security_scan.py"
+  - "tools/setup.py"
+  - "tools/stato.py"
+  - "tools/verbali.py"
+  - "tools/README.md"
+  - "tools/tests/test_ad_org.py"
+expires: "2026-11-08T00:00:00+01:00"
+
+# --- chiuso il 2026-10-13 ---
+# I punti 1, 2 e 3 sono chiusi e provati: la porta, il primo avvio, il CEO come ruolo.
+# Il lavoro nuovo tocca due file che questo contract non copre, quindi si apre a parte.
+# La regola e' quella: chi tocca gli stessi file apre UN contract, non ne allarga uno.

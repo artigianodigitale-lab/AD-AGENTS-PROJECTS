@@ -1,0 +1,103 @@
+# Contract operativo ENG-010 — una regola, un posto: chiusura dei residui del kit
+
+task_id: ENG-010
+title: "Una regola in un posto solo: formula del sigillo, UTF-8, ruolo delle evidenze, registro"
+domain: technical
+agent: platform
+task_type: shared_platform
+product: altro
+decision_record: DECISIONI/DEC-0063-il-congelamento-come-difesa-dalla-dimenticanza.md
+
+objective: >
+  ENG-009 (due gate, entrambi REJECT) ha lasciato quattro residui, e il piu' grave e'
+  ERR-0059: la formula del sigillo della revisione e' scritta in due punti
+  (`tests/gate_kit.py` la scrive, `tools/ad_contract.py` la ricalcola) e i due punti
+  sono divergiti, cosi' il lucchetto accusa di manomissione le revisioni autentiche e
+  blocca la chiusura dei contract. Questo contract porta la formula in UN posto solo
+  (in `tools/ad_contract.py`, il kit la importa), chiude gli altri tre residui (UTF-8
+  invalido, ruolo dell'evidenza, limite del registro dichiarato) e aggiunge i test che
+  avrebbero preso la divergenza: due moduli, stessa revisione, stesso sigillo.
+
+inputs:
+  - requirements
+  - decision_record
+  - plan
+
+acceptance_criteria:
+  - "UNA SOLA implementazione della formula: `tools/ad_contract.py` espone `digest_revisione(dati)` e `digest_chiusura(dati)`; `tests/gate_kit.py` le IMPORTA (nessuna copia). Un test calcola il sigillo di una revisione vera con i due moduli e pretende che coincida"
+  - "prova end-to-end della chiusura: in una macchina scratch, `freeze` -> `close` -> contract `status: closed` -> `ad_contract.validate(root=...)` PASS e `scan` pulito; e la revisione R2 reale di ENG-009 (creata prima di questa correzione) viene giudicata valida dal validatore dopo la correzione"
+  - "UTF-8 invalido in revisione, contract, timbro o evidenza -> `GateError` con la ragione, mai `UnicodeDecodeError` con traceback"
+  - "ruolo dell'evidenza verificato: `close` accetta `<task>-QA.yaml` solo con `gate: QA` (o `producer: qa`) e `<task>-CodeReview.yaml` solo con `gate: Code Review` (o `producer: review`); copiare l'evidenza del QA sopra quella del Code Review NON chiude il gate"
+  - "il limite del registro e' DICHIARATO nel README: cancellare `evidenze/.gate-ledger.yaml` fa ripartire il contatore in silenzio (dolo fuori perimetro, DEC-0063); un registro incoerente (vuoto dopo il freeze) fa rifiutare `close`"
+  - "coerenza rimessa a posto: `__pycache__` escluso sia al freeze sia al check; contract scelto per `task_id` e rifiuto se due contract hanno lo stesso task; voce vuota del `write_scope` non saltata in silenzio; `subdirs` tipata come `dirs`; `frozen_at` con i microsecondi e confronto stretto; `brief` verifica l'identita' della revisione"
+  - "i test nuovi provano: coerenza dei sigilli (kit vs validatore), chiusura end-to-end validata, UTF-8, ruolo delle evidenze, `__pycache__`, contract ombra, registro incoerente"
+  - "`tests/test_gate_kit.py` verde; `tests/ci.py --full` verde (compreso `gate-aperto`); suite 99/190/65/47 verdi; `coherence.py` 0; `validate_contract.py` su ENG-009 e ENG-010 PASS"
+  - "nessuna dipendenza nuova; nessun file di altri titolari"
+
+constraints:
+  - no production access
+  - do not edit this contract
+  - do not change own permissions
+  - "nessuna dipendenza nuova"
+  - "NESSUN file di altri titolari: non `tools/README.md` e `.brain/` (ADMF-008), non `tools/setup.py` (GOV-008)"
+  - "nessuna promessa di lucchetto crittografico: il kit protegge dalla dimenticanza, e lo dice"
+  - "una regola si scrive in un posto solo: se il kit e il validatore hanno bisogno della stessa formula, la importano"
+
+outputs:
+  - code
+  - tests
+  - documentation
+  - evidence
+
+required_gates:
+  - QA
+  - Code Review
+
+approval:
+  human: true
+
+budget:
+  max_retries: 2
+
+priority: P0
+
+impact_forecast:
+  data: NONE
+  schema: LOW
+  auth: LOW
+  security: MED
+  shared_platform: HIGH
+  product: NONE
+
+status: closed
+
+write_scope:
+  - "tests/gate_kit.py"
+  - "tests/test_gate_kit.py"
+  - "tools/ad_contract.py"
+  - "orchestrazione/README.md"
+  - "errori/ERR-0059-sigillo-in-due-posti.yaml"
+
+expires: "2026-11-19T00:00:00+01:00"
+
+# --- CHIUSO il 2026-10-19 con REJECT (2 gate su 2: R1 e R2) ---
+# Cosa e' entrato davvero: la formula del sigillo e' UNA e importata (ERR-0059
+# CHIUSO, verificato da entrambi i revisori con la revisione reale di ENG-009);
+# `close` legge e verifica il registro PRIMA di scrivere; la regola delle due
+# evidenze vale anche in verifica; il timbro porta l'impronta del contract
+# (fail-closed); un contract non-UTF8 non spegne il controllo dei percorsi;
+# il perimetro e' dichiarato (DEC-0064) e il brief lo porta; DRIFT-027 corretto
+# (un contract chiuso non possiede piu' i percorsi). 9 difetti su 12 chiusi.
+#
+# Residui (dentro il perimetro, non dolo) -> backlog ERR-0060:
+#   D1 il brief non e' difeso: `evidenze/incognite.yaml` non-UTF8 o con `unknowns`
+#      malformato -> traceback; drift/errori non-UTF8 -> letti in silenzio (0 su 0).
+#      E' la classe "un validatore che si rompe" applicata al brief.
+#   D2 un registro che non conosce la revisione in corso (ledger con R1, revisione
+#      R2 aperta) lascia chiudere e registra su R1; il freeze successivo ricicla "R2".
+#   D3 il test __pycache__ non prova l'esclusione (rimuoverla lascia 115 PASS).
+#   D4 la suite del kit non e' ermetica: legge `evidenze/ENG-009-revisione.yaml` reale.
+#
+# Perche' chiuso adesso: budget esaurito (2/2) e decisione del CEO di non spendere
+# altri giri sul kit prima dell'MVP. I quattro residui non bloccano l'uso e sono
+# nel backlog; il kit fa bene cio' che il perimetro dichiara.

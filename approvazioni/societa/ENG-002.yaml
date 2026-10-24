@@ -1,0 +1,27 @@
+# Marcatore di approvazione del CEO — ENG-002 (sprint A).
+#
+# Scritto dall'agente su indicazione esplicita del CEO (2026-10-18). `fonte` cita le
+# sue parole esatte, cosi' chi rilegge puo' verificarle (DEC-0009).
+
+task_id: ENG-002
+piano: piani/2026-10-18-superfici-di-esecuzione-portabili.md
+decision_record: DECISIONI/DEC-0057-superfici-di-esecuzione-portabili.md
+approvato_da: CEO (il CEO)
+data: "2026-10-18T14:39:00+02:00"
+fonte: "A. procedi"
+consenso: >-
+  Approvata la strada A per ENG-002: costruire il server MCP come primo sprint, senza
+  registrazione nei client (che e' ENG-003 e ha i suoi blocchi su .brain/ e setup.py).
+  Vincoli ereditati: nessuna dipendenza nuova, nessun percorso di altri titolari,
+  un solo esecutore, verifica affidata a un revisore diverso da chi scrive.
+
+# --- estensione del budget di gate (2026-10-18, 17:12) ---
+# I due gate di ENG-002 hanno dato REJECT (il primo: 5 finding; il secondo: L1, L4,
+# M3 residuo e due difetti di robustezza). `budget.max_retries: 2` era esaurito: la
+# decisione di fare un terzo tentativo e' del CEO, non dell'agente (invariante 7).
+estensione_budget:
+  approvato_da: CEO (il CEO)
+  data: "2026-10-18T17:12:00+02:00"
+  fonte: "a"
+  cosa: "un terzo tentativo di gate per ENG-002, dopo aver chiuso tutti i finding noti"
+  vincolo: "se il terzo gate e' REJECT, il lavoro resta aperto e la decisione torna al CEO"

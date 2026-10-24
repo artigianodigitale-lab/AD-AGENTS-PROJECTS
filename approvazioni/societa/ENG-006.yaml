@@ -1,0 +1,15 @@
+# Marcatore di approvazione del CEO — ENG-006 (versionamento e verifica automatica).
+
+task_id: ENG-006
+piano: piani/2026-10-19-versionamento-e-verifica-automatica.md
+decision_record: DECISIONI/DEC-0060-versionamento-e-verifica-automatica.md
+approvato_da: CEO (il CEO)
+data: "2026-10-19T09:20:00+02:00"
+fonte: "git+CI"
+consenso: >-
+  Approvato il lavoro sul versionamento (git) e sulla verifica automatica (CI) della
+  macchina: un repository locale con primo commit, un controllo di verifica
+  deterministico che gira prima di ogni commit e push, e il workflow pronto per un
+  remoto. Vincoli: nessuna dipendenza nuova, nessun file di altri titolari
+  (tools/README.md e .brain/ sono di ADMF-008), studio/ (65 MB di materiale di
+  studio) resta fuori dal versionamento, nessun segreto nel repository.

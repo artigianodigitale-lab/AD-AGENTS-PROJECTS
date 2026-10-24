@@ -1,0 +1,120 @@
+# Contract operativo ENG-001 — vedi contratti/_TEMPLATE.yaml per i campi.
+
+task_id: ENG-001
+title: "Evidenza verificabile: identità, incognite, verdetto fail-closed, rilevamento fuori banda"
+domain: technical
+agent: platform
+task_type: shared_platform
+product: altro
+decision_record: DECISIONI/DEC-0057-superfici-di-esecuzione-portabili.md
+
+objective: >
+  Rendere l'evidenza di AD verificabile e non manipolabile, e dare al sistema un modo per
+  accorgersi di una scrittura che non passa dai tool: oggi un'evidenza e' un YAML con un esito,
+  senza identita', senza autorita' e senza limiti — e con cinque superfici di esecuzione
+  (DEC-0057) la scrittura fuori dai tool non e' impedita, quindi deve diventare dimostrabile.
+  Alla fine: ogni evidenza ha un ID ricalcolabile, le incognite sono un registro con revisioni,
+  il verdetto non aggrega a PASS cio' che non e' completo, un bundle di evidenze si importa solo
+  se autentico, e un albero modificato fuori dai tool produce una contaminazione registrata.
+
+inputs:
+  - requirements
+  - decision_record
+  - plan
+
+acceptance_criteria:
+  - "`tools/ad_evidence.py` accetta i campi `confidence`, `authority`, `coverage`, `limitations`, `locations` con default retro-compatibili: i file gia' in `evidenze/` restano validi"
+  - "`tools/ad_evidence.py` calcola l'`evidence_id` dal contenuto (sha256 su JSON canonico, senza campi di visualizzazione) e `check` lo ricalcola e RIFIUTA se non combacia"
+  - "`tools/ad_evidence.py` gestisce le incognite come registro con `revision`, `status`, `severity`, evidenze a favore/contro, `required_authority`, `recommended_probes` e `resolution` vincolata a evidenza osservata"
+  - "`tools/verdict.py` rifiuta un `PASS` con copertura `partial` o `unknown`, e non aggrega mai `FAIL`/`UNKNOWN`/`TRUNCATED`/`SKIPPED` in ACCEPT"
+  - "`tools/verdict.py` verifica l'`evidence_id` prima di leggere l'esito: un'evidenza manomessa e' REJECT con la ragione"
+  - "il bundle di evidenze si esporta in JSON canonico sigillato e si importa solo se l'impronta corrisponde; un bundle manomesso e' rifiutato"
+  - "`tools/misure.py` e `tools/verdict.py` rifiutano un'esecuzione che non dichiara i propri limiti (`limitations` non vuoto o `coverage` esplicita)"
+  - "un comando di controllo confronta l'impronta dell'albero con la catena di evidenze e riporta le modifiche non coperte come contaminazioni, con i path esatti"
+  - "una contaminazione provocata in un test viene rilevata: il test prova il rilevamento, non la sua assenza"
+  - "`python3 tools/tests/test_ad_org.py` continua a passare (si esegue, non si modifica: e' di GOV-008); i test nuovi in `tools/tests/test_evidenza.py` provano il RIFIUTO, non solo il successo"
+  - "`python3 tools/coherence.py` esce 0 oppure l'unica divergenza e' quella preesistente del percorso del plugin, registrata in `drift/` con DRIFT-0xx"
+  - "`python3 tools/verbali.py check` e `python3 tools/drift.py check` passano"
+
+constraints:
+  - no production access
+  - do not edit this contract
+  - do not change own permissions
+  - "nessuna dipendenza nuova: solo standard library (stessa regola per cui `misure.py` usa YAML)"
+  - "NESSUN file nuovo in `tools/`: le incognite vivono in `tools/ad_evidence.py` come sottocomando, e il registro in `evidenze/incognite.yaml`. Serve a non toccare `tools/README.md`, che e' di ADMF-008 (attivo): un comando nuovo senza riga nel registro farebbe fallire `coherence.py`"
+  - "il limite dichiarato va scritto, non nascosto: le scritture fuori dai tool sono RILEVATE, non impedite (DEC-0057)"
+  - "non si tocca `.brain/`, `MODEL-ROUTING.md`, ne' i progetti numerati: sono di ENG-002 e di ADMF-008"
+
+outputs:
+  - code
+  - tests
+  - documentation
+  - evidence
+
+required_gates:
+  - QA
+  - Code Review
+
+approval:
+  human: true
+
+budget:
+  max_retries: 2
+
+priority: P0
+
+impact_forecast:
+  data: NONE
+  schema: HIGH
+  auth: NONE
+  security: HIGH
+  shared_platform: HIGH
+  product: NONE
+
+status: closed
+
+write_scope:
+  - "tools/ad_evidence.py"
+  - "tools/verdict.py"
+  - "tools/misure.py"
+  - "tools/tests/test_evidenza.py"
+  - "evidenze/"
+  - "errori/"
+  - "drift/"
+
+expires: "2026-11-18T00:00:00+01:00"
+
+# --- note di apertura (2026-10-18) ---
+# Perche' `agent: platform` e non un Transient Worker: GOV-001, GOV-003, GOV-005, GOV-006 e
+# GOV-007 hanno fatto esattamente questo tipo di lavoro (cancello, setup, engine) con
+# `platform` / `shared_platform`. SPECIALIZATION.md prevede il Transient Worker quando nessuna
+# card copre; qui la card c'e' ed e' il precedente approvato. Il Transient Worker resta
+# descritto in prosa e NON implementato: `ad_registry` legge solo AGENT-CARDS-V2.md e
+# AGENT-CARDS-BUSINESS.md, quindi un worker non potrebbe nemmeno essere validato. Va registrato
+# come divergenza, non aggirato.
+#
+# Perche' i FILE e non le cartelle: GOV-007 lo ha imparato a sue spese («il primo tentativo
+# dichiarava le cartelle, e il validatore l'ha preso»). `tools/` intero e' di ADMF-004 (chiuso)
+# e `.brain/` e `tools/README.md` sono di ADMF-008 (attivo): dichiararli sarebbe una
+# sovrapposizione, cioe' DRIFT-018.
+#
+# Perche' un file di test nuovo e non `test_ad_org.py`: quel file e' di GOV-008, ATTIVO. La
+# suite unica va estesa al nuovo file dal titolare di GOV-008 quando chiude (una riga in
+# `main()`), oppure eseguendo `python3 tools/tests/test_evidenza.py` come prova a se': il
+# contract dichiara la dipendenza invece di invadere il percorso. E' la lezione di DRIFT-018.
+
+# --- chiuso il 2026-10-18 (tentativo 2 di budget.max_retries: 2) ---
+# Verdetto: ACCEPT. Due gate indipendenti, produttori diversi dall'esecutore:
+#   evidenze/ENG-001-QA.yaml   (producer: qa,     coverage 17/17, PASS)
+#   evidenze/ENG-001-CodeReview.yaml (producer: review, coverage 17/17, PASS)
+# Il PRIMO gate ha dato REJECT con cinque finding reali — il piu' grave: il registro
+# delle incognite era fail-open senza --evidence, e una domanda critical si chiudeva
+# con una prova inventata. Riparati tutti (F1-F5) e registrati in
+# errori/ERR-0051-regola-solo-col-flag.yaml. Il secondo gate li ha riprodotti e
+# verificati chiusi, e ha promosso.
+#
+# Restano due rilievi NON bloccanti del secondo gate, registrati come aperti e
+# rimandati: (a) `--unknown new` scrive una voce con supporting_evidence inesistenti
+# e la rifiuta solo al check successivo; (b) test_cli_bundle dipende dallo stato di
+# evidenze/incognite.yaml. Non si correggono dentro un contract gia' verificato:
+# l'evidenza vale per la revisione che ha visto. -> ERR-0052.

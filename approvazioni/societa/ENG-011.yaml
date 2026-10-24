@@ -1,0 +1,14 @@
+# Marcatore di approvazione del CEO — ENG-011 (registrazione reale, portatile).
+
+task_id: ENG-011
+piano: piani/2026-10-19-registrazione-reale-e-portatile.md
+decision_record: DECISIONI/DEC-0065-registrazione-portatile.md
+approvato_da: CEO (il CEO)
+data: "2026-10-19T14:19:00+02:00"
+fonte: "Cursor è installato in questa macchina ma deve poter essere avviato anche da altre macchine se possibile come anche dsh e gli altri IDE"
+consenso: >-
+  Approvata la registrazione reale del server MCP in DSH e Cursor su questa macchina,
+  e la PORTABILITA': la registrazione non deve contenere percorsi di un'altra
+  macchina; ogni macchina la rigenera da sola con un comando (`install.py apply`), e
+  `install.py check` deve dire quando la voce e' vecchia o di un altro percorso.
+  Lo stesso vale, per quanto possibile, per gli altri tre client.

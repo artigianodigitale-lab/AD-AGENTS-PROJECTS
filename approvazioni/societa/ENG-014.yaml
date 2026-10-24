@@ -1,0 +1,13 @@
+# Marcatore di approvazione del CEO — ENG-014 (prompt del revisore senza percorsi).
+
+task_id: ENG-014
+piano: piani/2026-10-19-la-prompt-del-revisore.md
+decision_record: DECISIONI/DEC-0063-il-congelamento-come-difesa-dalla-dimenticanza.md
+approvato_da: CEO (il CEO)
+data: "2026-10-19T17:27:00+02:00"
+fonte: "procedi"
+consenso: >-
+  Approvata la correzione della prompt del revisore: la macchina si decide al lancio
+  (workspace) e gli strumenti trovano la radice da soli, quindi un percorso assoluto
+  non va scritto. La prompt la genera il codice (`gate_kit prompt`), un test impedisce
+  che un percorso torni, e la documentazione lo dichiara come regola.

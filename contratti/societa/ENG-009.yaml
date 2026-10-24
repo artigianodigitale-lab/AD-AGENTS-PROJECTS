@@ -1,0 +1,97 @@
+# Contract operativo ENG-009 — il congelamento come difesa dalla dimenticanza
+
+task_id: ENG-009
+title: "Kit del revisore a portata ridotta: buchi meccanici chiusi, affermazione onesta"
+domain: technical
+agent: platform
+task_type: shared_platform
+product: altro
+decision_record: DECISIONI/DEC-0063-il-congelamento-come-difesa-dalla-dimenticanza.md
+
+objective: >
+  ENG-008 (due gate, entrambi REJECT) ha mostrato che un file locale non firmato non
+  si rende manomettibile. Questo contract riduce l'affermazione a cio' che il kit SA
+  fare — impedire la dimenticanza, il fallimento reale di ERR-0057 — e chiude i buchi
+  meccanici trovati dai revisori: identita' della revisione, confinamento del
+  write_scope, timbro legato al contract, digest e gate obbligatori, registro delle
+  revisioni, niente parametri di bypass, chiusura solo con ENTRAMBE le evidenze del
+  gate. Il dolo resta coperto da git e dal revisore, ed e' dichiarato.
+
+inputs:
+  - requirements
+  - decision_record
+  - plan
+
+acceptance_criteria:
+  - "`close` RIFIUTA se non esistono entrambe le evidenze del gate in corso (`<task>-QA.yaml` e `<task>-CodeReview.yaml`) con mtime successivo al `frozen_at` della revisione; il messaggio nomina quella mancante"
+  - "identita' della revisione: `check`, `close` e `gate_status` confrontano il `task_id` dentro la revisione con il task richiesto; una revisione di un altro task copiata e' un rifiuto con la ragione"
+  - "`write_scope` confinato: percorsi assoluti, `..`, symlink che risolvono fuori dalla radice, voci non stringa o scalari al posto della lista -> `GateError`; e `validate_contract.py` rifiuta un `write_scope` che non e' una lista di percorsi relativi"
+  - "il timbro di preflight contiene l'impronta sha256 del contract; `freeze` rifiuta se il contract e' cambiato dopo il preflight, e rifiuta un timbro il cui `task_id` non combacia"
+  - "formato nuovo = revisione con `tool: gate_kit`: `digest` e `gate` sono OBBLIGATORI (mancanti = blocco, non avviso). Una revisione senza il marcatore e' legacy: avviso dichiarato"
+  - "registro delle revisioni `evidenze/.gate-ledger.yaml`: cancellare una revisione chiusa NON fa ripartire da R1 (il ledger lo impedisce con la ragione); `freeze` e `close` aggiornano il registro"
+  - "niente parametri di bypass nel percorso pubblico: `freeze` non ha `controlla_preflight`, `preflight` non espone `runner`; i test non hanno bisogno di scorciatoie"
+  - "campi malformati della revisione (`files` lista, `dirs` stringa, `expected` numero, `revision` non valida) -> `GateError` con la ragione, mai traceback"
+  - "`orchestrazione/README.md`: affermazione RIDOTTA (difesa dalla dimenticanza; il dolo lo vedono git e il revisore), divieto esplicito di ATTI AMMINISTRATIVI a gate aperto, 12 classi d'attacco elencate"
+  - "`tests/test_gate_kit.py` copre tutti i punti sopra (compresi i casi di rifiuto), `tests/ci.py --full` verde, suite esistenti verdi, `coherence.py` 0"
+  - "nessuna dipendenza nuova; nessun file di altri titolari"
+
+constraints:
+  - no production access
+  - do not edit this contract
+  - do not change own permissions
+  - "nessuna dipendenza nuova"
+  - "NESSUN file di altri titolari: non `tools/README.md` e `.brain/` (ADMF-008), non `tools/setup.py` (GOV-008)"
+  - "nessuna promessa di lucchetto crittografico: il kit protegge dalla dimenticanza, e lo dice"
+  - "il kit non decide: prepara e vincola. Il verdetto resta del revisore"
+
+outputs:
+  - code
+  - tests
+  - documentation
+  - evidence
+
+required_gates:
+  - QA
+  - Code Review
+
+approval:
+  human: true
+
+budget:
+  max_retries: 2
+
+priority: P0
+
+impact_forecast:
+  data: NONE
+  schema: LOW
+  auth: LOW
+  security: MED
+  shared_platform: HIGH
+  product: NONE
+
+status: closed
+
+write_scope:
+  - "tests/gate_kit.py"
+  - "tests/test_gate_kit.py"
+  - "tests/ci.py"
+  - "tools/ad_contract.py"
+  - "orchestrazione/README.md"
+  - "DECISIONI/DEC-0063-il-congelamento-come-difesa-dalla-dimenticanza.md"
+
+expires: "2026-11-19T00:00:00+01:00"
+
+# --- CHIUSO il 2026-10-19 con REJECT (2 gate su 2: R1 e R2) ---
+# R1: validatore che accettava write_scope assoluti, marcatore fuori dai sigilli,
+# copertura test incompleta, traceback, evidenze non riverificate, ledger cancellabile.
+# R2: la maggior parte chiusa (sette difetti su nove), ma il gate ha trovato il difetto
+# P0 ERR-0059: la formula del sigillo e' scritta in DUE posti (tests/gate_kit.py la
+# scrive, tools/ad_contract.py la ricalcola) e i due posti sono divergiti: il lucchetto
+# accusa di manomissione le revisioni autentiche e blocca la chiusura dei contract.
+# Piu': UTF-8 invalido -> traceback; il ruolo dell'evidenza non e' verificato (un solo
+# revisore duplicato chiude il gate); ledger cancellabile non dichiarato.
+#
+# Decisione del CEO: "A comunque va bene ma chiudere REJECT" — ENG-009 si chiude in
+# REJECT e le quattro correzioni ripartono in ENG-010, con una sola implementazione
+# della formula (una regola, un posto). Evidenze e verdetto restano nel repository.

@@ -1,0 +1,106 @@
+# Contract operativo ENG-007 — chiusura di DRIFT-028
+
+task_id: ENG-007
+title: "Chiusura di DRIFT-028: Decision Record e riallineamento dello snapshot normativo"
+domain: technical
+agent: platform
+task_type: shared_platform
+product: altro
+decision_record: DECISIONI/DEC-0061-allineamento-dello-snapshot-normativo.md
+
+objective: >
+  Lo snapshot di integrita' dei documenti normativi (`strategic_memory/_frozen_before.json`)
+  e' fermo al 2026-10-13 18:38. Da allora `AGENTS.md` e' diventato un symlink alla
+  costituzione, `GOVERNANCE-AZIENDALE.md` e' cambiato, e tre documenti nuovi non sono
+  mai stati fotografati. La verifica automatica lo segnala (`DRIFT-028`), e l'eccezione
+  temporanea in `tests/ci.py` lo tollera. Questo contract chiude la divergenza:
+  un Decision Record che dichiari le modifiche, la rigenerazione esplicita dello
+  snapshot, e la rimozione dell'eccezione — cosi' l'integrita' dei documenti torna
+  a essere una difesa vera, non una porta aperta.
+
+inputs:
+  - requirements
+  - decision_record
+  - plan
+
+acceptance_criteria:
+  - "esiste un Decision Record approvato (DEC-0061) che dichiara: quali cinque documenti divergono, in che modo (due modificati, tre nuovi), perche' e' stato deciso di accettarli come baseline, e la metrica di chiusura"
+  - "`python3 tests/test_strategic_memory.py` esce 0: lo snapshot e' riallineato al contenuto attuale dei documenti normativi"
+  - "l'eccezione `DRIFT-028` e' RIMOSSA da `tests/ci.py` e da `tests/test_ci.py`: il controllo `test-memoria` e' obbligatorio, senza tolleranze (sparisce anche l'elenco duplicato dei cinque nomi)"
+  - "`tests/test_ci.py` prova che dopo il riallineamento una divergenza qualunque fa fallire `test-memoria` (guasto iniettato: nessuna eccezione)"
+  - "`DRIFT-028` passa a stato FIXED con la prova (snapshot mtime e test verde); `orchestrazione/README.md` non promette piu' un'eccezione che non esiste"
+  - "`python3 tests/ci.py --full` e' verde; `test_ad_mcp` 190, `test_ad_install` 65, `test_evidenza` 99, `tests/test_ci.py` verde; `coherence.py` 0"
+  - "nessuna dipendenza nuova; nessun altro documento normativo toccato oltre allo snapshot"
+
+constraints:
+  - no production access
+  - do not edit this contract
+  - do not change own permissions
+  - "nessuna dipendenza nuova"
+  - "NESSUN file di altri titolari: non `tools/README.md` (ADMF-008), non `.brain/` (ADMF-008), non `tools/setup.py` (GOV-008)"
+  - "non si toccano i documenti normativi: si accetta il loro contenuto attuale come baseline. Se un documento va cambiato, e' un altro lavoro con il suo Decision Record"
+  - "l'eccezione si rimuove, non si allarga: nessuna nuova tolleranza al posto di quella chiusa"
+
+outputs:
+  - documentation
+  - code
+  - tests
+  - evidence
+
+required_gates:
+  - QA
+  - Code Review
+
+approval:
+  human: true
+
+budget:
+  max_retries: 2
+
+priority: P0
+
+impact_forecast:
+  data: NONE
+  schema: LOW
+  auth: LOW
+  security: MED
+  shared_platform: MED
+  product: NONE
+
+status: closed
+
+write_scope:
+  - "DECISIONI/DEC-0061-allineamento-dello-snapshot-normativo.md"
+  - "strategic_memory/_frozen_before.json"
+  - "tests/ci.py"
+  - "tests/test_ci.py"
+  - "drift/README.md"
+  - "orchestrazione/README.md"
+
+expires: "2026-11-19T00:00:00+01:00"
+
+# --- CHIUSO il 2026-10-19, ACCEPT (1o gate, revisione R1 congelata) ---
+# 8/8 impronte immobili a inizio/meta'/fine; contract active per tutta la durata;
+# 7/7 criteri verificati; regressione 190/65/99/45 e coherence 0.
+# Evidenze: evidenze/ENG-007-QA.yaml (qa, 7/7, PASS) e
+#          evidenze/ENG-007-CodeReview.yaml (review, 8/8, PASS); verdetto ACCEPT.
+#
+# DRIFT-028 e' CHIUSA: snapshot riallineato (16 documenti), eccezione RIMOSSA da
+# tests/ci.py e tests/test_ci.py, controllo delle impronte di nuovo OBBLIGATORIO.
+# Provato dal lato sbagliato in copia scratch: modificare GOVERNANCE-AZIENDALE.md,
+# MODEL-ROUTING.md, aggiungere NUOVO.md o rinominare lo snapshot rende la CI ROSSA
+# e nomina il documento. Nessuna eccezione al posto di quella chiusa.
+#
+# RILIEVI NON BLOCCANTI del gate, per il prossimo contract di igiene:
+#   1. il contract citava DEC-0062 invece di DEC-0061 (corretto in chiusura);
+#   2. la prova in test_ci.py e' una classificazione sintetica, non un guasto
+#      iniettato end-to-end (il gate l'ha fatto in copia scratch);
+#   3. `documenti_divergenti_dal_snapshot()` non e' piu' usata da nessun controllo
+#      della CI: resta utile ai test, ma va dichiarata come tale o spostata;
+#   4. `test_strategic_memory.py` nomina solo il PRIMO documento divergente: la CI
+#      non ne soffre (calcola lei l'insieme), ma il test grezzo si';
+#   5. il brief del gate diceva «9 criteri» mentre il contract ne elenca 7.
+#
+# DECISA dal CEO: "chiudiamo prima DRIFT-028". Il contenuto attuale dei documenti
+# normativi e' la nuova baseline approvata (DEC-0061); da ora una modifica senza
+# Decision Record e' un guasto, non un'eccezione.

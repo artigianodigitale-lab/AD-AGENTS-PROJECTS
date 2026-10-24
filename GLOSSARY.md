@@ -1,0 +1,113 @@
+# Glossario
+
+Cosa significano le parole di questo repository, e dove andarle a vedere.
+
+---
+
+**cancello**
+Il controllo che **rifiuta** una scrittura non autorizzata invece di limitarsi a sconsigliarla: è la differenza fra una regola e un muro. Vive nel plugin in `.brain/plugin/` e si installa con `python3 tools/setup.py`.
+*The check that **refuses** an unauthorised write instead of merely advising against it: it is the difference between a rule and a wall. It lives in the plugin under `.brain/plugin/` and is installed by `python3 tools/setup.py`.*
+
+**contratto / contract / permesso**
+Il file che dice chi può scrivere, **dove** e per quale tappa: senza, il cancello rifiuta. Il campo `write_scope` è l'elenco dei posti; il file vive in `contratti/<gruppo>/`.
+*The file that says who may write, **where**, and for which stage: without it, the gate refuses. The `write_scope` field is the list of places; the file lives in `contratti/<group>/`.*
+
+**consenso**
+Il sì scritto di chi ha l'autorità, **prima** che il lavoro cominci: l'ordine è consenso → permesso, e un permesso scritto prima del consenso non copre niente. Il sì si deposita in `approvazioni/<gruppo>/`.
+*The written yes from whoever holds the authority, **before** work starts: the order is consent → permission, and a permission written before the consent covers nothing. The yes is deposited in `approvazioni/<group>/`.*
+
+**cicatrice**
+Un errore registrato con tre domande — cosa è fallito, cosa l'ha risolto, **e cosa lo avrebbe preso** — perché un errore diventi una difesa invece di una voce di diario. Vivono in `errori/`.
+*A recorded error carrying three questions — what failed, what fixed it, **and what would have caught it** — so that an error becomes a defence instead of a diary entry. They live in `errori/`.*
+
+---
+
+## Il resto del vocabolario
+
+**carta di progetto**
+I documenti di un progetto — analisi, requisiti, tappe, passi, rapporti — che stanno dentro la cartella del progetto e non nella radice della macchina. In `<progetto>/Analisi-Prompt-Report/`; il documento d'ingresso si genera con `python3 tools/blueprint.py render "<progetto>"`.
+
+**registri**
+I file dove il sistema annota ciò che è successo — decisioni, errori, permessi, prove — invece di tenere tutto nella chat. Vivono in `DECISIONI/`, `errori/`, `contratti/`, `evidenze/`, `drift/`.
+
+**verbale**
+Il resoconto di una decisione presa: quali opzioni c'erano, **con le fonti**, compresa la voce «non fare nulla»; è immutabile e non si riscrive. Vive in `DECISIONI/`.
+*The account of a decision taken: which options existed, **with their sources**, including the "do nothing" one; it is immutable and is not rewritten. It lives in `DECISIONI/`.*
+
+**prova comportamentale / baseline**
+Una prova che misura **come si comporta l'agente**, non se il programma funziona; la baseline è la fotografia salvata con cui la si confronta, e risponde a una domanda sola: *è peggiorato qualcosa?* Vivono in `evals/` e girano con `python3 tools/comportamento.py check`.
+*A test that measures **how the agent behaves**, not whether the program works; the baseline is the saved picture it is compared against, and it answers one question only: **has anything got worse?** They live in `evals/` and run with `python3 tools/comportamento.py check`.*
+
+**sigillo / impronta**
+Il numero calcolato dal contenuto di un documento, che permette di distinguere un documento **vecchio** da uno **falso**: il sigillo non punta ai registri, li chiude dentro di sé. Si verifica con `python3 tools/blueprint.py check`.
+*The number computed from a document's content, which tells an **old** document apart from a **fake** one: the seal does not point at the registers, it seals them inside itself. It is checked with `python3 tools/blueprint.py check`.*
+
+**skill**
+Una procedura scritta — come si apre una tappa, come si valida un permesso — che l'agente carica invece di ricordare le regole a memoria. Vivono in `.brain/skills/`.
+
+**banda deterministica**
+I comandi che lavorano **senza intelligenza artificiale e senza consumare token**: danno sempre lo stesso risultato, e per questo possono fare da controllo. Vivono in `tools/`.
+*The commands that work **without artificial intelligence and without consuming tokens**: they always give the same result, which is why they can act as checks. They live in `tools/`.*
+
+**gancio**
+Il punto in cui il programma che ospita l'agente gli permette di bloccare una scrittura prima che avvenga: è ciò che rende possibile il cancello. Si collega con `python3 tools/setup.py`; dove non c'è, il cancello non c'è.
+
+**plugin**
+Il programma che il motore monta **dentro** il programma ospite per fermare le scritture non autorizzate: è il cancello quando diventa codice. Vive in `.brain/plugin/enforce-contract/`.
+*The program the engine mounts **inside** the host program to stop unauthorised writes: it is the gate once it becomes code. It lives in `.brain/plugin/enforce-contract/`.*
+
+**adattatore**
+Il pezzo che dovrebbe far funzionare il cancello dentro un programma ospite diverso (Claude Code, Codex, Antigravity): qui è **dichiarato, non provato**, e non esiste ancora come file. Lo dichiara `python3 tools/setup.py --check --ide claude-code`.
+*The piece that should make the gate work inside a different host program (Claude Code, Codex, Antigravity): here it is **declared, not tested**, and does not exist as a file yet. `python3 tools/setup.py --check --ide claude-code` says so.*
+
+**validatore**
+Il controllo che legge i documenti e dice se un permesso è valido — se il consenso c'è, se le date tornano, se il perimetro è dichiarato: va **eseguito**, non è automatico. È `python3 tools/validate_contract.py`.
+*The check that reads the documents and says whether a permission is valid — whether the consent exists, whether the dates add up, whether the scope is declared: it must be **run**, it is not automatic. It is `python3 tools/validate_contract.py`.*
+
+**marcatore di approvazione**
+Il file che prova che il sì c'è stato: da solo non autorizza niente, ma senza di lui il permesso non vale. Vive in `approvazioni/<gruppo>/<task_id>.yaml`.
+
+**tappa / milestone**
+Un pezzo di lavoro con un risultato riconoscibile, fatto di passi (in inglese *sprint*); il permesso dice per quale tappa vale, così non dura per sempre. I modelli sono in `milestone/` e si aprono con `python3 tools/milestone.py new-milestone`.
+*A piece of work with a recognisable result, made of steps (in Italian **passi**); the permission says which stage it is valid for, so it does not last forever. The templates are in `milestone/` and stages are opened with `python3 tools/milestone.py new-milestone`.*
+
+**drift**
+Le divergenze fra ciò che i documenti dicono e ciò che è vero: si registrano invece di nasconderle. Vivono in `drift/`.
+
+**piani**
+Le proposte scritte che aspettano un sì o un no: non sono memoria di ciò che è stato deciso, sono una coda di decisioni aperte. Vivono in `piani/`.
+
+**costituzione**
+Il documento con le regole che l'agente legge da solo appena si sveglia, e che non può saltare: è `AGENTS.md`, ed è anche **la porta** del sistema nel senso di "da dove si entra".
+*The document with the rules the agent reads by itself as soon as it wakes up, and which it cannot skip: it is `AGENTS.md`, and it is also the system's **door**, in the sense of "where you come in".*
+
+**governance / artefatto di governance**
+Le regole della casa e i file che le contengono o le eseguono — costituzione, procedure, plugin: sono protetti più degli altri, perché cambiarli cambia ciò che fanno tutti gli agenti. Vivono in `.brain/` e `tools/`.
+
+**DSH**
+La sigla di **DeepSeek Harness**, il programma dentro cui questo motore è nato: è uno dei programmi che sanno leggere le regole, ed è citato nel file `NOTICE`.
+*The short name of **DeepSeek Harness**, the program this engine was born inside: it is one of the programs that can read the rules, and it is credited in the `NOTICE` file.*
+
+**SearXNG**
+Il motore di ricerca che il sistema può usare in locale per cercare sul web senza consegnare i dati a terzi; nel repository è scritto anche *SearxNG*. È un servizio, non un file: senza, il motore legge solo gli indirizzi che gli dai.
+*The search engine the system can run locally to search the web without handing data to third parties; in the repository it is also written **SearxNG**. It is a service, not a file: without it, the engine reads only the addresses you give it.*
+
+**token**
+L'unità con cui si misura il lavoro dell'intelligenza artificiale, e quindi il suo costo: un comando che non consuma token è un comando che non fa lavorare l'AI.
+
+**euristica**
+Una regola pratica che funziona quasi sempre ma può sbagliare: qui è il caso del controllo sui comandi scritti in un terminale (la «shell»), che un comando astuto può aggirare.
+
+---
+
+## Le cinque parole per la stessa cosa
+
+Lo stesso oggetto ha cinque nomi, e non sempre sono davvero lo stesso oggetto: metà sono sinonimi, metà sono **due passaggi diversi** che il testo a volte confonde. **Non è una cosa da nascondere: è una cosa da sistemare.**
+
+- **permesso** — la parola del README, quella che si legge per prima: «senza un permesso attivo la scrittura viene rifiutata». Indica il file.
+- **contratto / contract** — la parola del codice e delle cartelle: `contratti/`, `tools/contract_scope.py`, `TASK-CONTRACTS.md`. È lo stesso file che il README chiama permesso.
+- **autorizzazione** — la parola del registro: `contratti/` e `approvazioni/` insieme sono «il registro delle autorizzazioni». È il nome del contenitore, non quello del singolo file.
+- **approvazione** — la parola del sì: il marcatore in `approvazioni/`, che **non** è il permesso. Prima c'è il sì, poi il permesso: due file diversi.
+- **consenso** — la stessa cosa dell'approvazione, detta in prosa: «prima il consenso, poi il permesso».
+
+**In breve:** *permesso*, *contratto*, *contract* e *autorizzazione* nominano lo stesso file; *approvazione* e *consenso* nominano il sì che viene prima. Chi legge il repository incontra cinque parole e crede che siano cinque cose: ne sono due. **La correzione da fare:** una parola per il sì (consenso), una per il file (permesso), e `contract` solo dove è il nome di un file o di un comando.

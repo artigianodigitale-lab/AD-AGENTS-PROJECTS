@@ -1,0 +1,68 @@
+# Contract operativo GOV-000 — vedi contratti/_TEMPLATE.yaml per i campi.
+
+task_id: GOV-000
+title: "Irrigidimento della governance: protezione degli artefatti"
+domain: technical
+agent: platform
+task_type: shared_platform
+product: altro
+decision_record: DECISIONI/DEC-0009-artefatti-di-governance.md
+
+objective: >
+  Proteggere .brain/ e tools/ con la stessa autorita' che protegge le cartelle
+  prodotto: contract approvato piu' marcatore del CEO, sia sui tool di scrittura
+  sia sui comandi bash. Zero regressioni sulla suite deterministica.
+
+inputs:
+  - requirements
+  - decision_record
+
+acceptance_criteria:
+  - contract_scope.py check ".brain/COSTITUZIONE.md" esce 1
+  - contract_scope.py check "tools/ad_scope.py" esce 1
+  - un comando bash che muta .brain/ o tools/ viene bloccato
+  - test_ad_org.py passa
+  - le cartelle prodotto restano protette come prima
+
+constraints:
+  - no production access
+  - do not edit this contract
+  - do not change own permissions
+  - contratti/ e approvazioni/ restano liberi: sono l'input dell'autorizzazione
+
+outputs:
+  - code
+  - tests
+  - evidence
+
+required_gates:
+  - Code Review
+
+approval:
+  human: true
+
+budget:
+  max_retries: 2
+
+priority: P0
+impact_forecast:
+  data: NONE
+  schema: NONE
+  auth: NONE
+  security: HIGH
+  shared_platform: HIGH
+  product: NONE
+
+status: closed
+write_scope:
+  - ".brain/"
+  - "tools/"
+expires: "2026-11-08T00:00:00+01:00"
+
+# --- chiuso il 2026-10-13 ---
+# Il lavoro e' finito: `.brain/` e `tools/` sono protetti dal plugin, e DEC-0009 e' attuato. Era attivo dal 2026-10-08 e occupava `tools/` insieme ad altri quattro.
+#
+# Un agente puo' CHIUDERE il proprio contract: chiudere **toglie** autorita', non ne
+# da'. Non puo' allargarlo, prorogarlo o cambiarne i criteri (invariante 7) — e la
+# differenza e' tutta li'. Senza questa possibilita' i permessi si accumulano, e un
+# percorso finisce con cinque titolari: vedi DRIFT-018.

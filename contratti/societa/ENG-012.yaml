@@ -1,0 +1,100 @@
+# Contract operativo ENG-012 — igiene: chiusura dei due backlog
+
+task_id: ENG-012
+title: "Igiene finale: backlog del kit (ERR-0060), dell'installer (ERR-0061), deriva documentale"
+domain: technical
+agent: platform
+task_type: shared_platform
+product: altro
+decision_record: DECISIONI/DEC-0063-il-congelamento-come-difesa-dalla-dimenticanza.md
+
+objective: >
+  Kit del revisore e installer sono usabili (l'MVP e' raggiunto), ma quattro gate
+  hanno lasciato difetti piccoli e veri nel backlog. Questa tappa non aggiunge
+  funzionalita': chiude ERR-0060 (nove voci), ERR-0061 (otto voci) e la deriva
+  documentale, cosi' l'MVP si puo' dichiarare stabile senza debiti nascosti.
+
+inputs:
+  - requirements
+  - decision_record
+  - plan
+
+acceptance_criteria:
+  - "ERR-0060: il brief non va in traceback su `evidenze/incognite.yaml`, `drift/README.md` o `errori/*.yaml` malformati o non-UTF8 (rifiuto con la ragione, o degradazione dichiarata); `brief` legge la revisione con la validazione dei campi"
+  - "ERR-0060: `close` rifiuta se l'ultima voce del registro non e' la revisione in corso (niente chiusura su una revisione scollegata); `frozen_at`/`closed_at` come timestamp YAML e `budget` non-mappa sono rifiuti, non traceback; un contract `.yml` e' visto come un `.yaml`; il filtro `__pycache__` sta in un posto solo"
+  - "ERR-0060: la suite del kit e' ermetica (revisione costruita in scratch, non letta dal workspace); il test di coerenza ancora anche il SIGILLO DI CHIUSURA a una revisione vera; un test prova davvero l'esclusione di `__pycache__` (togliendola, la suite diventa rossa)"
+  - "ERR-0061: il merge DSH tocca solo la NOSTRA voce: conserva le voci sorelle dello stesso `insert`, i commenti fra i blocchi, `env`/`disabled` della voce, e RIMUOVE i duplicati vecchi (nessun percorso di un'altra macchina resta dopo `--apply`)"
+  - "ERR-0061: `--status` usa il loader permissivo (`!!js`), controlla `serverName` e `disabled`; `[[mcp_servers]]` e' un rifiuto con la ragione, non 'registrata'; i permessi del file si conservano (600 resta 600); `--apply` verifica la post-condizione e se non e' 'aggiornata' ripristina; `--status auto` non da' falsi negativi sul profilo DSH"
+  - "ERR-0061: ogni correzione ha un test che la morde (togliendo la correzione, la suite diventa rossa)"
+  - "deriva documentale: `piani/` e `tools/ad_mcp/README.md` descrivono le interfacce che esistono (`--apply`, `--status`, `--rollback`), non `--target`; il refuso in DEC-0065 (immutabile) e' annotato in ERR-0061"
+  - "ERR-0060 e ERR-0061 passano a stato `chiuso` con la prova nel campo `cosa_l_ha_risolto`"
+  - "`tools/tests/test_ad_install.py`, `tests/test_gate_kit.py` e le suite esistenti verdi; `tests/ci.py --full` verde; `coherence.py` 0; i contract validano"
+  - "nessuna dipendenza nuova; nessun file di altri titolari"
+
+constraints:
+  - no production access
+  - do not edit this contract
+  - do not change own permissions
+  - "nessuna dipendenza nuova"
+  - "NESSUN file di altri titolari: non `tools/README.md` e `.brain/` (ADMF-008), non `tools/setup.py` (GOV-008)"
+  - "nessuna funzionalita' nuova: solo le correzioni elencate nei due backlog"
+  - "i Decision Record sono immutabili: si annota, non si riscrive"
+
+outputs:
+  - code
+  - tests
+  - documentation
+  - evidence
+
+required_gates:
+  - QA
+  - Code Review
+
+approval:
+  human: true
+
+budget:
+  max_retries: 2
+
+priority: P0
+
+impact_forecast:
+  data: NONE
+  schema: LOW
+  auth: LOW
+  security: MED
+  shared_platform: HIGH
+  product: NONE
+
+status: closed
+
+write_scope:
+  - "tests/gate_kit.py"
+  - "tests/test_gate_kit.py"
+  - "tools/ad_mcp/install.py"
+  - "tools/tests/test_ad_install.py"
+  - "tools/ad_mcp/README.md"
+  - "orchestrazione/README.md"
+  - "piani/2026-10-19-igiene-del-kit-e-dell-installer.md"
+  - "piani/2026-10-19-registrazione-reale-e-portatile.md"
+  - "errori/ERR-0060-backlog-del-kit.yaml"
+  - "errori/ERR-0061-backlog-installer.yaml"
+
+expires: "2026-11-19T00:00:00+01:00"
+
+# --- CHIUSO il 2026-10-19 con REJECT (1 gate su 2 disponibili) ---
+# Perche': il contract non copriva `tools/ad_contract.py`, che la tappa doveva
+# modificare (budget non-mappa, timestamp). L'ho scritto lo stesso, con uno script
+# bash: il plugin non ha visto la scrittura perche' la sua analisi della shell e' una
+# euristica (limite dichiarato che si e' avverato). E' ERR-0062.
+# Residui rimasti (-> ENG-013, contract nuovo con lo scope giusto):
+#   - brief che ignora in silenzio `errori/*.yaml` malformati;
+#   - autodetect del profilo DSH senza test (e ambiguo con 2+ profili);
+#   - `--apply` su voce disabilitata: il README promette "corregge", il codice la
+#     lascia stale e ripristina;
+#   - cordis: id matchato per sottostringa (una voce sorella con id simile viene
+#     distrutta), `-   id:` con spazi, id non prima chiave, `!!js` nella nostra voce;
+#   - `scan` cieco ai `.yml`; `budget: null` resta un warning; ramo morto `is_dir`;
+#   - README del server ancora contraddittorio ("non e' registrato").
+# Da qui in avanti: ogni contract che tocca un file di governance lo mette NEL
+# write_scope, e prima di scrivere si esegue `python3 tools/contract_scope.py check`.

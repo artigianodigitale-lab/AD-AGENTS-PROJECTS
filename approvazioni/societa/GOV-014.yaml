@@ -1,0 +1,16 @@
+# Marcatore di approvazione del CEO — GOV-014.
+
+task_id: GOV-014
+piano: piani/2026-10-21-verifica-migrazione.md
+approvato_da: CEO
+data: "2026-10-24T14:06:52+02:00"
+fonte: >-
+  «è in privato in teoria non dovrebbe accadere nulla ma abbiamo il backup completo. Procedi»
+  — CEO, 24 ottobre 2026, in risposta alla richiesta di aprire il contract per committare i
+  tre file di governance rimasti fuori dal commit.
+consenso: >-
+  Approvato il contract GOV-014 per portare in git i tre file gia' modificati dalla sessione
+  precedente: `.brain/skills/ad-avvio/SKILL.md` (regola del primo numero libero e della storia
+  che non si cancella), `tools/README.md` (registro dei comandi con `permessi.py`) e il nuovo
+  `tools/permessi.py` (controllo dei permessi attivi). Nessuna nuova modifica di comportamento:
+  si versiona cio' che esiste, con la protezione del contract e del marcatore.

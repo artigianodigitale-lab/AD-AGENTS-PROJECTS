@@ -1,0 +1,124 @@
+# Contract operativo ENG-006 — versionamento e verifica automatica
+
+task_id: ENG-006
+title: "Versionamento (git) e verifica automatica (CI) della macchina"
+domain: technical
+agent: platform
+task_type: shared_platform
+product: altro
+decision_record: DECISIONI/DEC-0060-versionamento-e-verifica-automatica.md
+
+objective: >
+  La macchina non ha memoria: nessun repository, nessun diff, nessun ritorno
+  indietro. E i controlli esistono ma nessuno li esegue automaticamente. Questo
+  contract porta la macchina sotto git con un primo commit, e mette la batteria
+  deterministica dietro un comando solo (`tests/ci.py`) che i ganci git eseguono
+  prima di ogni commit e push. La CI prova i programmi; il giudizio sui gate resta
+  a un revisore indipendente.
+
+inputs:
+  - requirements
+  - decision_record
+  - plan
+
+acceptance_criteria:
+  - "`python3 tests/ci.py` esegue la batteria dichiarata ed esce 0 su macchina verde; `--json` restituisce un esito strutturato per ogni controllo (nome, comando, esito, durata); un'opzione sconosciuta esce 2"
+  - "un controllo fallito fa uscire 1 e NOMINA il controllo fallito: provato da un test che inietta un guasto nel runner"
+  - "profilo `--fast` (coerenza, drift, verbali, errori, contract ATTIVI, le tre suite) e profilo `--full` (aggiunge la suite storica con l'eccezione dichiarata DRIFT-023 e il controllo dell'albero come informativo)"
+  - "la suite storica che si ferma su '13. Progetto Eta' e' riconosciuta come eccezione DICHIARATA (DRIFT-023) e non fa fallire la CI; qualunque altro guasto si'"
+  - "il controllo dell'albero e' informativo e non blocca: il testimone e' una fotografia e invecchia per progetto fra un gate e l'altro"
+  - "`git init` eseguito sulla macchina, `.gitignore` esteso (`studio/`, `.cache/`, `__pycache__`, `sede.yaml` gia' presente), primo commit con lo stato attuale: `git status` pulito dopo"
+  - "`studio/` NON e' nel repository (65 MB di materiale di studio, ricostruibile e non necessario al funzionamento)"
+  - "`.githooks/pre-commit` (fast) e `.githooks/pre-push` (full) esistono, sono eseguibili, e `git config core.hooksPath .githooks` e' impostato; un commit con la verifica rossa viene rifiutato"
+  - "`.github/workflows/ci.yml` esiste, esegue la stessa batteria su push e pull request, e non richiede rete per funzionare in locale"
+  - "`orchestrazione/README.md` documenta: cosa misura la CI, cosa NON misura (il testimone invecchia; il giudizio resta al gate), i due profili, l'eccezione DRIFT-023, e che il repository e' locale (nessun remoto configurato)"
+  - "`tests/test_ci.py` verde; `test_ad_mcp`, `test_ad_install`, `test_evidenza` verdi; `coherence.py` esce 0"
+  - "nessuna dipendenza nuova; nessun segreto e nessuna credenziale nel repository"
+
+constraints:
+  - no production access
+  - do not edit this contract
+  - do not change own permissions
+  - "nessuna dipendenza nuova (solo standard library)"
+  - "NESSUN file di altri titolari: non `tools/README.md` (ADMF-008), non `.brain/` (ADMF-008), non `tools/setup.py` (GOV-008)"
+  - "nessun segreto nel repository: `sede.yaml` resta escluso, nessuna chiave, nessun token"
+  - "`studio/` fuori dal versionamento: e' materiale di studio, non macchina"
+  - "la CI non sostituisce il Quality Gate e non lo puo' promuovere: prova i programmi, non giudica il lavoro"
+
+outputs:
+  - code
+  - tests
+  - documentation
+  - evidence
+
+required_gates:
+  - QA
+  - Code Review
+
+approval:
+  human: true
+
+budget:
+  max_retries: 2
+
+priority: P0
+
+impact_forecast:
+  data: NONE
+  schema: LOW
+  auth: LOW
+  security: MED
+  shared_platform: HIGH
+  product: NONE
+
+status: closed
+
+write_scope:
+  - "tests/ci.py"
+  - "tests/test_ci.py"
+  - ".gitignore"
+  - ".githooks/pre-commit"
+  - ".githooks/pre-push"
+  - ".github/workflows/ci.yml"
+  - "orchestrazione/README.md"
+  - "piani/2026-10-19-versionamento-e-verifica-automatica.md"
+
+expires: "2026-11-19T00:00:00+01:00"
+
+# --- CHIUSO il 2026-10-19, ACCEPT (2o gate, revisione R3 congelata) ---
+# Gate 1 (R2) REJECT per due difetti veri:
+#   D1 l'eccezione DRIFT-028 non era esclusiva: tests/ci.py leggeva l'output di
+#      tests/test_strategic_memory.py, che si ferma al PRIMO documento divergente,
+#      quindi modificare GOVERNANCE-AZIENDALE.md o MODEL-ROUTING.md restava
+#      invisibile e la CI diceva verde;
+#   D2 `--json` non esponeva `comando` e il test codificava il contratto piu' debole.
+# Gate 2 (R3) ACCEPT: congelamento 10/10 a inizio/meta'/fine, contract active per
+# tutta la durata, 12/12 criteri, D1 e D2 provati chiusi dal lato sbagliato
+# (documento fuori insieme -> fallito e nominato; dichiarato -> noto; due insieme ->
+# fallito; JSON con comando e test che lo pretende).
+# Evidenze: evidenze/ENG-006-QA.yaml (qa, 12/12, PASS) e
+#          evidenze/ENG-006-CodeReview.yaml (review, 10/10, PASS).
+#
+# CONSEGNA: la macchina e' un repository git (primo commit come fotografia,
+# studio/ fuori, nessun segreto), `tests/ci.py` e' la verifica deterministica
+# (--fast prima di ogni commit, --full prima di un push), i ganci `.githooks/` la
+# eseguono e un commit rosso non parte, `.github/workflows/ci.yml` e' pronto per un
+# remoto. Documentazione in orchestrazione/README.md.
+#
+# ECCEZIONI DICHIARATE, non silenzi: DRIFT-023 (la suite storica si ferma sui
+# progetti assenti) e DRIFT-028 (lo snapshot normativo e' vecchio: cinque documenti
+# divergono). Entrambe con firma stretta; per DRIFT-028 il rimedio e' un Decision
+# Record che riallinei lo snapshot, ed e' una decisione del CEO (livello 3).
+#
+# RILIEVI NON BLOCCANTI del secondo gate, per il prossimo contract:
+#   1. l'elenco dei cinque documenti e' duplicato in tests/ci.py e in DRIFT-028, e
+#      nessun test lega le due copie: aggiungere un test che confronti il registro
+#      con l'elenco dichiarato nel codice (fallirebbe se divergono);
+#   2. per un guasto storico diverso da DRIFT-023 il campo `dettaglio` ricade sulla
+#      nota statica (cosmetico);
+#   3. il profilo --full non ha un trigger automatico su questa macchina (nessun
+#      remoto: il pre-push non scatta mai);
+#   4. le chiavi JSON sono `stato`/`secondi` dove il criterio dice esito/durata
+#      (equivalenza semantica, accettata dal revisore);
+#   5. il riallineamento parziale dei cinque documenti rende il controllo rosso
+#      (fail-closed: tutto o niente) — corretto, ma da sapere.

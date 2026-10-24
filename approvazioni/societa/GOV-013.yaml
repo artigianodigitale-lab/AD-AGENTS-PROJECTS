@@ -1,0 +1,17 @@
+# Marcatore di approvazione del CEO — GOV-013 (protocollo multi-chat e controllo dei permessi appesi).
+
+task_id: GOV-013
+piano: ""
+approvato_da: CEO (il CEO)
+data: "2026-10-22T14:16:00+02:00"
+fonte: "Sì: protocollo + controllo (consigliato)"
+fonte_delega: >
+  «forse e' meglio che non generi io un marcatore ma che lo generi tu se ti serve. Prima
+  passi da me e io ti approvo e tu continui» (il CEO, 2026-10-13, in
+  approvazioni/societa/GOV-008.yaml)
+consenso: >-
+  Approvati il protocollo per lavorare con piu' chat in parallelo (una pagina in
+  `orchestrazione/`) e il **controllo sui permessi appesi**: un permesso attivo che punta a
+  una cartella che non esiste, scaduto, senza il marcatore del CEO, o rimasto aperto su un
+  passo gia' chiuso. Oggi il controllo avrebbe preso due residui veri (`ADMF-056` e
+  `CBG-001`), che il CEO ha deciso di chiudere.

@@ -1,0 +1,15 @@
+# Marcatore di approvazione del CEO.
+#
+# Scritto dall'agente su indicazione esplicita del CEO (2026-10-08), con la stessa
+# delega registrata in approvazioni/GOV-000.yaml e in DEC-0010.
+
+task_id: ORG-001
+piano: piani/2026-10-08-analisi-come-milestone.md
+approvato_da: CEO
+data: "2026-10-08T17:30:28+02:00"
+fonte: "procediamo"
+consenso: >-
+  Approvate le cinque modifiche: sequenza a 12 passi nella costituzione,
+  invariante 13, milestone e sprint obbligatori nei contract di progetto,
+  violazione nel validatore se lo sprint non e' aperto, e consenso sulle
+  milestone nella skill di kickoff.

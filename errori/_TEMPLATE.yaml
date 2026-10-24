@@ -1,0 +1,58 @@
+# Modello di voce del registro errori.
+#
+# Copia questo file, rinominalo `ERR-NNNN-nome-breve.yaml`, e riempi i campi.
+# Le tre domande obbligatorie sono: cosa e' fallito, cosa l'ha risolto, e
+# SOPRATTUTTO cosa lo avrebbe preso. Una voce senza la terza e' incompleta:
+# senza quella non c'e' apprendimento, c'e' solo memoria di un dispiacere.
+
+id: ERR-0000
+data: "AAAA-MM-GG"
+
+# --- le tre domande ---------------------------------------------------------
+
+cosa_e_fallito: >
+  Che cosa e' andato storto, in una frase. Concreta, non generica: «un conteggio
+  gonfiato» non dice niente; «il conteggio includeva 550 valori di un enum di
+  prodotto» dice tutto.
+
+cosa_l_ha_risolto: >
+  Come e' stato riparato. Se la riparazione ha toccato un record di governo,
+  dillo: riscrivere un file ne cambia l'mtime, e l'ordine si legge dagli mtime.
+
+cosa_l_avrebbe_preso: >
+  LA DOMANDA CHE CONTA. Cosa avrebbe fermato l'errore prima che accadesse.
+  Se la risposta e' «niente», scrivilo: vuol dire che quell'errore e' destinato a
+  ripetersi, ed e' una cosa che va saputa.
+
+# --- cosa ne facciamo -------------------------------------------------------
+
+diventa: controllo        # controllo | nota | verbale
+# controllo = diventa impossibile, non «sconsigliato»
+# nota      = una riga nella procedura giusta, recuperata quando serve
+# verbale   = una scelta, e resta in DECISIONI/
+
+dove: ""                  # il file dove vive la difesa. Per un controllo e'
+                          # obbligatorio, e il file deve esistere davvero:
+                          # `tools/errori.py check` lo verifica.
+
+# --- come e' stato trovato --------------------------------------------------
+
+trovato_da: io           # controllo | revisore | altro-agente | io
+# controllo    = il sistema se n'e' accorto da solo: e' quello che vogliamo
+# revisore     = un agente indipendente: va bene, ma costa
+# altro-agente = qualcuno che passava di li': FORTUNA
+# io           = me ne sono accorto da solo: FORTUNA
+#
+# Se la maggioranza e' `io` o `altro-agente`, non stiamo imparando: stiamo
+# avendo fortuna. `python3 tools/errori.py stats` lo dice.
+
+# --- stato ------------------------------------------------------------------
+
+stato: aperto            # chiuso | aperto
+# chiuso = la difesa esiste ed e' verificabile
+# aperto = l'errore puo' ripetersi
+
+# --- collegamenti -----------------------------------------------------------
+
+riferimenti: []
+# es. ["DECISIONI/DEC-0027-date-inventate.md", "drift/README.md#DRIFT-014"]

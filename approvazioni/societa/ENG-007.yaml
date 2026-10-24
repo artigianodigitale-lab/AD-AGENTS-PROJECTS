@@ -1,0 +1,15 @@
+# Marcatore di approvazione del CEO — ENG-007 (chiusura di DRIFT-028).
+
+task_id: ENG-007
+piano: piani/2026-10-19-versionamento-e-verifica-automatica.md
+decision_record: DECISIONI/DEC-0061-allineamento-dello-snapshot-normativo.md
+approvato_da: CEO (il CEO)
+data: "2026-10-19T10:28:00+02:00"
+fonte: "chiudiamo prima DRIFT-028"
+consenso: >-
+  Approvata la chiusura di DRIFT-028: un Decision Record che dichiari le modifiche
+  ai documenti normativi (AGENTS.md diventato symlink alla costituzione,
+  GOVERNANCE-AZIENDALE.md modificato, tre documenti nuovi mai fotografati) e la
+  rigenerazione esplicita dello snapshot di integrita' con `--update`. Approvata
+  anche la rimozione dell'eccezione temporanea da tests/ci.py: dopo il riallineamento
+  l'eccezione non serve piu' e non deve restare come porta aperta.

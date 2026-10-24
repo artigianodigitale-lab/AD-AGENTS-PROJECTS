@@ -1,0 +1,17 @@
+# Marcatore di approvazione del CEO — GOV-012 (la regola scritta dei numeri).
+
+task_id: GOV-012
+piano: ""
+approvato_da: CEO (il CEO)
+data: "2026-10-21T12:17:00+02:00"
+fonte: "Sì: chiudi GOV-009 e allinea (consigliato)"
+fonte_delega: >
+  «forse e' meglio che non generi io un marcatore ma che lo generi tu se ti serve. Prima
+  passi da me e io ti approvo e tu continui» (il CEO, 2026-10-13, in
+  approvazioni/societa/GOV-008.yaml)
+consenso: >-
+  Approvata la chiusura di `GOV-009` (il vecchio permesso dell'ingresso, finito il 13 ottobre)
+  e l'allineamento di `.brain/skills/ad-avvio/SKILL.md` alla decisione `DEC-0073`: il numero
+  del progetto si prende dal **primo libero**, un numero liberato da una cancellazione decisa
+  dal CEO torna disponibile, e la storia (verbali e contratti) conserva il numero del tempo.
+  Si chiude cosi' `DRIFT-032`, che registrava la contraddizione fra regola scritta e strumento.

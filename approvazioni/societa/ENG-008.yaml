@@ -1,0 +1,15 @@
+# Marcatore di approvazione del CEO — ENG-008 (il revisore ingegnerizzato).
+
+task_id: ENG-008
+piano: piani/2026-10-19-il-revisore-ingegnerizzato.md
+decision_record: DECISIONI/DEC-0062-il-revisore-come-strumento.md
+approvato_da: CEO (il CEO)
+data: "2026-10-19T10:50:00+02:00"
+fonte: "1,2,3,"
+consenso: >-
+  Approvato il primo dei tre passi verso l'MVP stabile: rendere il revisore uno
+  strumento e non una procedura scritta. Congelamento imposto dal codice (una
+  chiusura con gate aperto viene rifiutata), due revisori con contesti separati
+  (QA a scatola nera, Code Review che legge), un preflight deterministico prima di
+  aprire il gate, e il brief del revisore generato dai registri invece che scritto
+  a mano.

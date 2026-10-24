@@ -1,0 +1,18 @@
+# Marcatore di approvazione del CEO — ENG-010.
+
+task_id: ENG-010
+piano: piani/2026-10-19-il-revisore-ingegnerizzato.md
+decision_record: DECISIONI/DEC-0063-il-congelamento-come-difesa-dalla-dimenticanza.md
+approvato_da: CEO (il CEO)
+data: "2026-10-19T13:20:00+02:00"
+fonte: "A comunque va bene ma chiudere REJECT"
+consenso: >-
+  ENG-009 si chiude in REJECT; le quattro correzioni (una sola implementazione della
+  formula del sigillo, UTF-8 invalido rifiutato, ruolo dell'evidenza verificato,
+  registro dichiarato) ripartono in un contract nuovo, ENG-010, con budget di gate
+  nuovo. Il passo 2 (registrazione reale) coprira' DSH E Cursor, non solo DSH.
+
+# --- INTEGRAZIONE (2026-10-19, 13:50) — "ok procedi cn A" ---
+# Il CEO autorizza la R2 di ENG-010 con il PERIMETRO DICHIARATO (DEC-0064): il kit
+# copre la dimenticanza e gli incidenti, non il dolo; i revisori giudicano dentro il
+# perimetro, e un difetto fuori perimetro e' backlog, non FAIL.

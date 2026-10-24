@@ -1,0 +1,13 @@
+task_id: BIO-142
+gate: Architecture
+outcome: PASS
+producer: architect
+references:
+  - artefatti/prova.txt
+side_effects:
+  code: "NO"
+  database: "NO"
+  schema: "NO"
+  deps: "NO"
+  env: "NO"
+  external_services: "NO"

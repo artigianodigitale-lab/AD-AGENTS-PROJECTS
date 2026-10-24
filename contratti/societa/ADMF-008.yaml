@@ -1,0 +1,101 @@
+# Contract — Il registro degli strumenti smette di stare nella costituzione.
+#
+# Decisione del CEO, 2026-10-11, su una domanda che e' nata da un fatto:
+#   aggiungendo `tools/misure.py`, `coherence.py` e' diventato ROSSO con
+#   «il comando tools/misure.py esiste ma la costituzione non lo nomina», e per
+#   farlo tornare verde ho dovuto scrivere due volte in `.brain/COSTITUZIONE.md` e
+#   `.brain/GLOSSARIO.md` — il documento piu' protetto e piu' carico del sistema.
+#   il CEO ha scelto: «Si': registro separato + controllo».
+#
+# Il difetto e' di disegno, e vale la pena dirlo con precisione: **l'elenco dei
+# comandi vive nel documento che descrive il sistema, e cresce a ogni strumento
+# nuovo.** La costituzione e' il livello che ogni agente legge all'avvio: ogni riga
+# in piu' li' e' un costo per tutti, e ogni strumento nuovo e' due scritture a mano
+# in un documento di governance. E l'elenco **non e' verificato**: se qualcuno
+# scrive una riga sbagliata, nessuno se ne accorge.
+#
+# Cosa cambia. L'elenco dei comandi vive in **`tools/README.md`**, che e' gia' il
+# posto in cui i comandi sono documentati — e la costituzione **lo cita invece di
+# ricopiarlo**. `coherence.py` smette di pretendere che ogni comando sia nominato
+# nella costituzione e comincia a pretendere che sia nel registro, con la sua
+# descrizione: cosi' l'elenco e' **uno**, vive con il codice che descrive, e il
+# documento piu' protetto smette di crescere.
+
+task_id: ADMF-008
+title: "Il registro degli strumenti: l'elenco esce dalla costituzione ed entra nel controllo"
+domain: technical
+agent: platform
+task_type: shared_platform
+product: altro
+decision_record: DECISIONI/DEC-0044-misure-generate-non-scritte.md
+
+objective: >
+  Spostare l'elenco dei comandi dalla costituzione a un registro unico e verificato,
+  cosi' che aggiungere uno strumento non richieda di modificare due documenti di
+  governance e che l'elenco non possa divergere dal codice.
+
+inputs:
+  - requirements
+  - architecture
+  - plan
+
+acceptance_criteria:
+  - esiste UN solo posto in cui un comando e' dichiarato, con nome e descrizione
+  - la costituzione CITA il registro invece di ricopiare l'elenco
+  - un controllo FALLISCE se un comando in tools/ non e' nel registro, o se il registro nomina un comando che non esiste
+  - un controllo FALLISCE se un comando cambia nome e il registro resta indietro
+  - aggiungere uno strumento non richiede piu' di scrivere nella costituzione
+  - la descrizione di ogni comando e' in parole comprensibili (invariante 14)
+  - coherence.py resta verde, e resta verde dopo l'aggiunta di uno strumento di prova
+  - il caso negativo e' provato: un comando non dichiarato fa fallire il controllo
+
+constraints:
+  - no production access
+  - do not edit this contract
+  - do not change own permissions
+  - NON si tocca il comportamento dei comandi esistenti: solo la loro dichiarazione
+  - la costituzione perde l'elenco dei comandi e guadagna un rimando: nessun'altra modifica
+  - nessun documento normativo di root toccato (i 12 restano intatti)
+  - il controllo non deve introdurre una dipendenza nuova
+  - la guardia di ambito si chiama prima di ogni scrittura
+
+outputs:
+  - code
+  - tests
+  - evidence
+
+required_gates:
+  - Code Review
+  - Documentation
+
+approval:
+  human: false
+
+budget:
+  max_retries: 2
+
+priority: P0
+
+# P0, non P1: `shared_platform: HIGH` impone il massimo (DEC-0012), e il validatore
+# l'ha rilevato. Cambia il modo in cui il sistema si descrive, per tutti gli agenti:
+# un difetto qui produce un livello di avvio sbagliato in ogni sessione.
+impact_forecast:
+  data: NONE
+  schema: NONE
+  auth: NONE
+  security: NONE
+  shared_platform: HIGH
+  product: NONE
+
+status: active
+write_scope:
+  - "tools/README.md"
+  - ".brain/"
+expires: "2027-01-11T00:00:00+01:00"
+
+# --- raggio ristretto il 2026-10-13 ---
+# Questo raggio era una CARTELLA, e la copriva insieme ad altri quattro permessi:
+# cinque titolari sulla stessa tappa (DRIFT-018). Il contratto dichiarava gia'
+# milestone e sprint, quindi la cartella giusta era quella del SUO passo.
+# **Nessuna autorita' e' stata tolta**: il raggio e' piu' stretto, non diverso.
+# DEC-0054, regola 3: si dichiarano i file, non le cartelle.

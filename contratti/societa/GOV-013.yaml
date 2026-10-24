@@ -1,0 +1,77 @@
+# Contract operativo GOV-013 — lavorare con piu' chat, senza pestarsi i piedi
+
+task_id: GOV-013
+title: "Il protocollo multi-chat e il controllo che trova i permessi appesi"
+domain: technical
+agent: platform
+task_type: shared_platform
+product: altro
+decision_record: DECISIONI/DEC-0075-protocollo-multi-chat-e-permessi-appesi.md
+
+objective: >
+  Con piu' chat che lavorano su progetti diversi nello stesso momento, il lavoro sui progetti
+  e' separato ma la macchina e' in comune: registri, viste generate, suite e git. Servono due
+  cose: un **protocollo scritto** (una pagina in `orchestrazione/`) che dica cosa ogni chat puo'
+  fare e cosa no, e un **controllo deterministico** che trovi i permessi che mentono — attivi su
+  una cartella che non esiste, scaduti, senza il marcatore del CEO, o rimasti aperti su un passo
+  gia' chiuso. Oggi quel controllo prenderebbe due residui veri: `ADMF-056` (passo chiuso,
+  permesso attivo) e `CBG-001` (scaduto dal 2026-10-18).
+
+inputs:
+  - requirements
+  - DECISIONI/DEC-0075-protocollo-multi-chat-e-permessi-appesi.md
+  - approvazioni/societa/GOV-013.yaml
+  - errori/ERR-0028-prodotto-modificato-durante-il-gate.yaml
+  - errori/ERR-0057-prodotto-mosso-sotto-il-gate.yaml
+
+acceptance_criteria:
+  - "esiste `orchestrazione/PROTOCOLLO-MULTI-SESSIONE.md`: una pagina in parole comprensibili con le regole per piu' chat (una chat per progetto; id solo dagli strumenti; viste generate non in contemporanea; la suite e' globale; git un solo scrittore per repo; la macchina si cambia da una chat sola; i permessi si chiudono quando il passo chiude) e cosa fare se una regola viene violata"
+  - "esiste `python3 tools/permessi.py check`: elenca i permessi attivi che **mentono** — (a) `expires` nel passato, (b) `write_scope` su una cartella numerata che non esiste, (c) senza il marcatore del CEO in `approvazioni/`, (d) appesi su un passo che ha gia' il `REPORT.md` — ed esce 1 se ce n'e' almeno un errore (a/b/c); `--strict` tratta come errore anche i (d); `--json` e `--root` per le prove"
+  - "`python3 tools/permessi.py autotest` costruisce un albero finto e dimostra che il controllo **morde**: prende un permesso scaduto, uno su cartella inesistente, uno senza marcatore e uno appeso, e non segnala il caso pulito"
+  - "il comando e' dichiarato in `tools/README.md`, che e' il registro dei comandi (una riga, in parole comprensibili, con `check` e `autotest`)"
+  - "prima della chiusura dei due residui, `permessi.py check` sulla macchina vera trovava `ADMF-056` e `CBG-001`; dopo la chiusura non li trova piu' (prova nell'evidenza del gate)"
+  - "`python3 tools/coherence.py` esce 0 per la parte di competenza (registro comandi coerente); `python3 tools/errori.py check`, `verbali.py check`, `drift.py check` verdi"
+  - "l'evidenza del gate `Code Review` e' depositata in `evidenze/GOV-013-CodeReview.yaml` da un agente diverso dall'esecutore"
+
+constraints:
+  - no production access
+  - do not edit this contract
+  - do not change own permissions
+  - "RAGGIO: i tre file dichiarati; nessuna cartella, nessun progetto"
+  - "nessun progetto si tocca: il protocollo e il controllo riguardano la macchina"
+  - "il controllo e' di sola lettura: non chiude e non modifica nessun permesso"
+  - "non si tocca `tools/tests/test_ad_org.py`: e' di GOV-008"
+  - "la riga nel registro `tools/README.md` si scrive sotto ADMF-008, che e' il contract del registro: quel file ha gia' un titolare"
+
+outputs:
+  - code
+  - documentation
+  - evidence
+
+required_gates:
+  - Code Review
+
+approval:
+  human: true
+
+budget:
+  max_retries: 2
+
+priority: P2
+impact_forecast:
+  data: NONE
+  schema: NONE
+  auth: NONE
+  security: NONE
+  shared_platform: MED
+  product: NONE
+
+# Chiuso il 2026-10-22 dopo il gate Code Review: R1 REJECT per due difetti veri del comando
+# (`--json --strict`, piu' cartelle numerate), corretti e verificati in R2. Prova:
+# `evidenze/GOV-013-CodeReview.yaml`, produttore review.
+status: closed
+closed_at: "2026-10-22T14:35:00+02:00"
+
+write_scope:
+  - "orchestrazione/PROTOCOLLO-MULTI-SESSIONE.md"
+  - "tools/permessi.py"

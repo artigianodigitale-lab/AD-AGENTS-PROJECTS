@@ -1,0 +1,70 @@
+# Contract operativo GOV-006
+
+task_id: GOV-006
+title: "L'installazione: la macchina si collega da sola, dove sta"
+domain: technical
+agent: platform
+task_type: shared_platform
+product: altro
+decision_record: DECISIONI/DEC-0054-un-percorso-un-titolare.md
+
+objective: >
+  Oggi la macchina funziona perche' qualcuno ha creato a mano tre collegamenti, il
+  2026-10-08, con i percorsi assoluti scritti dentro. Spostandola, o su un altro
+  computer, non funziona. Serve un installatore che scopra dove si trova e colleghi
+  tutto li': il montaggio del plugin, la costituzione, le skill — e che PROVI di
+  averlo fatto, con una scrittura vera che deve essere rifiutata.
+
+inputs:
+  - requirements
+  - decision_record
+
+acceptance_criteria:
+  - setup.py scopre da solo la radice, senza percorsi assoluti scritti dentro
+  - installa il montaggio del plugin nel profilo dichiarato, con il percorso VERO
+  - collega la costituzione e le skill della macchina
+  - e' idempotente: eseguito due volte non rompe niente
+  - PROVA di aver funzionato: una scrittura in un progetto viene RIFIUTATA
+  - dichiara quali IDE hanno un gancio e quali ricevono solo le regole
+  - --check verifica senza scrivere, --uninstall disfa
+
+constraints:
+  - no production access
+  - do not edit this contract
+  - do not change own permissions
+  - RAGGIO: due percorsi. tools/setup.py e il registro tools/README.md
+  - NON tocca i progetti, NON tocca la configurazione di altri programmi
+
+outputs:
+  - code
+  - documentation
+  - evidence
+
+required_gates:
+  - Code Review
+
+approval:
+  human: true
+
+budget:
+  max_retries: 2
+
+priority: P0
+impact_forecast:
+  data: NONE
+  schema: NONE
+  auth: NONE
+  security: MED
+  shared_platform: HIGH
+  product: NONE
+
+status: closed
+aperto: "2026-10-13"
+write_scope:
+  - "tools/setup.py"
+  - "tools/README.md"
+expires: "2026-11-08T00:00:00+01:00"
+
+# --- chiuso il 2026-10-13 ---
+# L'installatore e' fatto e provato (6 prove, anche da una sede diversa). Il lavoro nuovo
+# lo estende — la porta d'ingresso, il primo avvio — e tocca `tools/setup.py`. Va in GOV-007.

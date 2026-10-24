@@ -1,0 +1,30 @@
+# Marcatore di approvazione del CEO.
+#
+# Decisione del CEO, 2026-10-11, nata da un fatto preciso: aggiungendo
+# `tools/misure.py`, il controllo di coerenza e' diventato rosso — «il comando
+# tools/misure.py esiste ma la costituzione non lo nomina» — e per farlo tornare
+# verde ho dovuto scrivere in `.brain/COSTITUZIONE.md` e in `.brain/GLOSSARIO.md`.
+# La domanda era: «ogni strumento nuovo richiede di modificare due documenti di
+# governance. Va bene cosi'?» La risposta del CEO: **«Si': registro separato +
+# controllo»**.
+#
+# Nota sul raggio d'azione: `.brain/` e' symlinkato in `~/.dsh/AGENTS.md`, in
+# `~/.agents/skills/` e montato nel profilo DSH — una scrittura li' cambia cosa fanno
+# **tutti** gli agenti, in **ogni** sessione. Per questo il `write_scope` di questo
+# contract include `.brain/`, ed e' la ragione per cui la decisione e' del CEO e non
+# dell'orchestratore.
+#
+# `data` e' il momento in cui il sistema ha REGISTRATO l'autorizzazione: il contract
+# deve essere piu' recente dell'approvazione, e un contract retrodatato non copre.
+
+task_id: ADMF-008
+piano: piani/2026-10-11-quattro-decisioni-sulla-macchina.md
+approvato_da: CEO
+data: "2026-10-11T20:18:00+02:00"
+fonte: "Sì: registro separato + controllo (Consigliato) — risposta alla domanda sull'aggiunta di uno strumento"
+consenso: >-
+  Approvato che l'elenco dei comandi esca dalla costituzione e vada in un registro
+  unico e verificato: la costituzione lo cita invece di ricopiarlo, un controllo
+  fallisce se un comando non e' dichiarato o se il registro nomina un comando che non
+  esiste, e aggiungere uno strumento smette di richiedere due scritture in un
+  documento di governance.

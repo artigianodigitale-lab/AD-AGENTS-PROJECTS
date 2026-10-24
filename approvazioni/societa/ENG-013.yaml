@@ -1,0 +1,14 @@
+# Marcatore di approvazione del CEO — ENG-013 (igiene, ripresa con lo scope giusto).
+
+task_id: ENG-013
+piano: piani/2026-10-19-igiene-del-kit-e-dell-installer.md
+decision_record: DECISIONI/DEC-0063-il-congelamento-come-difesa-dalla-dimenticanza.md
+approvato_da: CEO (il CEO)
+data: "2026-10-19T16:10:00+02:00"
+fonte: "procedi con A"
+consenso: >-
+  Il CEO ha gia' approvato la tappa di igiene ("procedi con A"); ENG-012 e' stato
+  chiuso REJECT perche' il contract non copriva tools/ad_contract.py, che la tappa
+  doveva toccare (ERR-0062). La ripresa avviene in ENG-013 con lo STESSO obiettivo e lo
+  scope CORRETTO: tutti i file che la tappa tocca sono nel write_scope, compreso
+  tools/ad_contract.py e il gancio pre-commit che rende meccanico il controllo.

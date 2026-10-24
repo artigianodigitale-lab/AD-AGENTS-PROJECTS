@@ -1,0 +1,14 @@
+# Marcatore di approvazione del CEO — ENG-012 (igiene: chiusura dei backlog).
+
+task_id: ENG-012
+piano: piani/2026-10-19-igiene-del-kit-e-dell-installer.md
+decision_record: DECISIONI/DEC-0063-il-congelamento-come-difesa-dalla-dimenticanza.md
+approvato_da: CEO (il CEO)
+data: "2026-10-19T15:52:00+02:00"
+fonte: "procedi con A"
+consenso: >-
+  Approvata una sola tappa di igiene, senza allargare: chiudere i due backlog
+  (ERR-0060 del kit del revisore, ERR-0061 dell'installer) e la deriva documentale
+  (le interfacce citate dai documenti che non esistono nel codice). Nessuna nuova
+  funzionalita': solo correzioni dei difetti che i gate hanno trovato e che sono
+  rimasti nel backlog.

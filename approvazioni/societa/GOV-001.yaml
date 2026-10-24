@@ -1,0 +1,25 @@
+# Marcatore di approvazione del CEO.
+#
+# Scritto dall'agente su indicazione esplicita del CEO (2026-10-08, delegato anche per
+# GOV-000): il campo `fonte` cita le sue parole esatte, cosi' chi rilegge puo' verificarle.
+#
+# Piu' debole di un atto scritto dal CEO: prova che l'agente ha eseguito una consegna,
+# non che il CEO ha firmato. Vedi DEC-0009.
+
+task_id: GOV-001
+piano: piani/2026-10-10-motore-dsh-cursor-readonly.md
+approvato_da: CEO
+data: "2026-10-10T20:45:00+02:00"
+fonte: "APPROVED WITH CONSTRAINTS"
+fonte_delega: "forse e' meglio che non generi io un marcatore ma che lo generi tu se ti serve. Prima passi da me e io ti approvo e tu continui"
+consenso: >-
+  Approvato il blueprint «Motore DSH, Cursor in sola lettura» con sette vincoli: Cursor sola
+  lettura; .cursor/ col solo deny-write e un DEC che dica «gancio di blocco si', secondo
+  cervello no»; fail-closed SELETTIVO (deny su .brain/, tools/ e cartelle numerate, fail-open
+  altrove); capability token RIMANDATI; fast-path L1 con K=5 ANTICIPATO in P0; sequenza
+  P0 -> P1 -> stop -> P2; P0.4 SOSTITUITA dal filtro dei falsi allarmi.
+  Ordine vincolato dello Sprint 1: falsi allarmi -> fail-closed selettivo ->
+  suite/documentazione allineate -> deny-write Cursor + MODEL-ROUTING vero.
+  Altre correzioni richieste: non chiamare «Aegis» il paper 2608.16891; dare il link a CapNET
+  o toglierlo; aggiornare MODEL-ROUTING (Cursor e' in uso in sola lettura); carte in societa/,
+  non in un progetto numerato; GOV-000 non si auto-rinnova.

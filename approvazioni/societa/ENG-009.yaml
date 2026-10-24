@@ -1,0 +1,16 @@
+# Marcatore di approvazione del CEO — ENG-009.
+
+task_id: ENG-009
+piano: piani/2026-10-19-il-revisore-ingegnerizzato.md
+decision_record: DECISIONI/DEC-0063-il-congelamento-come-difesa-dalla-dimenticanza.md
+approvato_da: CEO (il CEO)
+data: "2026-10-19T11:55:00+02:00"
+fonte: "A"
+consenso: >-
+  Approvata una terza revisione del kit a PORTATA RIDOTTA (contract nuovo ENG-009,
+  dopo la chiusura di ENG-008 in REJECT): chiudere i buchi meccanici trovati dai due
+  revisori (identita' della revisione, confinamento del write_scope, timbro legato al
+  contract, digest e gate obbligatori, cancellazione vista da un registro, niente
+  parametri di bypass, chiusura solo con entrambe le evidenze del gate) e RISCRIVERE
+  l'affermazione: il kit protegge dalla dimenticanza, non dal dolo; il dolo lo vedono
+  git e il revisore indipendente. Nessuna promessa di lucchetto crittografico.

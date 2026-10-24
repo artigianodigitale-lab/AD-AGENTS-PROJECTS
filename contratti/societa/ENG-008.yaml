@@ -1,0 +1,126 @@
+# Contract operativo ENG-008 — il revisore ingegnerizzato
+
+task_id: ENG-008
+title: "Il revisore come strumento: congelamento imposto, preflight, brief, due contesti"
+domain: technical
+agent: platform
+task_type: shared_platform
+product: altro
+decision_record: DECISIONI/DEC-0062-il-revisore-come-strumento.md
+
+objective: >
+  Il revisore indipendente ha trovato quasi tutti i difetti veri (~30 in 17 giri di
+  gate), ma e' una procedura scritta in un prompt: il congelamento e' stato violato
+  tre volte in un giorno (ERR-0057). Questo contract lo rende uno strumento: il
+  congelamento lo impone il codice, il preflight gira prima di aprire il gate, il
+  brief del revisore e' generato dai registri (con il catalogo delle classi
+  d'attacco che cresce con le lezioni), e i due ruoli sono due contesti separati.
+
+inputs:
+  - requirements
+  - decision_record
+  - plan
+
+acceptance_criteria:
+  - "`tests/gate_kit.py` offre: `preflight <task>` (batteria deterministica + contract valido + albero, con esito GO/NO-GO), `freeze <task>` (scrive la revisione con le impronte e `gate: open`), `check <task>` (verifica le impronte, exit 1 se mosse), `close <task>` (chiude il gate SOLO se le impronte combaciano), `brief <task> --role qa|review` (brief generato dai registri), `attacks` (elenca il catalogo)"
+  - "il catalogo delle classi d'attacco e' dichiarato nel codice, con almeno 8 classi, ognuna con nome, cosa cerca e come si prova"
+  - "`tools/ad_contract.py` RIFIUTA un contract `closed` se per il suo task esiste un gate aperto non ancora chiuso: la chiusura prematura e' un errore che il validatore prende, non una nota di disciplina"
+  - "ciclo completo provato da un test: freeze -> check (ok) -> manomissione -> check (exit 1) -> close (rifiutato finche' le impronte non tornano) -> close (ok) -> validate (PASS)"
+  - "la chiusura prematura e' provata dal lato sbagliato: con `gate: open`, `validate_contract.py` su un contract `closed` esce con violazione e la nomina"
+  - "`preflight` stampa un piano verificabile anche senza eseguire la batteria (`--print`), cosi' il test non rientra nella CI in ricorsione"
+  - "`brief --role qa` istruisce a NON leggere il codice (provare fatti) e `--role review` a leggerlo (cercare cio' che i test non vedono); entrambi contengono i criteri del contract, le evidenze precedenti del task, le cicatrici pertinenti e il catalogo delle classi d'attacco"
+  - "`orchestrazione/README.md` documenta il protocollo: preflight -> freeze -> due revisori separati -> close, e il divieto di atti amministrativi a gate aperto"
+  - "`tests/test_gate_kit.py` verde; `tests/ci.py --full` verde con il nuovo test nel profilo completo; suite esistenti verdi; `coherence.py` 0"
+  - "nessuna dipendenza nuova; nessun file di altri titolari"
+
+constraints:
+  - no production access
+  - do not edit this contract
+  - do not change own permissions
+  - "nessuna dipendenza nuova"
+  - "NESSUN file di altri titolari: non `tools/README.md` e `.brain/` (ADMF-008), non `tools/setup.py` (GOV-008)"
+  - "il kit non decide: prepara e vincola. Il verdetto resta del revisore, l'ACCEPT resta del Quality Gate"
+  - "il kit vive in `tests/`: il registro dei comandi e' di ADMF-008 e non si tocca"
+
+outputs:
+  - code
+  - tests
+  - documentation
+  - evidence
+
+required_gates:
+  - QA
+  - Code Review
+
+approval:
+  human: true
+
+budget:
+  max_retries: 2
+
+priority: P0
+
+impact_forecast:
+  data: NONE
+  schema: LOW
+  auth: MED
+  security: MED
+  shared_platform: HIGH
+  product: NONE
+
+status: closed
+
+write_scope:
+  - "tests/gate_kit.py"
+  - "tests/test_gate_kit.py"
+  - "tests/ci.py"
+  - "tools/ad_contract.py"
+  - "orchestrazione/README.md"
+  - "piani/2026-10-19-il-revisore-ingegnerizzato.md"
+  - "DECISIONI/DEC-0062-il-revisore-come-strumento.md"
+
+expires: "2026-11-19T00:00:00+01:00"
+
+# --- STATO DOPO IL SECONDO GATE (R2, REJECT) — budget esaurito, decide il CEO ---
+# Il secondo gate ha chiuso D2 per i casi dichiarati e ha reso il preflight
+# obbligatorio nel CLI, ma ha trovato falle piu' profonde, riassunte dai due
+# revisori. Da correggere se si fa una R3:
+#   A. `check`/`gate_status` non confrontano il `task_id` della revisione col task:
+#      una revisione di un ALTRO task, copiata, chiude il gate.
+#   B. il timbro di preflight non e' legato al contract: modificare il contract
+#      dopo il preflight non impedisce il freeze (un timbro scritto a mano passa).
+#   C. `write_scope` non confinato: valori assoluti, `..`, symlink, e un valore
+#      scalare invece di una lista (che validate_contract accetta!) escono dalla root.
+#   D. `digest` e `gate` mancanti non bloccano per le revisioni di formato nuovo;
+#      togliere `gate` declassa blocco -> avviso.
+#   E. cancellare una revisione chiusa e ri-congelare riparte da R1 in silenzio.
+#   F. parametri di bypass a livello di API (`controlla_preflight=False`, `runner`).
+#   G. campi malformati della revisione -> traceback invece di rifiuto.
+#   H. il README non documenta il divieto di ATTI AMMINISTRATIVI a gate aperto, e
+#      il conteggio delle classi d'attacco e' sbagliato (11 invece di 12).
+#   I. PROCEDURA (colpa mia, ERR-0057 quarta ricorrenza): ho chiuso il gate mentre la
+#      QA stava ancora verificando. `close` deve pretendere ENTRAMBE le evidenze del
+#      gate in corso, scritte dopo il frozen_at.
+#
+# Valutazione onesta: senza una chiave crittografica, un file locale non e'
+# manomettibile solo per chi non ha accesso in scrittura. Il kit difende dalla
+# DIMENTICANZA (il fallimento reale di ERR-0057); il dolo lo vedono git e il
+# revisore. Se si fa una R3, il contract va riscritto con questa affermazione,
+# non con "il lucchetto e' nel codice".
+
+# --- CHIUSO il 2026-10-19 con REJECT (2 gate su 2: R1 e R2) ---
+# Il primo gate ha trovato tre fail-open descritti (preflight non obbligatorio,
+# impronte incomplete, lucchetto aggirabile). Il secondo gate ha chiuso quei casi ma
+# ha mostrato che la CLASSE non si chiude con un file locale non firmato: identita'
+# della revisione non confrontata, write_scope non confinato, timbro non legato al
+# contract, digest/gate mancanti, cancellazione che riparte da R1. E una ricorrenza
+# di ERR-0057 (ho chiuso il gate con la QA ancora in corso).
+#
+# Decisione del CEO: "A" — una revisione a PORTATA RIDOTTA in un contract nuovo
+# (ENG-009), perche' i criteri di un contract non si riscrivono dall'esecutore.
+# ENG-009 terra' cio' che il kit SA fare davvero (difesa dalla dimenticanza) e
+# chiudera' i buchi meccanici; il dolo resta coperto da git e dal revisore, e sara'
+# dichiarato, non promesso.
+#
+# Evidenze: ENG-008-QA.yaml (FAIL) e ENG-008-CodeReview.yaml (FAIL, due volte):
+# restano nel repository come storia del gate.

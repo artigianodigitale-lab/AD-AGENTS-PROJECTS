@@ -1,0 +1,105 @@
+# Contract operativo ENG-011 — registrazione reale e portatile del server MCP
+
+task_id: ENG-011
+title: "Registrazione reale e portatile: DSH, Cursor e gli altri client"
+domain: technical
+agent: platform
+task_type: shared_platform
+product: altro
+decision_record: DECISIONI/DEC-0065-registrazione-portatile.md
+
+objective: >
+  Il cancello esiste e ha le prove, ma nessuno lo usa mentre lavora: gli strumenti si
+  chiamano solo a mano. Questo contract registra il server MCP in DSH e Cursor su
+  questa macchina e rende la registrazione PORTATILE: nessun percorso di un'altra
+  macchina dentro la configurazione, ogni macchina si registra da sola con un comando,
+  e `check` dice quando la voce e' vecchia o di un altro percorso. La voce usa
+  `python3` dal PATH, quindi un solo campo dipende dalla macchina e si rigenera.
+
+inputs:
+  - requirements
+  - decision_record
+  - plan
+
+acceptance_criteria:
+  - "`tools/ad_mcp/install.py` offre `apply --target dsh|cursor|claude|codex|gemini|auto [--dry-run]`, `check`, `rollback`: `apply` scrive la voce con i percorsi risolti su QUESTA macchina dopo un backup; `check` distingue aggiornata / assente / STALE (percorso di un'altra macchina o server inesistente); `rollback` riporta il file BYTE-IDENTICO a prima (sha256 uguale)"
+  - "portabilita' provata: la macchina viene copiata in un altro percorso, li' `check` dice stale e `apply` riscrive i percorsi giusti; la voce non contiene mai il percorso di un'altra macchina dopo `apply`"
+  - "la voce usa `python3` (dal PATH), non il percorso assoluto dell'interprete: un solo campo dipende dalla macchina"
+  - "prova reale: partendo DALLA VOCE SCRITTA, un client di prova fa `initialize` e `tools/list` e vede i 10 strumenti, sia nella forma cordis (DSH) sia in `mcpServers` (gli altri)"
+  - "`--target auto` registra i client installati e salta gli altri con un messaggio chiaro, senza inventare percorsi"
+  - "backup e rollback provati per ogni target scritto; nessun segreto nei file; nessun riavvio del client da parte dell'agente; il file di configurazione viene toccato una sola volta per target"
+  - "`tools/tests/test_ad_install.py` copre apply/check/rollback/stale/dry-run/auto con HOME temporaneo (i test NON scrivono nella home reale), e resta verde; `tests/ci.py --full` verde; `coherence.py` 0"
+  - "`orchestrazione/README.md` e il piano documentano: come si registra su una macchina nuova, come si verifica, come si torna indietro; e cosa l'agente NON puo' verificare (l'interfaccia del client)"
+  - "nessuna dipendenza nuova; nessun file di altri titolari"
+
+constraints:
+  - no production access
+  - do not edit this contract
+  - do not change own permissions
+  - "nessuna dipendenza nuova"
+  - "NESSUN file di altri titolari: non `tools/README.md` e `.brain/` (ADMF-008), non `tools/setup.py` (GOV-008)"
+  - "i test non scrivono nella home reale: usano un HOME temporaneo"
+  - "nessun riavvio del client: la configurazione si scrive, non si forza"
+  - "la configurazione non contiene segreti ne' percorsi di altre macchine"
+
+outputs:
+  - code
+  - tests
+  - documentation
+  - evidence
+
+required_gates:
+  - QA
+  - Code Review
+
+approval:
+  human: true
+
+budget:
+  max_retries: 2
+
+priority: P0
+
+impact_forecast:
+  data: NONE
+  schema: LOW
+  auth: MED
+  security: MED
+  shared_platform: HIGH
+  product: NONE
+
+status: closed
+
+write_scope:
+  - "tools/ad_mcp/install.py"
+  - "tools/tests/test_ad_install.py"
+  - "piani/2026-10-19-registrazione-reale-e-portatile.md"
+  - "orchestrazione/README.md"
+
+expires: "2026-11-19T00:00:00+01:00"
+
+# --- CHIUSO il 2026-10-19 con REJECT (2 gate su 2: R1 e R2) ---
+# Cosa FUNZIONA ed e' la ragione d'essere del contract: la registrazione reale e'
+# avvenuta su QUATTRO client (DSH profilo desktop, Cursor, Codex, Gemini), il server
+# e' collegato in questa sessione (10 strumenti ad_* rispondono), la portabilita' e'
+# provata (macchina copiata -> registra se stessa; spostata -> STALE; apply corregge),
+# il rollback e' byte-identico, il backup esiste per ogni file preesistente, e la
+# registrazione e' additiva (commenti DSH e altre tabelle Codex conservati).
+#
+# Perche' REJECT: i revisori hanno trovato residui nel MERGE e negli STATI, non nel
+# risultato principale:
+#   1. cordis: il merge a testo sostituisce l'intero blocco di primo livello, quindi
+#      perde le voci sorelle dello stesso `insert` e i commenti FRA i blocchi; non
+#      rimuove un blocco duplicato vecchio (un percorso di un'altra macchina resta
+#      mentre --status dice aggiornata).
+#   2. --apply dsh ricostruisce la voce e perde env/disabled della voce esistente.
+#   3. --status dice "rotta" su un cordis valido con `!!js` (usa safe_load) e
+#      "aggiornata" su una voce disabilitata o con serverName sbagliato.
+#   4. --apply codex con `[[mcp_servers]]` dice "registrata" mentre il suo stesso
+#      --status dice "rotta"; senza tomllib non valida.
+#   5. L'interfaccia dichiarata nel criterio (`apply --target`) non esiste: il codice
+#      espone `--apply` (documentato in README/piano). Incoerenza del criterio.
+#   6. apply cambia i permessi del file (600 -> 664): la scrittura atomica non
+#      conserva il modo.
+# Residui nel backlog ERR-0061. L'MVP e' raggiunto: il cancello e' raggiungibile dai
+# client, che era il fine del contract.

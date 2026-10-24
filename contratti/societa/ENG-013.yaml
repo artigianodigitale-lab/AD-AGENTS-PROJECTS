@@ -1,0 +1,102 @@
+# Contract operativo ENG-013 — igiene, ripresa con lo scope giusto
+
+task_id: ENG-013
+title: "Igiene: i residui di ERR-0060/ERR-0061 e la difesa meccanica di ERR-0062"
+domain: technical
+agent: platform
+task_type: shared_platform
+product: altro
+decision_record: DECISIONI/DEC-0063-il-congelamento-come-difesa-dalla-dimenticanza.md
+
+objective: >
+  ENG-012 (igiene) e' stato chiuso REJECT per un errore di SCOPE: il contract non
+  elencava `tools/ad_contract.py`, che la tappa doveva correggere, e la scrittura e'
+  passata lo stesso (ERR-0062). Questo contract riprende la stessa tappa con lo scope
+  corretto: chiude i residui di ERR-0060 e ERR-0061 trovati dal gate di ENG-012, e
+  aggiunge la difesa meccanica che rende impossibile la scrittura fuori scope — il
+  gancio `pre-commit` che rifiuta un commit se un file di governance non e' coperto.
+
+inputs:
+  - requirements
+  - decision_record
+  - plan
+
+acceptance_criteria:
+  - "il `brief` non ignora in silenzio `errori/*.yaml` non-UTF8 o non-mappa (avviso con la ragione) e non va in `RecursionError` su YAML annidato (revisione, registri, contract): rifiuto o degradazione dichiarata"
+  - "autodetect del profilo DSH: se c'e' un solo profilo lo usa; se ce ne sono piu' d'uno e nessuno contiene la voce, RIFIUTA chiedendo `DSH_PROFILE` (non inventa 'web'); un test lo morde (rimuovendo il fix, la suite diventa rossa)"
+  - "merge cordis: riconosce la voce per `id` ESATTO (una voce sorella con `id` che contiene il nostro non viene toccata), accetta `-   id:` e item con indentazione diversa, conserva l'indentazione originale; se la nostra voce contiene `!!js` RIFIUTA (non lo perde in silenzio)"
+  - "`--apply` su voce `disabled: true` la riabilita (toglie `disabled`) e la post-condizione lo verifica; il README dice quello che il codice fa"
+  - "`scan` vede anche i contract `.yml`; `budget: null` e' una violazione (non un warning); il ramo morto `is_dir` di `stato` e' sistemato (una directory -> 'rotta')"
+  - "`tools/ad_mcp/README.md` e `orchestrazione/README.md` non si contraddicono (niente 'non e' registrato', niente 'scrive tools/setup.py', conteggi dei controlli veri, autodetect dichiarato con l'ambiguita')"
+  - "difesa meccanica ERR-0062: `.githooks/pre-commit` rifiuta il commit se un file staged di governance (`tools/`, `.brain/`, cartelle numerate) non e' coperto da un contract attivo; un test lo prova in un repo scratch"
+  - "ERR-0062 passa a `chiuso` con la prova (il gancio esiste e morde); ERR-0060/ERR-0061 aggiornati se la risoluzione era piu' larga del codice"
+  - "`tests/test_gate_kit.py`, `tests/test_ci.py`, `tools/tests/test_ad_install.py` e le suite esistenti verdi; `tests/ci.py --full` verde; `coherence.py` 0; i contract validano"
+  - "nessuna dipendenza nuova; nessun file di altri titolari"
+
+constraints:
+  - no production access
+  - do not edit this contract
+  - do not change own permissions
+  - "nessuna dipendenza nuova"
+  - "NESSUN file di altri titolari: non `tools/README.md` e `.brain/` (ADMF-008), non `tools/setup.py` (GOV-008)"
+  - "prima di ogni scrittura su un percorso di macchina: `python3 tools/contract_scope.py check <percorso>`"
+  - "nessuna nuova funzionalita': solo i residui elencati e la difesa del gancio"
+
+outputs:
+  - code
+  - tests
+  - documentation
+  - evidence
+
+required_gates:
+  - QA
+  - Code Review
+
+approval:
+  human: true
+
+budget:
+  max_retries: 2
+
+priority: P0
+
+impact_forecast:
+  data: NONE
+  schema: LOW
+  auth: MED
+  security: MED
+  shared_platform: HIGH
+  product: NONE
+
+status: closed
+
+write_scope:
+  - "tests/gate_kit.py"
+  - "tests/test_gate_kit.py"
+  - "tools/ad_contract.py"
+  - "tools/ad_mcp/install.py"
+  - "tools/tests/test_ad_install.py"
+  - "tools/ad_mcp/README.md"
+  - "orchestrazione/README.md"
+  - "tests/ci.py"
+  - "tests/test_ci.py"
+  - ".githooks/pre-commit"
+  - "errori/ERR-0062-scrittura-fuori-scope.yaml"
+  - "errori/ERR-0060-backlog-del-kit.yaml"
+  - "errori/ERR-0061-backlog-installer.yaml"
+
+expires: "2026-11-19T00:00:00+01:00"
+
+# --- CHIUSO il 2026-10-19 con REJECT (2 gate su 2: R1 e R2) ---
+# Cosa e' entrato davvero: brief difeso sui registri malformati (KeyError e
+# RecursionError chiusi), gancio che controlla anche cartelle `N. Nome` con spazio e
+# nomi non-ASCII, cordis con id ESATTO/indentazione/`!!js` rifiutato/disabled rimosso,
+# autodetect che non inventa piu' "web" con profili ambigui, apply che ripristina lo
+# stato di PRIMA (non il primo backup), scan sui `.yml`, budget:null = violazione,
+# ERR-0062 con la difesa meccanica del gancio (tools/ e .brain/), doc allineate.
+# Residui -> ERR-0063 (cancellazioni/rename nel gancio; errori non-mappa falsy nel
+# brief; insert vuoto; test che non coprono i casi di id; risoluzioni troppo larghe).
+#
+# Perche' chiuso adesso e non con un'altra R: il budget e' esaurito e il rendimento e'
+# calato. L'MVP e' raggiunto e provato; i residui sono piccoli e vanno chiusi quando
+# danno fastidio nell'uso, non prima (vedi ERR-0063, "la lezione di questa tappa").

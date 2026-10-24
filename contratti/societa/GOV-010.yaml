@@ -1,0 +1,73 @@
+# Contract operativo GOV-010
+
+task_id: GOV-010
+title: "Creare e collegare un progetto, e la ricerca profonda col browser"
+domain: technical
+agent: platform
+task_type: shared_platform
+product: altro
+decision_record: DECISIONI/DEC-0056-lavvio-dichiara-e-chiede.md
+
+objective: >
+  Due cose che mancano perche' AAP sia finita. (1) All'avvio si chiede "nuovo o
+  esistente?", ma non esiste un comando per farlo: si crea la cartella a mano. Serve
+  `progetto.py` con `nuovo`, `collega` ed `elenca`. (2) La ricerca legge gli indirizzi
+  che le dai; con Camoufox puo' leggere piu' a fondo le fonti che trova — dentro le
+  regole, e **fermandosi davanti a un CAPTCHA** invece di provare a superarlo.
+
+inputs:
+  - requirements
+
+acceptance_criteria:
+  - progetto.py nuovo crea una cartella NUMERATA, e dice il nome completo prima di crearla
+  - progetto.py collega importa una cartella numerata, e RIFIUTA una non numerata col numero suggerito
+  - collega chiede una conferma esplicita prima di SPOSTARE qualcosa: e' irreversibile
+  - progetto.py elenca i progetti col loro numero
+  - la ricerca profonda legge le fonti trovate col browser, entro un limite dichiarato
+  - davanti a un CAPTCHA la ricerca SI FERMA e lo dice: non prova a superarlo
+  - progetto.py PROVA da solo: un giro a vuoto su un progetto di prova, senza toccare i veri
+
+constraints:
+  - no production access
+  - do not edit this contract
+  - do not change own permissions
+  - "NESSUN CAPTCHA si supera — si legge cio' che e' pubblico, e davanti a una richiesta
+    esplicita di prova di umanita' ci si ferma. E' la differenza fra leggere e forzare"
+  - "robots.txt si rispetta come sempre — il controllo e' gia' nel tool"
+  - i 17 progetti NON si toccano: si creano o si collegano su richiesta del CEO
+
+outputs:
+  - code
+  - tests
+  - documentation
+
+required_gates:
+  - Code Review
+
+approval:
+  human: true
+
+budget:
+  max_retries: 2
+
+priority: P0
+impact_forecast:
+  data: NONE
+  schema: NONE
+  auth: NONE
+  security: MED
+  shared_platform: HIGH
+  product: MED
+
+status: closed
+aperto: "2026-10-13"
+write_scope:
+  - "tools/progetto.py"
+  - "tools/ricerca.py"
+  - "tools/README.md"
+expires: "2026-11-08T00:00:00+01:00"
+
+# --- chiuso il 2026-10-13 ---
+# Fatto e provato: `progetto.py` con nuovo/collega/elenca (provato su cartelle di
+# prova, non sui progetti veri), la ricerca profonda con il muro del CAPTCHA, e
+# l'allineamento di ad-kickoff. Il registro dei comandi ha la sua riga.

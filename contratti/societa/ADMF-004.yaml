@@ -1,0 +1,112 @@
+# Contract dello sprint 2 della milestone 3 — i due controlli che non fanno il loro lavoro.
+#
+# Decisi dal CEO, 2026-10-11: «riparali tutti e tre nello sprint 2». Il terzo,
+# ERR-0028, non e' qui e la ragione e' scritta sotto: non e' codice.
+#
+# ERR-0026 — il controllo che impedisce di scrivere in un progetto senza permesso
+# esiste in UN SOLO strumento su sei: `ad_milestone._guard`. `blueprint.py` importa
+# `ad_scope` e non lo interroga, e ha scritto in un file che nessun contract copriva
+# (provato: `contract_scope.py check` su quel percorso esce 1, e la scrittura e'
+# avvenuta lo stesso). Il principio violato e' di DEC-0008: «gli strumenti si
+# rifiutano di scrivere in una cartella prodotto non coperta da un contract
+# approvato: le scritture fatte da uno script non passano dall'euristica della shell
+# del plugin, quindi la guardia sta dentro lo strumento». In un solo strumento,
+# pero'. E il docstring di `_guard` lo dice: «Un varco negli strumenti sarebbe un
+# varco nell'enforcement».
+#
+# ERR-0027 — `ad_evidence.py` sceglie l'evidenza di un gate cosi': filtra per gate,
+# prende la piu' recente per timestamp, e SOLO DOPO controlla il `task_id`. Se
+# l'evidenza di un altro permesso e' piu' nuova, quella giusta non viene nemmeno
+# guardata: il gate risulta INVALID e il verdetto e' REJECT. Provato: su 7 permessi
+# del progetto, 6 risultano falliti pur avendo la loro revisione valida, e l'unico
+# che passa e' quello la cui evidenza e' l'ultima depositata — cioe' un caso.
+# Difetto latente per costruzione: invisibile finche' esiste un solo permesso per
+# gate, si manifesta appena il sistema funziona.
+#
+# Perche' NON c'e' ERR-0028 qui. Il divieto di modificare un artefatto mentre il
+# gate lo verifica vive in QUALITY-GATES.md, che e' uno dei 12 documenti normativi:
+# cambiarlo richiede un Decision Record e la rigenerazione esplicita dell'impronta
+# di integrita'. E' una decisione del CEO, non una riparazione di codice, e
+# mescolarla a questa la renderebbe invisibile dentro un diff di strumenti.
+
+task_id: ADMF-004
+title: "La guardia dentro ogni strumento, e il verdetto che non ruba l'evidenza altrui"
+domain: technical
+agent: platform
+task_type: shared_platform
+product: altro
+decision_record: DECISIONI/DEC-0008-milestone-e-sprint.md
+
+objective: >
+  Riparare i due controlli di governance che oggi sbagliano: la guardia di ambito,
+  perche' sia chiamata da ogni strumento che scrive e non da uno solo, e la scelta
+  dell'evidenza di un gate, perche' filtri per task_id prima di scegliere per data —
+  ciascuno con la prova che esegue il caso che oggi fallisce.
+
+inputs:
+  - requirements
+  - architecture
+  - plan
+
+acceptance_criteria:
+  - ogni strumento che scrive in un percorso protetto rifiuta il percorso non coperto, e la prova esegue il rifiuto
+  - la guardia e' definita UNA volta e richiamata, non ricopiata in ogni strumento
+  - la scelta dell'evidenza di un gate filtra per task_id prima di scegliere per timestamp
+  - con due permessi che depositano lo stesso gate, ciascuno legge la PROPRIA evidenza (caso che oggi nessun test copre)
+  - il caso che oggi sbaglia e' coperto da una prova che lo esegue: non basta leggere il codice
+  - python3 tools/tests/test_ad_org.py passa
+  - il verdetto di ORD-001, FIX-001, SEC-001, REL-001 e ORD-004 smette di essere INVALID per la trappola
+
+constraints:
+  - no production access
+  - do not edit this contract
+  - do not change own permissions
+  - NON si tocca QUALITY-GATES.md ne' alcun altro documento normativo
+  - non si cambiano i criteri di un verdetto: si corregge la scelta dell'evidenza
+  - non si cambia il comportamento del verdetto sui casi legittimi: un gate senza evidenza resta un REJECT
+  - la riparazione non introduce eccezioni: se un percorso non e' coperto, si rifiuta
+
+outputs:
+  - code
+  - tests
+  - evidence
+
+required_gates:
+  - Code Review
+  - QA
+
+approval:
+  human: true
+
+budget:
+  max_retries: 2
+
+# P0, non P1: `shared_platform: HIGH` impone il massimo (DEC-0012), e il
+# validatore l'ha infatti rilevato. La macchina che giudica tutti i lavori
+# vale la priorita' piu' alta che esista.
+priority: P0
+
+# Cambia la macchina che giudica tutti i lavori: un difetto qui produce verdetti
+# falsi su lavori veri, ed e' esattamente cio' che e' successo. Il progetto non
+# viene toccato: l'impatto e' sulla piattaforma condivisa di governance.
+impact_forecast:
+  data: NONE
+  schema: NONE
+  auth: NONE
+  security: LOW
+  shared_platform: HIGH
+  product: NONE
+
+milestone: 3
+sprint: 2
+
+# CHIUSO il 2026-10-11 con la firma del CEO, registrata in
+# DECISIONI/DEC-0043-firma-riparazione-controlli.md. I due gate richiesti hanno
+# dato ACCEPT sulla stessa impronta dell'albero `tools/`; il primo tentativo era
+# stato bocciato con un difetto vero (la guardia lasciava passare i percorsi fuori
+# dall'albero di autorita'), e il rework lo ha corretto trovando anche una sesta
+# porta che il gate non aveva elencato. Da qui non copre piu' `tools/`.
+status: chiuso
+write_scope:
+  - "tools/"
+expires: "2027-01-11T00:00:00+01:00"

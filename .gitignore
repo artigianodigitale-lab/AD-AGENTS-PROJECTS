@@ -1,0 +1,57 @@
+# La configurazione locale: chi e' il CEO e dove stanno i progetti.
+# Non e' codice, e' di chi usa il motore. Si versiona solo l'esempio.
+sede.yaml
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Cache degli strumenti
+*.tmp
+*.log
+.DS_Store
+
+# Materiale di studio: e' dato, non macchina. 65 MB su 68, ricostruibile dalla
+# fonte, non serve al funzionamento. Resta su disco, non nel repository.
+studio/
+
+# Cache locale degli strumenti (rigenerabile)
+.cache/
+.pytest_cache/
+
+# Le chiavi dei servizi esterni: mai in git. Si versiona solo l'esempio.
+.env
+.env.*
+!.env.example
+
+# Il backup locale degli aggiornamenti: e' tuo, non si versiona.
+.aggiornamento/
+
+# Progetti numerati: le carte di un progetto stanno NEL progetto. Il repository
+# della macchina non li pubblica (richiesta del CEO: il progetto "1." resta fuori).
+# Solo nella radice: `[0-9]*/` senza la sbarra prendeva anche i gruppi del
+# registro (`contratti/1-Progetto Alfa/`), e i permessi di un progetto sparivano dal
+# repository — la stessa classe di ERR-0065.
+/[0-9]*/
+
+# Risposta API scaricata per prova: non si versiona.
+/cboe.json
+
+# Niente registri dei progetti, niente storia dei prodotti: la macchina e la sua fotografia pulita.
+contratti/*/
+!contratti/societa/
+approvazioni/*/
+!approvazioni/societa/
+evidenze/*.yaml
+!evidenze/*societa*
+DECISIONI/*.md
+!DECISIONI/_TEMPLATE.md
+errori/ERR-*.yaml
+piani/
+drift/
+orchestrazione/
+BLUEPRINT.md
+studio/
+.github/

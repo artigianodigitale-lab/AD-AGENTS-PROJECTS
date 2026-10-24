@@ -1,0 +1,39 @@
+# Il controllo dei segreti: cosa e' esentato, e perche'.
+#
+# PERCHE' ESISTE. Scansionando il primo commit, gitleaks ha segnalato 11 righe. Erano
+# tutte **le stringhe finte che ho scritto per spiegare come si riconosce un falso
+# allarme** — dentro `security_scan.py`, nei test, e nei verbali che raccontano il
+# caso. Il controllo trovava le frasi che insegnano a non fidarsi delle apparenze, e
+# le trattava come segreti.
+#
+# PERCHE' NON SI LASCIA IL RUMORE. Un repository che nasce con 11 allarmi permanenti
+# **insegna a ignorarli**, e in mezzo al rumore sparisce quello vero. E' il difetto
+# trovato nei progetti il 2026-10-10 (`ERR-0016`), e non si ricrea qui.
+#
+# PERCHE' PER VALORE E NON PER RIGA. La prima versione usava `.gitleaksignore`, che
+# esenta `file:regola:riga`. **E' fragile, e l'ho misurato**: aggiungendo UNA riga in
+# cima a `security_scan.py`, un'esenzione ha smesso di combaciare (segnale riapparso)
+# e l'altra e' finita a coprire **la riga accanto**. Spostare le righe fa rumore E
+# copre la cosa sbagliata. Qui si esentano i **valori**: un valore finto resta finto
+# ovunque compaia e qualunque riga sia. Verificato: 0 segnali, prima e dopo lo
+# spostamento.
+#
+# LIMITE DICHIARATO. Questo file e' una **benda**: e' il posto dove un segreto vero
+# puo' nascondersi. Le esenzioni qui sotto sono **cinque valori finti**, e sono tutti
+# ricostruibili a mano — l'ultimo e' «hello1234567890abcdef...» in base64. Se un
+# giorno servisse esentare un valore che **non** si sa ricostruire, quello e' il
+# momento di fermarsi e guardare, non di aggiungere una riga.
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "stringhe finte, scritte per PROVARE il filtro dei falsi allarmi"
+regexTarget = "match"
+regexes = [
+  '''sk-or-test-key-12345''',
+  '''sbx21-warm-neutrals''',
+  '''audience\.explicit\.b2c''',
+  '''AIzaSyD9x2KpQ7mVbN4tR8wZcL3hF6yJ1uE5sA''',
+  '''aGVsbG8xMjM0NTY3ODkwYWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4''',
+]

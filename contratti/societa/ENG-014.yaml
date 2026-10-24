@@ -1,0 +1,93 @@
+# Contract operativo ENG-014 — la prompt del revisore non contiene percorsi
+
+task_id: ENG-014
+title: "La prompt del revisore si genera dal codice, senza percorsi assoluti"
+domain: technical
+agent: platform
+task_type: shared_platform
+product: altro
+decision_record: DECISIONI/DEC-0063-il-congelamento-come-difesa-dalla-dimenticanza.md
+
+objective: >
+  La cartella della macchina si decide al lancio (workspace) e ogni strumento trova la
+  radice da `Path(__file__)`: un percorso assoluto dentro la prompt del revisore e'
+  inutile, fragile e contro la costituzione. Inoltre la prompt era improvvisata, quindi
+  nessun test poteva accorgersene (ERR-0064). `gate_kit prompt` genera la prompt dal
+  codice, senza percorsi, e un test impedisce che ne torni uno.
+
+inputs:
+  - requirements
+  - decision_record
+  - plan
+
+acceptance_criteria:
+  - "`python3 tests/gate_kit.py prompt <task> --role qa|review` stampa la PROMPT del revisore senza percorsi assoluti: ruolo e metodo, comando per leggere il brief, perimetro, divieto di chiudere il gate, dove scrivere l'evidenza, comando del verdetto; `--role` obbligatorio"
+  - "ne' il `brief` ne' la `prompt` contengono la radice della macchina (`str(ROOT)`) ne' la parola `MACCHINA:`; un test lo impone e morde (rimettendo il percorso, la suite diventa rossa)"
+  - "la `prompt` nomina il task e il ruolo e i comandi relativi (`python3 tests/gate_kit.py ...`), senza `cd` ne' percorsi"
+  - "`orchestrazione/README.md` dichiara la regola: la cartella si decide al lancio; un percorso in una prompt e' un errore (riferimento a ERR-0064)"
+  - "`ERR-0064` passa a `chiuso` con la prova (generatore + test)"
+  - "`tests/test_gate_kit.py` verde; `tests/ci.py --full` verde; `coherence.py` 0; i contract validano"
+  - "nessuna dipendenza nuova; nessun file di altri titolari"
+
+constraints:
+  - no production access
+  - do not edit this contract
+  - do not change own permissions
+  - "nessuna dipendenza nuova"
+  - "NESSUN file di altri titolari: non `tools/README.md` e `.brain/` (ADMF-008), non `tools/setup.py` (GOV-008)"
+  - "non si cambia il funzionamento del gate: solo il modo in cui la prompt viene generata"
+
+outputs:
+  - code
+  - tests
+  - documentation
+  - evidence
+
+required_gates:
+  - QA
+  - Code Review
+
+approval:
+  human: true
+
+budget:
+  max_retries: 2
+
+priority: P1
+
+impact_forecast:
+  data: NONE
+  schema: LOW
+  auth: LOW
+  security: LOW
+  shared_platform: MED
+  product: NONE
+
+status: closed
+
+write_scope:
+  - "tests/gate_kit.py"
+  - "tests/test_gate_kit.py"
+  - "orchestrazione/README.md"
+  - "errori/ERR-0064-percorso-nella-prompt.yaml"
+
+expires: "2026-11-19T00:00:00+01:00"
+
+# --- CHIUSO il 2026-10-19 con REJECT (2 gate su 2: R1 e R2) ---
+# Il fine del contract e' raggiunto ed e' verificato dai due revisori della R2:
+# la prompt del revisore la genera il codice (`gate_kit prompt`), NON contiene
+# percorsi assoluti (nessun `str(ROOT)`), porta ruolo, metodo, brief, PERIMETRO,
+# divieto di chiudere il gate, file dell'evidenza e comando del verdetto; un test
+# confronta anche la radice scratch e morde; README dichiara la regola (ERR-0064
+# chiuso). Criteri 1,3,4,5,6,7 PASS; criterio 2 PASS nella sostanza (nessun percorso),
+# con la sola parola `MACCHINA:` citata nel testo del criterio stesso.
+#
+# Perche' comunque REJECT: il gate, giudicando il kit intero, ha trovato due difetti
+# TRASVERSALI, non causati da questa modifica:
+#   - `close` accetta un'evidenza debole che `tools/verdict.py`/`ad_evidence` rifiuta
+#     (validatore piu' debole del formato che controlla: famiglia ERR-0059);
+#   - `_evidenza_problemi` va in RecursionError su YAML annidato;
+#   - piu' `acceptance_criteria` falsy e test della radice sul brief.
+# Non apro un ENG-015 per questi: sono nel backlog ERR-0063 e vanno chiusi uno per
+# uno, ciascuno con il suo contract, quando mordono. La lezione dei cinque contract:
+# una tappa "igiene" che tocca quattordici file non e' verificabile a fondo.

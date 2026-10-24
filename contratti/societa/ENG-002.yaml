@@ -1,0 +1,112 @@
+# Contract operativo ENG-002 — il cancello portabile (sprint A)
+
+task_id: ENG-002
+title: "Il cancello portabile (sprint A): server MCP di AD, senza registrazione nei client"
+domain: technical
+agent: platform
+task_type: shared_platform
+product: altro
+decision_record: DECISIONI/DEC-0057-superfici-di-esecuzione-portabili.md
+
+objective: >
+  Oggi la regola di AD vive nei suoi comandi Python: un agente la usa solo se sa
+  quale comando lanciare e come, e ogni client (DSH, Claude Code, Codex, Cursor,
+  Gemini CLI) la raggiunge in modo diverso — o non la raggiunge. Serve il confine
+  che viaggia: un server MCP locale (stdio, JSON-RPC 2.0, sole librerie standard)
+  che espone i controlli deterministici come tool tipizzati, con effetti
+  dichiarati. Sprint A: il server e i suoi test, provato in locale. La
+  registrazione nei cinque client e' ENG-003, e resta fuori da qui.
+
+inputs:
+  - requirements
+  - decision_record
+  - plan
+
+acceptance_criteria:
+  - "il server risponde a `initialize` (protocolVersion, capabilities.tools, serverInfo), `ping`, `tools/list`, `tools/call`; un metodo sconosciuto risponde con JSON-RPC -32601 e un `data.remediation`"
+  - "almeno 10 tool, ognuno con `inputSchema` JSON-Schema stretto, `annotations` derivate dagli effetti dichiarati (readOnlyHint/destructiveHint) e una descrizione che dice a cosa serve"
+  - "`ad_verdict` produce lo stesso esito di `tools/verdict.py` sugli stessi input (parita' provata da un test, non dichiarata)"
+  - "`ad_contract_check` e `ad_contract_validate` danno lo stesso esito dei comandi omonimi"
+  - "`ad_unknowns`, `ad_bundle`, `ad_tree` funzionano attraverso il server e rifiutano gli stessi casi che il CLI rifiuta"
+  - "un percorso che esce dalla root della macchina viene RIFIUTATO con la ragione, non letto: il server non ha autorita' fuori dalla macchina"
+  - "ogni errore e' `{code, message, remediation}`: un errore senza rimedio non e' rappresentabile"
+  - "nessuna dipendenza nuova: sole librerie standard; `python3 tools/ad_mcp/server.py` parte senza installare niente"
+  - "`python3 tools/tests/test_ad_mcp.py` passa e prova: handshake, lista, ogni tool, un caso di rifiuto per tool, e la parita' col CLI"
+  - "ERR-0052 chiuso: `--unknown new` valida prima di scrivere e non deposita una voce incoerente; `test_cli_bundle` usa un ledger proprio e non dipende dallo stato del registro reale"
+  - "`python3 tools/tests/test_evidenza.py` passa e `python3 tools/coherence.py` esce 0"
+
+constraints:
+  - no production access
+  - do not edit this contract
+  - do not change own permissions
+  - "nessuna dipendenza nuova (solo standard library): un server che richiede un pacchetto non e' portabile"
+  - "NESSUN file di altri titolari: non `.brain/` (ADMF-008), non `tools/setup.py` (GOV-008), non `tools/README.md` (ADMF-008). Un percorso, un titolare (DRIFT-018)"
+  - "nessuna registrazione nei client: quella e' ENG-003, e ha i suoi blocchi"
+  - "il server non scrive fuori dalla macchina e non legge fuori dalla macchina; `--tree-root` resta un'eccezione dichiarata e confinata ai test"
+
+outputs:
+  - code
+  - tests
+  - documentation
+  - evidence
+
+required_gates:
+  - QA
+  - Code Review
+
+approval:
+  human: true
+
+budget:
+  # Esteso da 2 a 3 su decisione del CEO del 2026-10-18 (fonte: "a", registrata in
+  # approvazioni/societa/ENG-002.yaml → estensione_budget). Due gate avevano dato
+  # REJECT; il terzo verifica i finding chiusi, non riapre il lavoro.
+  max_retries: 3
+
+priority: P0
+
+impact_forecast:
+  data: NONE
+  schema: HIGH
+  auth: HIGH
+  security: HIGH
+  shared_platform: HIGH
+  product: NONE
+
+status: closed
+
+write_scope:
+  - "tools/ad_mcp/__init__.py"
+  - "tools/ad_mcp/server.py"
+  - "tools/ad_mcp/README.md"
+  - "tools/tests/test_ad_mcp.py"
+  - "tools/verdict.py"
+  - "tools/ad_evidence.py"
+  - "tools/tests/test_evidenza.py"
+
+expires: "2026-11-18T00:00:00+01:00"
+
+# --- nota di apertura (2026-10-18) ---
+# Perche' i FILE e non `tools/ad_mcp/`: GOV-007 ha imparato che le cartelle creano
+# sovrapposizioni («il primo tentativo dichiarava le cartelle, e il validatore l'ha
+# preso»). `tools/verdict.py`, `tools/ad_evidence.py` e la suite sono liberi dopo la
+# chiusura di ENG-001, e ci vanno i due rilievi di ERR-0052.
+
+# --- chiuso il 2026-10-18 (4 tentativi di gate) ---
+# Verdetto finale: REJECT. Quattro gate indipendenti, tutti REJECT, con 14 difetti
+# trovati e 12 chiusi (H1-H3, M1-M4, L1, L4, N1, N2, N5*, N6, N7, i due bloccanti del
+# 3o gate). Le evidenze finali sono evidenze/ENG-002-QA.yaml e -CodeReview.yaml
+# (outcome FAIL, produttori qa/review).
+#
+# Perche' REJECT e non un quinto tentativo: il 4o gate ha verificato il
+# congelamento (9/9 impronte, revisione immobile — il protocollo di ERR-0057 ha
+# funzionato) e ha trovato due residui:
+#   1. un percorso con byte NUL -> -32603 con rimedio falso ("riprova") invece di
+#      -32602 con la ragione: ValueError sfugge a _resolve, che cattura solo OSError;
+#   2. ad_tree.paths accetta [''] (radice) e ['   '] come se fossero percorsi.
+# Sono piccoli, ma il budget di gate e' speso e la regola e' che senza ACCEPT non
+# si chiude con ACCEPT. La chiusura dei due residui e la registrazione sono in
+# **ENG-003** (approvato dal CEO con "A e B, dobbiamo risolvere ogni situazione").
+#
+# Cosa resta non fatto qui, e dove va: registrazione nei 5 client (ENG-003, bloccata
+# da ADMF-008 e GOV-008); riga in tools/README.md (DRIFT-026, ADMF-008).

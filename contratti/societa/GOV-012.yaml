@@ -1,0 +1,69 @@
+# Contract operativo GOV-012 — la regola scritta dei numeri si allinea allo strumento
+
+task_id: GOV-012
+title: "La regola dei numeri in ad-avvio dice quello che fanno gli strumenti"
+domain: technical
+agent: platform
+task_type: shared_platform
+product: altro
+decision_record: DECISIONI/DEC-0073-numeri-dei-progetti.md
+
+objective: >
+  `.brain/skills/ad-avvio/SKILL.md` dice ancora «Il numero non si sceglie a caso e non si
+  riusa», mentre `tools/ad_scope.py` assegna il primo numero libero (17) e il CEO ha deciso con
+  `DEC-0073` che i numeri liberati tornano disponibili. Un agente nuovo leggerebbe la regola
+  vecchia e rifiuterebbe il numero che lo strumento gli da'. Questo contract allinea il testo
+  alla decisione, dopo la chiusura di `GOV-009` che ne aveva la proprieta' esclusiva.
+
+inputs:
+  - requirements
+  - DECISIONI/DEC-0073-numeri-dei-progetti.md
+  - approvazioni/societa/GOV-012.yaml
+  - drift/README.md
+
+acceptance_criteria:
+  - "`.brain/skills/ad-avvio/SKILL.md` non dice piu' «non si riusa»: dice che il numero si prende dal primo libero, che un numero liberato da una cancellazione decisa dal CEO torna disponibile, e che la storia (verbali e contratti) conserva il numero del tempo"
+  - "il testo resta coerente con `DEC-0073` e con `tools/progetto.py numero` (17 oggi)"
+  - "`DRIFT-032` si chiude citando `DEC-0073`"
+  - "i comandi di macchina restano verdi: `errori.py check`, `verbali.py check`, `coherence.py`, `drift.py check`, `stato.py check`"
+  - "`python3 tests/test_strategic_memory.py` passa (nessun documento normativo di root toccato)"
+  - "l'evidenza del gate `Documentation` e' depositata in `evidenze/GOV-012-Documentation.yaml` da un agente diverso dall'esecutore"
+
+constraints:
+  - no production access
+  - do not edit this contract
+  - do not change own permissions
+  - "RAGGIO: solo `.brain/skills/ad-avvio/SKILL.md`; nessuna cartella"
+  - "nessun progetto si rinomina, nessuna cartella si sposta"
+  - "la storia non si riscrive: i verbali e i contratti restano quelli"
+  - "non si tocca `.brain/COSTITUZIONE.md`, ne' le altre skill"
+
+outputs:
+  - documentation
+  - evidence
+
+required_gates:
+  - Documentation
+
+approval:
+  human: true
+
+budget:
+  max_retries: 2
+
+priority: P2
+impact_forecast:
+  data: NONE
+  schema: NONE
+  auth: NONE
+  security: NONE
+  shared_platform: LOW
+  product: NONE
+
+# Chiuso il 2026-10-21 dopo il gate Documentation (R1 REJECT per DRIFT-032 fuori raggio,
+# R2 ACCEPT): prova in evidenze/GOV-012-Documentation.yaml, produttore technical-writer.
+status: closed
+closed_at: "2026-10-21T12:27:00+02:00"
+
+write_scope:
+  - ".brain/skills/ad-avvio/SKILL.md"

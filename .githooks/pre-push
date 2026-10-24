@@ -1,0 +1,5 @@
+#!/bin/sh
+# ENG-006 — la verifica completa prima di un push.
+# Aggiunge: impronte dei documenti normativi, suite storica (eccezione DRIFT-023),
+# controllo dell'albero (informativo: il testimone invecchia per progetto).
+exec python3 "$(git rev-parse --show-toplevel)/tests/ci.py" --full

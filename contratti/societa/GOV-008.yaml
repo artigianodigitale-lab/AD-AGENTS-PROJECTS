@@ -1,0 +1,75 @@
+# Contract operativo GOV-008 — il motore sa dove sono i progetti
+
+task_id: GOV-008
+title: "AAP finita: il motore trova i progetti anche se non stanno accanto a lui"
+domain: technical
+agent: platform
+task_type: shared_platform
+product: altro
+decision_record: DECISIONI/DEC-0055-lengine-diventa-un-prodotto.md
+
+objective: >
+  Finche' il motore cerca i progetti nella propria cartella, non e' portabile: spostarlo
+  significa perdere i progetti. `sede.yaml` dichiara gia' il campo `progetti` e
+  **nessuno lo legge**. Va letto, e i comandi che cercano i progetti devono cercarli li'.
+  Cosi' AD-AGENTS-PROJECTS diventa un motore completo: si copia, si dice dove sono i
+  progetti, e funziona.
+
+inputs:
+  - requirements
+  - decision_record
+
+acceptance_criteria:
+  - ad_docs espone dove sono i progetti, leggendolo da sede.yaml
+  - se il campo e' vuoto, i progetti sono accanto al motore: il comportamento di oggi
+  - i comandi che cercano i progetti li cercano li', non nella cartella del motore
+  - una copia del motore in un'altra cartella, puntata ai progetti, passa la suite
+  - la suite prova il caso con il difetto iniettato
+
+constraints:
+  - no production access
+  - do not edit this contract
+  - do not change own permissions
+  - i 17 progetti NON si toccano: si leggono
+  - RAGGIO: i file elencati, non le cartelle
+
+outputs:
+  - code
+  - tests
+  - documentation
+  - evidence
+
+required_gates:
+  - Code Review
+
+approval:
+  human: true
+
+budget:
+  max_retries: 2
+
+priority: P0
+impact_forecast:
+  data: NONE
+  schema: NONE
+  auth: NONE
+  security: MED
+  shared_platform: HIGH
+  product: MED
+
+status: active
+aperto: "2026-10-13"
+write_scope:
+  - "tools/ad_docs.py"
+  - "tools/ad_scope.py"
+  - "tools/ad_milestone.py"
+  - "tools/ad_coherence.py"
+  - "tools/blueprint.py"
+  - "tools/comportamento.py"
+  - "tools/stato.py"
+  - "tools/setup.py"
+  - "tools/tests/test_ad_org.py"
+  - "README.md"
+  - "sede.yaml"
+  - "orchestrazione/stato.md"
+expires: "2026-11-08T00:00:00+01:00"

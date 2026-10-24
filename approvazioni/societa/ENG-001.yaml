@@ -1,0 +1,27 @@
+# Marcatore di approvazione del CEO.
+#
+# Scritto dall'agente su indicazione esplicita del CEO (2026-10-18), come per GOV-001:
+# il campo `fonte` cita le sue parole esatte, cosi' chi rilegge puo' verificarle.
+#
+# Piu' debole di un atto scritto dal CEO: prova che l'agente ha eseguito una consegna,
+# non che il CEO ha firmato. Vedi DEC-0009.
+
+task_id: ENG-001
+piano: piani/2026-10-18-superfici-di-esecuzione-portabili.md
+decision_record: DECISIONI/DEC-0057-superfici-di-esecuzione-portabili.md
+approvato_da: CEO (il CEO)
+data: "2026-10-18T09:00:00+02:00"
+fonte: >
+  «dobbiamo cambiare la struttura per la superficie di esecuzione. Non sarà più solo DSH
+  ma per tutti gli IDE seguendo lo stesso modello di rea»
+consenso: >-
+  Approvato il cambiamento delle superfici di esecuzione: cinque, non una — DSH, Cursor,
+  Claude Code, Codex, Gemini CLI — «i principali con massima autorizzazione». Regola:
+  «Cursor sempre esecuzione», che supera DEC-0039 nella parte «una sola superficie» e ne
+  conserva il principio (nessun cancello costruito dentro un IDE di terzi: il cancello
+  viaggia con lo strumento). Modello: quello di REA, letto come portabilità da un server
+  unico, non come hook per client. Autorizzato il percorso «DEC + piano + contract».
+  Vincoli ereditati dalla costituzione: un solo esecutore (ENG-001), verifica affidata a un
+  revisore diverso da chi scrive, nessuna dipendenza nuova, nessun progetto numerato toccato,
+  e il limite nuovo (le scritture fuori dai tool sono rilevate, non impedite) va DICHIARATO
+  in ENG-002, non nascosto.

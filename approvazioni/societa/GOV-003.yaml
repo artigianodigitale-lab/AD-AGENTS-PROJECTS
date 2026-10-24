@@ -1,0 +1,20 @@
+# Marcatore di approvazione del CEO.
+
+task_id: GOV-003
+piano: piani/2026-10-10-motore-dsh-cursor-readonly.md
+approvato_da: CEO
+data: "2026-10-13T07:34:02+02:00"
+fonte: "APPROVED WITH CONSTRAINTS (2026-10-10) — GOV-003 e' la CONTINUAZIONE di GOV-001"
+fonte_delega: "forse e' meglio che non generi io un marcatore ma che lo generi tu se ti serve. Prima passi da me e io ti approvo e tu continui"
+consenso: >-
+  GOV-003 non e' un lavoro nuovo: e' la PARTE CHE RESTA di GOV-001 — il fail-closed
+  selettivo — dopo che DEC-0039 ha fatto decadere la parte Cursor. Il consenso del CEO
+  e' quello del 2026-10-10 sul blueprint «Motore DSH, Cursor in sola lettura», con il
+  vincolo 3: «Fail-closed SELETTIVO: deny su .brain/, tools/ e cartelle numerate;
+  altrove resta fail-open».
+  Cambia una cosa, ed e' la correzione di DEC-0054: il RAGGIO.
+  GOV-001 dichiarava `.brain/` e `tools/` INTERI, e cosi' copriva lo stesso terreno di
+  altri quattro permessi: cinque titolari su `tools/` (DRIFT-018). GOV-003 ne dichiara
+  TRE percorsi — `.brain/plugin/enforce-contract/`, `tools/ad_scope.py`,
+  `tools/ad_contract.py` — che sono esattamente i file che il fail-closed tocca.
+  Lo scopo e' identico; il raggio e' la meta'.

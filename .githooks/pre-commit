@@ -1,0 +1,28 @@
+#!/bin/sh
+# ENG-006 — la verifica deterministica prima di ogni commit.
+# Se e' rossa, il commit non parte. Profilo veloce: registri, contract attivi, suite.
+radice="$(git rev-parse --show-toplevel)"
+
+# ENG-013 / ERR-0062 — nessuna scrittura di governance fuori da un contract.
+# La lezione: uno script che scrive tramite un altro programma sfugge all'euristica
+# del plugin. Il gancio agisce sul punto in cui la scrittura diventa ufficiale: se un
+# file staged e' un artefatto di governance e nessun contract attivo lo copre, il
+# commit si rifiuta. Sono esentati i percorsi che la costituzione dichiara liberi
+# (registri, contratti, approvazioni, evidenze, piani, test).
+# `read` riga per riga: i nomi possono contenere spazi (la convenzione di un
+# progetto e' "18. Nome Del Progetto", e un `for` spezzerebbe la parola).
+git -c core.quotePath=false diff --cached --name-only --diff-filter=ACMR | while IFS= read -r file; do
+    [ -n "$file" ] || continue
+    case "$file" in
+        tools/*|.brain/*|[0-9]*/*) ;;
+        *) continue ;;
+    esac
+    if ! python3 "$radice/tools/contract_scope.py" check "$file" >/dev/null 2>&1; then
+        echo "COMMIT RIFIUTATO: '$file' e' un artefatto di governance e nessun contract attivo lo copre." >&2
+        echo "Apri un contract con il file nel write_scope (ERR-0062), poi riprova." >&2
+        python3 "$radice/tools/contract_scope.py" check "$file" 2>&1 | head -2 >&2
+        exit 1
+    fi
+done || exit 1
+
+exec python3 "$radice/tests/ci.py" --fast
