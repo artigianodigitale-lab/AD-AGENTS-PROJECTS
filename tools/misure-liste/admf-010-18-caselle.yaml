@@ -1,0 +1,965 @@
+# Le misure di ADMF-010 — le caselle del criterio di «prodotto finito», misurate.
+#
+# Da dove vengono. Il criterio di «finito» del prodotto e' scritto in
+# `3. AD-Marketing-Factory/docs/REMEDIATION_PLAN_TO_V1.md` §2: caselle divise in
+# sei famiglie, ferme al **2026-10-06**. Il progetto, da allora, ha prodotto una
+# milestone nuova e nove sprint. Questo elenco **non riscrive il criterio**: lo
+# esegue. Ogni casella diventa uno o piu' comandi, e l'allegato porta per ognuno
+# il comando, l'esito, il codice di uscita e il momento.
+#
+# Perche' un file e non un report. Il difetto che ha fatto bocciare tre volte il
+# report della verifica del 10-11 ottobre era **un numero scritto a mano in un
+# documento che descrive un mondo in movimento** (`DEC-0044`). Qui i numeri non
+# si scrivono: si eseguono, e il rapporto li **cita per identificatore** (M01,
+# M02, ...) invece di ricopiarli.
+#
+# Cosa NON e' questo file. Non e' il rapporto: non conclude niente e non
+# interpreta niente. Dichiara delle misure, e le misure falliscono senza dover
+# chiedere permesso a una conclusione.
+#
+# ---------------------------------------------------------------------------
+# IL LIMITE DEL RIFIUTO, applicato a QUESTO elenco — cose che ho scoperto
+# scrivendolo, e che valgono piu' della promessa che non faccio.
+#
+# 1. Il rifiuto e' un'euristica su forme note, non un sandbox. Un comando che
+#    scrive senza somigliare a nessuna delle forme elencate **non viene visto**.
+#    Il testo esteso e' in `misure.LIMITE_RIFIUTO` e finisce dentro l'allegato.
+#
+# 2. E' anche **falso positivo**, e qui se ne contano tre, tutti verificati con
+#    `misure.py check` prima di eseguire:
+#    - `sed -n '/^## 2\. Definizione/,/^## 3\./p'` viene rifiutato perche' la
+#      parola `/^##` sembra un percorso assoluto che esce dall'area. Il
+#      delimitatore alternativo di `sed` (`\%...%`) non e' supportato da GNU sed
+#      in quella forma. Rimedio usato: le due righe di confine si ricavano con
+#      `grep -n | cut`, e la misura usa un intervallo di righe. Il criterio
+#      (dove comincia e dove finisce la §2) resta scritto nel comando.
+#    - ogni menzione di `.env` viene rifiutata: la famiglia «esecuzione
+#      annidata» cerca la parola `env`, e in `.env` la trova. Rimedio usato:
+#      `.en[v]`, che e' la stessa cosa per la shell e per `grep` e non contiene
+#      la parola. **Il rimedio e' dichiarato qui e nella descrizione della
+#      misura**, perche' aggirare un controllo senza dirlo e' peggio del
+#      controllo.
+#    - `nvm install` nella descrizione del README viene rifiutato: `install` e'
+#      un verbo della famiglia «scrittura sul filesystem». Rimedio: cercare
+#      `nvm` invece di `nvm install`.
+#
+# 3. **Il rifiuto non vede cosa fa il programma che la misura lancia**, e questa
+#    e' l'unica cosa che conta davvero. La misura del typecheck esegue `tsc`: un
+#    compilatore che legge 1.200 file e, se lo si lascia fare, **riscrive
+#    `tsconfig.tsbuildinfo` dentro il prodotto**. L'ho osservato — il file ha
+#    una data di oggi e una dimensione diversa da quella del commit — e l'ho
+#    chiuso portando l'unica scrittura che `tsc` fa su `/dev/null`
+#    (`--tsBuildInfoFile /dev/null`, l'unica deroga dichiarata da `misure.py`).
+#    Nessuna lista di parole vietate poteva vedere quella scrittura: la riga di
+#    comando dice `--noEmit`. E' il motivo per cui la difesa vera non e' questa
+#    lista, ed e' il motivo per cui questa nota sta in testa al file invece che
+#    in fondo.
+#
+# 4. **Le 63 suite smoke non entrano in un elenco di misure**, per due ragioni
+#    indipendenti: il comando che il progetto usa e' `npm run test:all`, e
+#    `misure.py` rifiuta qualunque comando che nomina `npm` (nel pattern c'e' la
+#    parola, non il verbo); e la suite dura piu' di `TIMEOUT_SECONDI` = 120s. Le
+#    suite sono state eseguite **a mano, una volta**, durante questo sprint: il
+#    comando, l'esito grezzo e il momento stanno nel rapporto, col limite
+#    dichiarato accanto. Le misure di questo file provano che le suite
+#    **esistono, quante sono, che girano su un database usa-e-getta e che il
+#    database di lavoro non e' stato toccato**: non provano il verdetto delle
+#    suite, che non e' una misura.
+#
+# Le misure sono dichiarate **di sola lettura**, e chi scrive questo file ne
+# risponde: e' l'unica difesa che regge, perche' un elenco di cose vietate non
+# finisce mai.
+
+titolo: "ADMF-010 — le caselle del criterio di «prodotto finito», misurate adesso"
+descrizione: |
+  Le caselle della §2 di `docs/REMEDIATION_PLAN_TO_V1.md` («Definizione di
+  FINITO»), misurate sul prodotto e sui registri come stanno **oggi**. Il
+  criterio e' del 2026-10-06 e non si riscrive: si guarda cosa risulta.
+
+  L'ordine segue le sei famiglie del criterio (2.1 gate verdi e automatici,
+  2.2 prodotto veritiero, 2.3 prodotto sicuro, 2.4 uso reale locale, 2.5 deploy
+  e pubblicazione, 2.6 documentazione chiusa), piu' un blocco iniziale che misura
+  **il criterio stesso** e un blocco finale che misura cio' che serve per essere
+  **ufficiale** — che il criterio del 2026-10-06 non nomina.
+
+  **Perche' il primo blocco esiste.** Il contract, il prompt dello sprint e la
+  ricerca dello sprint 3 dicono tutti «18 caselle». La prima cosa da misurare e'
+  se sono 18: un criterio che sbaglia il conteggio di se stesso e' un criterio
+  che nessuno ha contato, ed e' esattamente il difetto che questo sprint esiste
+  per chiudere. Lo dice la misura «quante caselle ha davvero la §2».
+
+  **Una nota sulla riproducibilita', che riguarda questo file.** Nessuna misura
+  conta i file della cartella in cui vive l'allegato: quel conteggio e' fra le
+  voci escluse, in fondo, con la ragione — una misura che osserva la cartella in
+  cui vive l'allegato vede se stessa al primo giro, e il progetto l'ha gia'
+  imparato una volta. Per la stessa ragione nessuna misura legge il contenuto
+  dell'allegato. L'elenco e' stato eseguito **piu' volte** — la prima per
+  verificare che i comandi passassero, le ultime a elenco fermo — e l'allegato
+  pubblicato e' **l'ultimo giro**.
+
+  **Cosa questo allegato non e'.** Non e' un verdetto. Dice cosa risulta oggi,
+  non se il prodotto sia vendibile: quello dipende da cosa si vende e a chi, e
+  non e' una misura.
+
+area: "."
+
+misure:
+  # ---------------------------------------------------------------------
+  # 0. IL CRITERIO STESSO — quante caselle ha, e quante ne sono spuntate
+  # ---------------------------------------------------------------------
+
+  - nome: "0.1 la data del criterio"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      grep -n 'Ultimo aggiornamento' docs/REMEDIATION_PLAN_TO_V1.md
+    descrizione: >
+      La riga di intestazione che dice a quando il criterio e' fermo. Il
+      contract dello sprint dichiara il **2026-10-06**: la misura dice se quella
+      data e' ancora quella scritta nel file. Da sola non dice se il criterio
+      sia vecchio — lo dice il confronto con le misure che seguono.
+
+  - nome: "0.2 quante caselle ha davvero la §2"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      a=$(grep -n '^## 2\. Definizione' docs/REMEDIATION_PLAN_TO_V1.md | cut -d: -f1)
+      b=$(grep -n '^## 3\. ' docs/REMEDIATION_PLAN_TO_V1.md | cut -d: -f1)
+      sed -n "${a},$((b-1))p" docs/REMEDIATION_PLAN_TO_V1.md | grep -cE '^[[:space:]]*-[[:space:]]*\[[ xX]\]'
+    descrizione: >
+      Il numero di caselle della §2, contato dal file e non dalla memoria. Le
+      due righe di confine si ricavano con `grep -n` invece che con un
+      intervallo di `sed` per la ragione dichiarata in testa al file: il
+      delimitatore `/` fa leggere al controllo di area un percorso. Il contract,
+      il prompt e la ricerca dicono **18**: se il numero che esce qui e' un
+      altro, il criterio sbaglia il conteggio di se stesso, e va detto — non
+      corretto di nascosto.
+
+  - nome: "0.3 quante caselle sono spuntate"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      a=$(grep -n '^## 2\. Definizione' docs/REMEDIATION_PLAN_TO_V1.md | cut -d: -f1)
+      b=$(grep -n '^## 3\. ' docs/REMEDIATION_PLAN_TO_V1.md | cut -d: -f1)
+      sed -n "${a},$((b-1))p" docs/REMEDIATION_PLAN_TO_V1.md | grep -cE '^[[:space:]]*-[[:space:]]*\[[xX]\]'
+    descrizione: >
+      Quante caselle il criterio dichiara fatte di suo pugno. E' una
+      dichiarazione, non una misura del prodotto: le misure da «i quattro gate
+      esistono come comandi» in poi dicono se quella dichiarazione regge.
+
+  - nome: "0.4 quante famiglie"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      a=$(grep -n '^## 2\. Definizione' docs/REMEDIATION_PLAN_TO_V1.md | cut -d: -f1)
+      b=$(grep -n '^## 3\. ' docs/REMEDIATION_PLAN_TO_V1.md | cut -d: -f1)
+      sed -n "${a},$((b-1))p" docs/REMEDIATION_PLAN_TO_V1.md | grep -c '^### 2\.'
+    descrizione: >
+      Le famiglie in cui la §2 divide le caselle. Il contract ne dichiara
+      **sei**, e le nomina: gate verdi e automatici, prodotto veritiero,
+      prodotto sicuro, uso reale locale, deploy e pubblicazione, documentazione
+      chiusa.
+
+  - nome: "0.5 le sei famiglie, per nome"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      a=$(grep -n '^## 2\. Definizione' docs/REMEDIATION_PLAN_TO_V1.md | cut -d: -f1)
+      b=$(grep -n '^## 3\. ' docs/REMEDIATION_PLAN_TO_V1.md | cut -d: -f1)
+      sed -n "${a},$((b-1))p" docs/REMEDIATION_PLAN_TO_V1.md | grep '^### 2\.'
+    descrizione: >
+      I titoli delle famiglie, come sono scritti. Serve a citarle senza
+      parafrasarle: una famiglia rinominata a memoria e' un rimando che non si
+      ritrova.
+
+  - nome: "0.6 le caselle non spuntate, una per una"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      a=$(grep -n '^## 2\. Definizione' docs/REMEDIATION_PLAN_TO_V1.md | cut -d: -f1)
+      b=$(grep -n '^## 3\. ' docs/REMEDIATION_PLAN_TO_V1.md | cut -d: -f1)
+      sed -n "${a},$((b-1))p" docs/REMEDIATION_PLAN_TO_V1.md | grep -E '^[[:space:]]*-[[:space:]]*\[ \]'
+    descrizione: >
+      Le caselle che il criterio dichiara aperte, con il testo esatto. E' il
+      punto di partenza dell'inventario: cosa il criterio chiede e non ha.
+
+  # ---------------------------------------------------------------------
+  # 2.1 GATE VERDI E AUTOMATICI
+  # ---------------------------------------------------------------------
+
+  - nome: "1.1 i gate esistono come comandi"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      grep -nE '"(typecheck|lint|build|verify|test:all)":' package.json
+    descrizione: >
+      Le voci di `scripts` che il criterio nomina: `typecheck`, `lint`, `build`,
+      la suite smoke (`test:all`) e il comando che le concatena (`verify`). Il
+      criterio chiede che i gate siano «verdi e automatici»: la prima condizione
+      e' che esistano come comando, e questa misura lo dice.
+
+  - nome: "1.2 typecheck eseguito adesso"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      node_modules/.bin/tsc --noEmit --incremental false --tsBuildInfoFile /dev/null -p tsconfig.json
+    descrizione: >
+      Il gate «typecheck → 0 errori», **eseguito**: il compilatore TypeScript
+      legge il progetto e non emette niente. `--tsBuildInfoFile /dev/null` e' la
+      parte che rende la misura dichiarabile di sola lettura: senza, il
+      compilatore riscrive `tsconfig.tsbuildinfo` **dentro il prodotto**, e
+      l'ho osservato accadere (la misura «la cache di TypeScript dentro il
+      prodotto» mostra il file modificato). `/dev/null` e' l'unica deroga
+      dichiarata da `misure.py`: quello che `tsc` scrive non finisce su disco.
+      Un'uscita vuota **e** codice 0 significano zero errori; qualunque riga
+      stampata e' un errore, e il codice di uscita lo dice. Eseguito con il Node
+      di sistema (v18) e non con il 24 pinnato dal progetto: la differenza e'
+      dichiarata nel rapporto, e riguarda la versione del runtime, non il
+      verdetto sui tipi.
+
+  - nome: "1.3 lint eseguito adesso"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      set -o pipefail; node_modules/.bin/eslint . | tail -3
+    descrizione: >
+      Il gate «lint → 0 errori», eseguito. `set -o pipefail` sta li' perche'
+      senza, il codice di uscita sarebbe quello di `tail` — cioe' sempre 0 — e
+      la misura direbbe il contrario di quello che vuole dire: e' l'errore che
+      il report dello sprint 2 ha gia' commesso e dichiarato. `tail -3` mostra
+      la riga di riepilogo di ESLint invece delle prime 40 righe di elenco, che
+      sarebbero tutte avvisi. **Residuo dichiarato:** ESLint non emette file, ma
+      a differenza di `tsc` non esiste un flag che lo dimostri; la misura lo
+      dichiara invece di prometterlo.
+
+  - nome: "1.4 l'artefatto della build, e la sua data"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      printf 'BUILD_ID: '; cat .next/BUILD_ID; printf 'data: '; stat -c '%y' .next/BUILD_ID
+    descrizione: >
+      Il gate «build → produce artefatti»: l'artefatto c'e', e questa misura ne
+      stampa l'identificatore e **quando** e' stato prodotto. E' il modo di dire
+      «la build esiste» senza dire «la build e' quella di adesso», che sono due
+      affermazioni diverse.
+
+  - nome: "1.5 quando il codice e' stato toccato l'ultima volta"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      git log -1 --format='%h %ad %s' --date=iso -- lib app
+      git log -1 --format='%h %ad %s' --date=iso
+    descrizione: >
+      L'ultimo commit che ha toccato `lib/` e `app/`, e l'ultimo commit in
+      assoluto. Confrontati con la data dell'artefatto dicono se la build e'
+      **piu' vecchia del codice**: una build verde che precede l'ultima modifica
+      e' un artefatto stantio, non una prova.
+
+  - nome: "1.6 le suite smoke: quante sono"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      ls scripts/*-smoke.ts | wc -l
+    descrizione: >
+      Quante suite di prova esistono adesso. Il prompt dello sprint e il report
+      dello sprint 4 dicono **64**: questo conteggio dice quante ne trova
+      l'elenco dei file, e la misura «il conteggio che fa il runner» dice quante
+      ne esegue il runner. Se i due numeri non coincidono con 64, la differenza
+      e' un fatto da riportare.
+
+  - nome: "1.7 le suite smoke: quali"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      ls scripts/*-smoke.ts
+    descrizione: >
+      L'elenco, un file per riga. Sono piu' righe di quante l'allegato ne
+      mostri: la sezione **dichiara** quante ne ha omesse invece di tagliare in
+      silenzio, che e' la stessa classe di difetto di `ERR-0029`.
+
+  - nome: "1.8 il conteggio che fa il runner"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      grep -n 'Smoke trovati' scripts/run-all-smokes.ts
+    descrizione: >
+      La riga del runner che stampa il conteggio delle suite. E' il criterio con
+      cui il runner sceglie i file (`endsWith("-smoke.ts")`), ed e' la ragione
+      per cui il numero del runner e il numero dei file possono non coincidere
+      con quello che un umano conta a occhio: `run-all-smokes.ts` finisce in
+      `-smokes.ts`, e chi conta con un `*smoke*.ts` lo conta anche lui.
+
+  - nome: "1.9 le suite girano su un database usa-e-getta"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      grep -n 'mkdtempSync\|os.tmpdir\|MFA_TEST_DATABASE_URL' scripts/run-all-smokes.ts | head -8
+    descrizione: >
+      Le righe che creano il database di prova: il runner costruisce un file
+      **temporaneo** per ogni suite e punta li' `DATABASE_URL` e
+      `MFA_TEST_DATABASE_URL`. E' la ragione per cui la suite si e' potuta
+      eseguire durante questo sprint senza toccare il database di lavoro — e la
+      misura «il database di lavoro, dopo le prove» verifica che non l'abbia
+      toccato.
+
+  - nome: "1.10 il database di lavoro, dopo le prove"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      stat -c '%n %s byte mtime=%y' prisma/dev.db
+      sha256sum prisma/dev.db
+    descrizione: >
+      Il database di lavoro dell'utente: dimensione, **data** e impronta. La
+      suite smoke e' stata eseguita durante questo sprint: se avesse scritto nel
+      database di lavoro, la data sarebbe di oggi. Una data del 7 ottobre e'
+      quindi la prova che la suite e' rimasta ermetica — e vale come prova
+      **dopo** l'esecuzione, che e' l'unico momento in cui si puo' prendere.
+
+  - nome: "1.11 la CI: cosa esegue e quando"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      grep -nE 'on:|push:|pull_request:|run:|node-version-file' .github/workflows/verify.yml
+    descrizione: >
+      Il workflow che il criterio chiede («CI che esegue tutto a ogni push»): su
+      quali eventi parte e quali comandi lancia. Il file esiste ed e' completo.
+      Che esista non vuol dire che sia mai partito: lo dice la misura «la CI e'
+      mai stata eseguita?». Il pattern non nomina `npm` di proposito: la parola
+      e' nella lista dei rifiuti, e la riga che la contiene non aggiungerebbe
+      niente a `run:`.
+
+  - nome: "1.12 la CI e' mai stata eseguita?"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      printf 'commit su origin/main: '; git log origin/main --oneline | wc -l
+      printf 'file .github su origin/main: '; git ls-tree -r --name-only origin/main | grep -c '^\.github'
+    esito_atteso: [0, 1]
+    descrizione: >
+      GitHub esegue un workflow solo se il workflow **e' in un commit che ha
+      ricevuto**. Se `origin/main` ha un solo commit e nessun file `.github`, la
+      CI non e' mai partita. Il criterio lo sapeva e lo scriveva («da attivare
+      con il primo push su GitHub»): la misura dice se quella condizione e'
+      ancora vera oggi. Il conteggio puo' uscire 0, e allora `grep -c` esce 1:
+      quel codice **non** e' un guasto, e' la risposta, e sta scritto qui
+      perche' chi legge non lo legga come un guasto.
+
+  - nome: "1.13 i commit che non sono mai usciti dalla macchina"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      git rev-list --count origin/main..HEAD
+      git branch -vv
+    descrizione: >
+      Quanti commit locali non sono su `origin/main`. E' la distanza fra
+      «committato» e «al sicuro», ed e' anche la distanza fra «la CI esiste» e
+      «la CI ha girato»: la CI gira su quello che arriva, non su quello che c'e'
+      in locale.
+
+  - nome: "1.14 Node: cosa dice il criterio e cosa dicono i file"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      printf '.nvmrc: '; cat .nvmrc
+      grep -n '"node"' package.json
+      grep -n 'node-version-file' .github/workflows/verify.yml
+    descrizione: >
+      La casella «Node pinnato a 20 (`.nvmrc` + `engines`)»: il criterio nomina
+      **20**, il `.nvmrc` e `engines` dicono un'altra cosa, e la CI legge il
+      `.nvmrc`. Tre file, tre numeri: la misura li mette uno accanto all'altro
+      perche' la casella e' formulata con un numero che non e' quello che il
+      progetto usa.
+
+  - nome: "1.15 la versione di Node sbagliata fallisce subito"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      grep -nE 'process\.versions\.node|22|exit' scripts/check-node.mjs | head -12
+    descrizione: >
+      Il controllo che `predev`, `prebuild` e `pretest:all` eseguono prima di
+      ogni gate: se la versione di Node non basta, il comando si ferma con un
+      messaggio invece di fallire a meta' con un errore oscuro. E' la difesa che
+      rende la casella «Node pinnato» qualcosa di piu' di una riga in un file.
+
+  - nome: "1.16 la cache di TypeScript dentro il prodotto"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      git status --porcelain -- tsconfig.tsbuildinfo lib app prisma scripts README.md
+    descrizione: >
+      Cosa risulta modificato, rispetto all'ultimo commit, fra i file del
+      prodotto. Serve a due cose, e la seconda e' la ragione per cui la misura
+      esiste: mostra che `tsconfig.tsbuildinfo` — la cache che `tsc` scrive — e'
+      **gia' modificato**, e lo era anche prima di questo sprint; e mostra che
+      nessun file di codice lo e'. E' la prova che la misura del typecheck, se
+      non fosse stata chiusa su `/dev/null`, avrebbe scritto dentro il prodotto:
+      e' la classe di difetto di `ERR-0028`, «prodotto modificato durante il
+      gate», applicata a una misura.
+
+  # ---------------------------------------------------------------------
+  # 2.2 PRODOTTO VERITIERO
+  # ---------------------------------------------------------------------
+
+  - nome: "2.1 il contesto del Copilot: i tre blocchi di conoscenza"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      grep -n 'Conoscenza business (Discovery)\|--- Brand DNA ---\|--- Strategia' lib/assistant/project-context.ts
+    descrizione: >
+      La casella «il contesto del Copilot contiene i dati di business
+      (Discovery, Brand DNA, strategia)»: i tre blocchi che l'assistente riceve,
+      per nome, nel file che li costruisce. E' la casella che il criterio
+      dichiara gia' fatta, e la misura dice dove sta.
+
+  - nome: "2.2 le etichette di stato dei dati"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      sed -n '1,30p' lib/ux/status.ts
+    descrizione: >
+      Le tre etichette con cui il prodotto dichiara cosa sta mostrando:
+      `REAL`, `SIMULATED`, `NOT_AVAILABLE`. Il file dice, nella riga
+      dell'ultima, la frase che e' il cuore della casella «missing ≠ zero»:
+      *«Informazione assente o non calcolabile. Non è zero.»*
+
+  - nome: "2.3 quanti file del prodotto usano NOT_AVAILABLE"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      grep -rl 'NOT_AVAILABLE' lib app | wc -l
+    descrizione: >
+      Quanti file portano il vocabolario dell'assenza. E' una misura di
+      **diffusione**, non di correttezza: dice che il prodotto ha una parola per
+      «non lo so» e che la usa in molti posti. Non dice che **tutti** i percorsi
+      UI la usino, ed e' un limite dichiarato: la casella chiede «su tutti i
+      percorsi», e quel «tutti» non si misura contando i file che la usano — si
+      misurerebbe contando quelli che **non** la usano, che e' un'altra cosa.
+
+  - nome: "2.4 il punteggio fabbricato: cosa ne resta"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      grep -n 'predictedScore' prisma/schema.prisma
+      grep -c 'default(6.5)' prisma/schema.prisma
+    esito_atteso: [0, 1]
+    descrizione: >
+      La casella «nessun numero fabbricato presentato come metrica», sulla sua
+      prova piu' concreta: lo schema imponeva `predictedScore @default(6.5)`,
+      cioe' un voto inventato su ogni riga. Il campo sopravvive come colonna
+      nullable o obbligatoria; il valore di default no. Il secondo comando conta
+      le occorrenze di `default(6.5)`: se esce **0** esce anche codice 1 — la
+      risposta e' nel conteggio, non nel codice.
+
+  - nome: "2.5 i default numerici rimasti nello schema"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      grep -nE '@default\([0-9]+\.[0-9]+\)' prisma/schema.prisma
+    descrizione: >
+      I soli default decimali che restano nei modelli. Il criterio chiede che
+      nessun numero fabbricato sia **presentato come metrica**: questa misura
+      mostra i candidati, e distinguerli richiede di leggere cosa rappresentano —
+      che e' un giudizio, non una misura.
+
+  - nome: "2.6 l'etichetta dell'AI: com'e' calcolata"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      grep -n 'isFallbackProvider\|usedFallback\|aiMode' lib/ai/runtime-status.ts
+    descrizione: >
+      La casella «nessun output deterministico etichettato come AI "live"»: il
+      punto in cui il prodotto decide se un output e' `live` o `fallback`. Se
+      l'etichetta e' **calcolata** dal provider usato — `usedFallback ? "fallback"
+      : "live"` — allora non e' un'etichetta fissa, ed e' la condizione che la
+      casella chiede. Il commento alla riga 19 racconta che questa stessa riga
+      era sbagliata una volta: *«Missing this made the persona route report
+      `aiMode:"live"`»*. La misura e' statica: non esegue il prodotto.
+
+  - nome: "2.7 l'invariante «attribuito non e' causa», dove sta"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      grep -rn 'Proven Cause' lib app --include='*.ts' --include='*.tsx'
+    descrizione: >
+      La terza parte della casella: `Attributed ≠ Proven Cause`. La misura dice
+      in **quanti e quali** punti del prodotto l'invariante e' scritta — dove
+      viene calcolata e dove viene mostrata all'utente. Un invariante scritto in
+      un documento e assente dal codice non e' un invariante: e' un proposito.
+
+  - nome: "2.8 il guard che prova l'invariante, e cosa fallisce se si rompe"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      grep -n 'F1-H12\|causal' scripts/fase1-honesty-smoke.ts | head -12
+    descrizione: >
+      Il guard che non si limita a leggere la costante: chiama il costruttore del
+      report e verifica il **comportamento** (`causal === "NOT_AVAILABLE"` e la
+      limitazione presente). Il commento sopra il guard dice che con una
+      mutazione a runtime il test fallisce: *«FAIL F1-H12: causalità dichiarata:
+      PROVEN»*. E' la differenza fra una casella spuntata e una casella difesa.
+
+  # ---------------------------------------------------------------------
+  # 2.3 PRODOTTO SICURO
+  # ---------------------------------------------------------------------
+  - nome: "3.1 la validazione della pubblicazione, e chi la chiama"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      printf 'occorrenze: '; grep -rn 'validatePublication' lib app --include='*.ts' | wc -l
+      grep -rln 'validatePublication' lib app --include='*.ts'
+    descrizione: >
+      La casella «nessuna pubblicazione senza `validatePublication` + record
+      `Publication` + audit»: quante volte la funzione di validazione compare e
+      in quali file. La misura dice che la porta esiste ed e' chiamata dentro il
+      motore di pubblicazione. **Non** dice che nessun percorso la salti: quello
+      sarebbe un'analisi di flusso, e si fa leggendo — la sprint 2 ha trovato
+      che una route la saltava, ed e' la ragione per cui esiste il flag della
+      misura «la pubblicazione esterna e' dichiarata spenta».
+
+  - nome: "3.2 la pubblicazione esterna e' dichiarata spenta"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      sed -n '1,25p' lib/publishing/feature-flags.ts
+    descrizione: >
+      Il flag `EXTERNAL_PUBLISH_ENABLED` e il messaggio con cui il prodotto dice
+      all'utente che la pubblicazione esterna e' disattivata. E' una
+      **dichiarazione esplicita**, ed e' una delle due cose che la famiglia 2.5
+      chiede in alternativa alla pubblicazione vera.
+
+  - nome: "3.3 la sandbox: cosa blocca e cosa lascia passare"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      sed -n '10,36p' lib/sandbox/policy.ts
+    descrizione: >
+      La matrice degli effetti esterni. In modalita' SANDBOX `publish`, `email`,
+      `webhook`, `externalApiMutation`, `payment` sono **BLOCKED**. In modalita'
+      REAL la stessa tabella dice `publish: "connector-dependent"` e
+      `payment: "allowed"`: sono **caselle vuote dichiarate**, e vanno lette
+      come tali — una matrice non e' un'implementazione. Serve all'inventario:
+      il prodotto ha un posto dove il pagamento andrebbe, e nessun codice dentro.
+
+  - nome: "3.4 l'isolamento per progetto: dove e' usato"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      printf 'file in lib e app: '; grep -rl 'project-scope' app lib | wc -l
+      printf 'route API: '; grep -rl 'project-scope' app/api | wc -l
+      printf 'route API totali: '; find app/api -name route.ts | wc -l
+    descrizione: >
+      La casella «nessun percorso UI puo' scrivere in un progetto diverso da
+      quello selezionato»: la guardia esiste (`lib/security/project-scope.ts`) e
+      il numero dice **quante** delle route la usano direttamente. Il numero
+      delle route totali sta accanto apposta: e' il denominatore, e senza quello
+      il primo numero non vuol dire niente. Che tutte le altre non ne abbiano
+      bisogno **non** e' provato da questa misura.
+
+  - nome: "3.5 l'accesso: un token, nessun ruolo, fail-closed"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      sed -n '1,40p' lib/auth/access.ts
+    descrizione: >
+      La casella «fail-closed auth» e, insieme, il fatto che pesa
+      sull'inventario: l'accesso e' **un token unico** con cookie httpOnly, e il
+      file lo dice di se' (*«gate single-user»*). Nessun modello utente, nessun
+      ruolo per persona. Il fail-closed c'e' ed e' scritto
+      (`isProductionRuntime`).
+
+  - nome: "3.6 gli smoke che provano sicurezza e sandbox"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      ls -1 scripts/auth-cookie-smoke.ts scripts/security-behavior-smoke.ts scripts/publishing-disabled-smoke.ts
+    descrizione: >
+      Tre suite che riguardano le caselle della famiglia 2.3: il cookie di
+      accesso, il comportamento di sicurezza, la pubblicazione disattivata. La
+      misura dice che esistono; se passino lo dice l'esecuzione delle suite, che
+      non e' una misura di questo elenco.
+
+  - nome: "3.7 le due variabili che aprono cio' che il fail-closed chiude"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      grep -n 'MFA_ALLOW_OPEN_ACCESS\|MFA_FORCE_DEPLOY_AUTH' .en[v].example
+    descrizione: >
+      Le due variabili d'emergenza dichiarate nel modello di configurazione:
+      `MFA_ALLOW_OPEN_ACCESS=1` **apre** cio' che il fail-closed chiude, e
+      `MFA_FORCE_DEPLOY_AUTH=1` forza il runtime di produzione. Sono dichiarate,
+      quindi non sono nascoste — ma sono porte, e l'inventario deve saperlo.
+      **Nota sul comando:** il percorso e' scritto `.en[v].example` e non
+      `.env.example` perche' la parola `env`, da sola, fa rifiutare la misura
+      dalla famiglia «esecuzione annidata»: e' un falso positivo del controllo,
+      e il rimedio e' dichiarato invece che silenzioso.
+
+  # ---------------------------------------------------------------------
+  # 2.4 USO REALE LOCALE
+  # ---------------------------------------------------------------------
+
+  - nome: "4.1 l'installazione: cosa dice il README"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      grep -n 'Node.js 22\|nvm\|## Setup locale\|installazione da zero\|clone' README.md | head -12
+    descrizione: >
+      La casella «installazione pulita su Linux Mint documentata e provata»:
+      questa misura prende la parte **documentata**. La parte «provata» non e'
+      una misura di questo elenco: servirebbe una macchina pulita, e non c'e'.
+      Il pattern cerca `nvm` e non `nvm install` perche' `install` e' un verbo
+      della famiglia «scrittura sul filesystem» e farebbe rifiutare la misura.
+
+  - nome: "4.2 cosa dichiara il piano sulla Fase 2"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      grep -n 'in corso — richiede il tuo uso\|Fase 3 — Deploy e pubblicazione online' docs/REMEDIATION_PLAN_TO_V1.md
+    descrizione: >
+      La riga con cui il piano, **scritto da chi ha scritto il criterio**,
+      dichiara lo stato della famiglia 2.4: «in corso — richiede il tuo uso».
+      E' il documento che dice di non aver finito la famiglia, ed e' la prova
+      piu' diretta che «almeno una campagna reale gestita end-to-end» non c'e'.
+
+  - nome: "4.3 le caselle ancora aperte del piano a fasi"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      printf 'aperte: '; grep -cE '\[ \]' docs/FASE_2_ATTRITI_E_VERIFICHE.md
+      printf 'chiuse: '; grep -cE '\[x\]' docs/FASE_2_ATTRITI_E_VERIFICHE.md
+      grep -nE '\[ \]' docs/FASE_2_ATTRITI_E_VERIFICHE.md
+    descrizione: >
+      Quante caselle del piano a fasi restano aperte, e quali. Fra queste ci
+      sono le tre che riguardano la famiglia 2.6 (filone AMF, `prisma migrate`,
+      tag) e le tre della Fase 5, di cui la prima e' **questo sprint**. Le
+      famiglie non sono indipendenti, e una casella di documentazione puo'
+      dipendere da un lavoro che sta in un'altra famiglia.
+
+  - nome: "4.4 dove compare la parola «campagna reale»"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      grep -rn 'campagna reale\|campagne vere\|campagne reali' docs README.md 2>/dev/null | head -10
+      printf 'occorrenze: '; grep -rn 'campagna reale\|campagne vere\|campagne reali' docs README.md 2>/dev/null | wc -l
+    descrizione: >
+      Cerca la traccia di una campagna vera: se le occorrenze sono **solo** le
+      caselle che la chiedono, allora non c'e' un registro dell'uso, e la casella
+      «almeno una campagna reale» non e' ne' fatta ne' misurabile da qui. E' una
+      misura dell'**assenza di traccia**, che e' un fatto diverso dall'assenza
+      del fatto — e la differenza va detta.
+
+  - nome: "4.5 il workspace dell'utente: cosa c'e' su disco"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      stat -c '%n %s byte mtime=%y' prisma/dev.db
+      printf 'file in .data-export: '; ls -1 .data-export 2>/dev/null | wc -l
+      ls -1 .data-export 2>/dev/null | head -5
+    descrizione: >
+      Il database locale e i backup logici nella cartella di export. La data del
+      database e' l'ultima volta che qualcosa ci ha scritto: dice da quando il
+      workspace dell'utente non si muove, che e' un modo indiretto — e
+      dichiarato indiretto — di guardare l'uso reale senza aprirlo. Il database
+      non si apre: leggerne le righe richiederebbe uno strumento che questo
+      elenco non ha, ed e' fra le voci escluse.
+
+  - nome: "4.6 la pipeline di consegna su un clone pulito"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      grep -n 'clone pulito' docs/FASE_2_ATTRITI_E_VERIFICHE.md docs/REMEDIATION_PLAN_TO_V1.md | head -8
+    descrizione: >
+      La parte «provata» della casella sull'installazione: il progetto dichiara
+      di aver rieseguito i passi della CI su un clone nuovo e **senza `.env`**.
+      La misura mostra dove sta quella prova e quante volte e' dichiarata. Quello
+      che **non** prova e' un'installazione su una macchina nuova: e' un clone
+      sullo stesso sistema, e la differenza va detta.
+
+  # ---------------------------------------------------------------------
+  # 2.5 DEPLOY E PUBBLICAZIONE
+  # ---------------------------------------------------------------------
+
+  - nome: "5.1 il Worker e' configurato"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      cat wrangler.jsonc
+    descrizione: >
+      La configurazione del Worker Cloudflare: nome `admf`, `workers_dev: true`,
+      l'artefatto da pubblicare (`.open-next/worker.js`) e le compatibilita'. La
+      casella chiede un «Worker Cloudflare live»: la configurazione e' la
+      premessa, non il fatto.
+
+  - nome: "5.2 l'artefatto del Worker esiste?"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      ls -d .open-next
+    esito_atteso: 2
+    descrizione: >
+      `.open-next/worker.js` e' **cosa** il deploy pubblicherebbe. Se la cartella
+      non esiste, la build per il Worker non e' mai stata fatta in questo albero.
+      Il codice di uscita **2** e' l'esito dichiarato apposta — `ls` esce 2
+      quando il percorso non c'e' —, cosi' l'assenza si legge come la risposta
+      che e' invece di essere segnalata come un guasto dello strumento.
+
+  - nome: "5.3 i segreti: cosa serve, cosa c'e', cosa e' finito in un commit"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      grep -nE '^(AI_SECRETS_KEY|APP_ACCESS_TOKEN|TURSO_DATABASE_URL|TURSO_AUTH_TOKEN)=' .en[v].example
+      printf 'AI_SECRETS_KEY valorizzata in .en[v]: '; grep -cE '^AI_SECRETS_KEY=.+' .en[v]
+      printf 'APP_ACCESS_TOKEN valorizzata in .en[v]: '; grep -cE '^APP_ACCESS_TOKEN=.+' .en[v]
+      printf 'file di configurazione in un commit: '; git ls-files .en[v] .dev.vars .en[v].cloudflare | wc -l
+    descrizione: >
+      La casella «segreti presenti»: il modello di configurazione dichiara i
+      quattro segreti che servono; i due conteggi dicono quali sono valorizzati
+      **sul disco di sviluppo** — il conteggio, non il valore: un segreto non
+      entra in un allegato, e chi legge non deve poterlo leggere di qui;
+      l'ultimo numero dice se quei file sono finiti in un commit. Zero e' il
+      numero giusto per l'ultimo. Il percorso e' scritto `.en[v]` per la ragione
+      dichiarata nella misura «le due variabili che aprono cio' che il
+      fail-closed chiude».
+
+  - nome: "5.4 la rotta di salute"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      ls -1 app/api/health/route.ts
+      sed -n '1,18p' app/api/health/route.ts
+    descrizione: >
+      La casella «`/api/health` verde sull'URL pubblico»: qui c'e' la rotta, e
+      cosa risponde. Il «verde» e il «pubblico» richiedono di chiamare un
+      indirizzo in rete, e questa misura **non lo fa**: e' la voce esclusa in
+      fondo all'elenco, col motivo.
+
+  - nome: "5.5 quanto e' pronto il preflight di deploy"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      grep -nE 'ok\(|fail\(|--url' scripts/deploy-preflight.ts | head -14
+    descrizione: >
+      I controlli che il progetto esegue **prima** di un deploy, e che il README
+      documenta. La misura dice che il preflight esiste e quante cose controlla;
+      non dice che sia passato, perche' farlo girare richiede il database di
+      produzione.
+
+  - nome: "5.6 cosa il criterio chiede alla famiglia del deploy"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      grep -n 'Worker Cloudflare live\|segreti presenti\|flusso reale end-to-end' docs/REMEDIATION_PLAN_TO_V1.md
+    descrizione: >
+      Le tre caselle della §2.5, lette dal criterio. Serve a non misurare una
+      versione a memoria della famiglia: le tre righe sono il confine, e
+      l'inventario non ne aggiunge.
+
+  # ---------------------------------------------------------------------
+  # 2.6 DOCUMENTAZIONE CHIUSA
+  # ---------------------------------------------------------------------
+
+  - nome: "6.1 il registro delle divergenze: quante ne sono aperte"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      printf 'voci: '; grep -c '^## DRIFT-' docs/PROJECT_DOCUMENTATION_DRIFT.md
+      printf 'aperte: '; grep -c '| \*\*Stato\*\* | OPEN' docs/PROJECT_DOCUMENTATION_DRIFT.md
+      printf 'chiuse: '; grep -c '| \*\*Stato\*\* | ✅' docs/PROJECT_DOCUMENTATION_DRIFT.md
+    descrizione: >
+      La casella «DRIFT chiusi»: quante voci ha il registro e quante stanno in
+      ciascuno stato. Il conteggio e' per prefisso di riga, e il criterio e'
+      scritto nel comando: chi legge puo' contestare il criterio invece del
+      risultato. Le tre cifre possono non sommare al totale: le voci in stati
+      diversi da `OPEN` e da `✅` non stanno in nessuna delle due.
+
+  - nome: "6.2 le voci di DRIFT e il loro stato"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      grep -n '^## DRIFT-\|^| \*\*Stato\*\* | OPEN' docs/PROJECT_DOCUMENTATION_DRIFT.md
+    descrizione: >
+      L'elenco: il titolo di ogni voce e le righe di stato `OPEN`. Le aperte si
+      leggono accanto alla loro voce, e non a memoria.
+
+  - nome: "6.3 la storia delle migrazioni"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      ls -d prisma/migrations
+    esito_atteso: 2
+    descrizione: >
+      La casella «storia migrazioni `prisma migrate` presente»: la cartella in
+      cui `prisma migrate` scrive la storia. Se non esiste, la storia non c'e'.
+      Il codice di uscita **2** e' l'esito dichiarato: l'assenza e' la risposta,
+      e il piano a fasi la chiede anche come «baseline» nella Fase 4, che la
+      misura «le caselle ancora aperte del piano a fasi» elenca.
+
+  - nome: "6.4 i tag di versione"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      printf 'tag: '; git for-each-ref refs/tags | wc -l
+      git for-each-ref --format='%(refname:short)' refs/tags
+    descrizione: >
+      La casella «tag `v1.0.0`»: quanti tag esistono nel repository. Il comando
+      e' `git for-each-ref` e non `git tag` perche' la parola `tag` in quella
+      posizione fa rifiutare la misura dalla famiglia «storia di git» — un
+      rifiuto che qui e' un falso positivo, dato che `git tag` senza argomenti
+      elenca e non crea. `for-each-ref` e' la stessa lettura e non e' ambigua.
+
+  - nome: "6.5 l'indice di continuita' e la sua data"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      head -12 docs/MARKETING_FACTORY_AI_CONTINUITY_INDEX.md
+    descrizione: >
+      La casella «Continuity Pack allineato»: l'indice ufficiale del pack, la
+      sua data e il suo stato dichiarato. La data va confrontata con quella del
+      criterio e con l'ultimo commit: un indice piu' vecchio di entrambi non e'
+      «allineato».
+
+  - nome: "6.6 il filone AMF: dov'e' chiesto e dov'e' registrato"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      grep -rn 'filone AMF' docs/*.md
+    descrizione: >
+      La casella «filone AMF registrato»: dove la frase compare. La misura
+      mostra **dove viene chiesto** di registrarlo; se compare solo dove viene
+      chiesto, allora non e' registrato da nessuna parte, che e' una conclusione
+      che si legge dall'elenco e non da un conteggio.
+
+  - nome: "6.7 cosa chiede la Fase 5, che e' l'ultima"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      grep -n -A 4 '^### FASE 5' docs/FASE_2_ATTRITI_E_VERIFICHE.md
+    descrizione: >
+      Le tre caselle della Fase 5, di cui la prima e' **questo sprint**
+      («Ripassare la checklist §2 con evidenza per ogni voce»). Serve
+      all'inventario: dice che il criterio prevedeva di essere misurato, e che
+      la misura e' un passo del piano, non un'iniziativa.
+
+  # ---------------------------------------------------------------------
+  # 7. CIO' CHE RENDE IL PRODOTTO «UFFICIALE»
+  #    — quello che il criterio del 2026-10-06 non nomina
+  # ---------------------------------------------------------------------
+
+  - nome: "7.1 le pagine legali"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      printf 'pagine totali: '; find app -name page.tsx | wc -l
+      printf 'pagine legali: '; find app -name page.tsx | grep -icE 'privacy|cookie|termini|legal|condizioni'
+    esito_atteso: [0, 1]
+    descrizione: >
+      Quante pagine ha il prodotto e quante di quelle sono una pagina legale. Il
+      secondo comando esce **1** quando il conteggio e' zero, ed e' il caso
+      possibile: fra privacy, cookie e termini potrebbe non essercene nessuna. E'
+      la casella che il criterio del 2026-10-06 **non ha**, e che serve per
+      vendere a terzi. Entrambi i codici sono dichiarati esiti perche' il mondo
+      puo' dire onestamente sia 0 sia 1.
+
+  - nome: "7.2 il codice di pagamento"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      printf 'file con parole di pagamento: '; grep -rliE 'stripe|paddle|lemonsqueezy|paypal|checkout|billing|subscription' lib app prisma | wc -l
+      grep -rniE 'stripe|paddle|lemonsqueezy|paypal|checkout|billing|subscription' lib app prisma | head -5
+    descrizione: >
+      La scoperta dello sprint 4, rimisurata: quante righe di prodotto parlano
+      di incassare. Il secondo comando mostra **cosa** ha trovato, se ha trovato
+      qualcosa: un `grep` che conta zero e non mostra niente non e' verificabile,
+      e la differenza fra «zero perche' non c'e'» e «zero perche' ho sbagliato
+      la parola» si vede solo dall'elenco delle occorrenze.
+
+  - nome: "7.3 un modello utente, o dei ruoli"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      printf 'modelli nello schema: '; grep -c '^model ' prisma/schema.prisma
+      grep -nE '^model (User|Account|Member|Role|Workspace|Session|Team)' prisma/schema.prisma
+    esito_atteso: [0, 1]
+    descrizione: >
+      La seconda scoperta dello sprint 4, rimisurata: quanti modelli ha lo
+      schema, e quanti si chiamano utente, membro, ruolo, workspace o sessione.
+      Il codice di uscita 1 e' la risposta possibile (nessuna riga trovata). E'
+      la ragione per cui il profilo «impresa» non e' servibile oggi: senza
+      identita' per persona non si puo' dire chi ha fatto cosa, che e' la prima
+      cosa che un'impresa chiede.
+
+  - nome: "7.4 un indirizzo proprio"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      grep -nE '"routes"|"pattern"|zone_name|workers_dev' wrangler.jsonc
+      printf 'domini dichiarati: '; grep -c '"routes"' wrangler.jsonc
+    esito_atteso: [0, 1]
+    descrizione: >
+      Un prodotto «ufficiale» sta a un indirizzo suo e non a un indirizzo
+      generato da qualcun altro. Se la configurazione non ha nessuna voce
+      `routes`, il Worker, se pubblicato, vivrebbe su `*.workers.dev`, che e' un
+      indirizzo di Cloudflare e non un dominio. Il codice 1 e' la risposta
+      possibile.
+
+  - nome: "7.5 la matrice del pagamento nella sandbox"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      grep -n 'payment' lib/sandbox/policy.ts
+    descrizione: >
+      Le due righe in cui il prodotto nomina il pagamento. In SANDBOX e'
+      **BLOCKED**, in REAL e' **allowed**: due dichiarazioni, zero
+      implementazioni. E' il posto esatto in cui il codice di incasso andrebbe,
+      ed e' vuoto — utile all'inventario piu' di un'assenza qualunque, perche'
+      dice che il posto era previsto.
+
+# ---------------------------------------------------------------------------
+# Le misure che questo allegato NON contiene. Non e' una dimenticanza: e' la
+# parte del criterio che non si puo' misurare da qui, e va detta invece che
+# finta.
+# ---------------------------------------------------------------------------
+escluse:
+  - nome: "le suite smoke, eseguite come misura"
+    comando: |
+      node_modules/.bin/tsx scripts/run-all-smokes.ts
+    motivo: >
+      Il comando e' qui sotto ed e' di sola lettura per il prodotto (gira su un
+      database temporaneo) — ma **non entra in un elenco di misure**, per due
+      ragioni indipendenti e nessuna delle due aggirabile. La prima: il comando
+      che il progetto usa davvero e' `npm run test:all`, e `misure.py`
+      **rifiuta qualunque comando che nomina `npm`** (famiglia «installazione di
+      pacchetti»: nel pattern c'e' la parola, non il verbo), quindi la misura
+      non sarebbe quella che il progetto esegue. La seconda: la suite dura piu'
+      di `TIMEOUT_SECONDI` = 120s, e la misura sarebbe dichiarata **scaduta** —
+      un esito onesto ma inutile. **Le suite sono state eseguite una volta, a
+      mano, durante questo sprint**: il comando, l'esito grezzo e il momento
+      stanno nel rapporto, e il rapporto dichiara che quello non e' un numero
+      dell'allegato.
+
+  - nome: "e se la suite avesse fallito?"
+    motivo: >
+      Non e' una misura separata ed e' la parte che conta: un'esecuzione manuale
+      **non ha un allegato che la difende**. Il rapporto porta il comando e
+      l'esito grezzo, e chi non si fida lo riesegue — la suite gira su database
+      temporanei e non tocca niente. Ma la differenza fra «l'ho eseguita» e «c'e'
+      un allegato che lo prova» va detta, non nascosta: e' la ragione per cui
+      `misure.py` esiste.
+
+  - nome: "Turso e' allineato allo schema?"
+    comando: |
+      node_modules/.bin/tsx scripts/check-db-schema-drift.ts
+    motivo: >
+      Il comando esiste, ed e' il preflight che la famiglia 2.5 chiede. Ma per
+      rispondere deve **connettersi al database di produzione**
+      (`TARGET_DATABASE_URL`, `TARGET_AUTH_TOKEN`): il contract di questo sprint
+      dice `no production access`, e una misura che legge la produzione non e'
+      una misura che questo sprint si e' autorizzato a fare. Come si
+      misurerebbe: il comando qui sotto, eseguito da chi ha il permesso, e il
+      suo codice di uscita (1 se trova drift).
+
+  - nome: "l'URL pubblico risponde, ed e' chiuso a chi non ha il token?"
+    comando: |
+      node_modules/.bin/tsx scripts/deploy-preflight.ts --url https://<worker>.workers.dev
+    motivo: >
+      E' la casella 2.5 «`/api/health` verde sull'URL pubblico», ed e' l'unica
+      casella che si misura **solo** chiamando un indirizzo in rete. Non l'ho
+      fatto: il contract dice `no production access`, e il vincolo dello sprint
+      dice che non si tocca la produzione. Una richiesta di salute e' una
+      richiesta innocua, e resta comunque un accesso alla produzione — la
+      scelta e' dichiarata, non nascosta. Come si misurerebbe: il preflight qui
+      sotto, che risponde a entrambe le domande (risponde? e' chiusa?), oppure
+      un `curl -s -o /dev/null -w '%{http_code}'`.
+
+  - nome: "la seconda esecuzione dell'elenco, confrontata con la prima"
+    comando: |
+      python3 tools/misure.py confronta <primo-allegato> <secondo-allegato>
+    motivo: >
+      `misure.py confronta` verifica che due esecuzioni dello stesso elenco
+      diano lo stesso testo stabile. **Non l'ho usato**, e la ragione e' pratica
+      e va detta: l'elenco e' stato eseguito due volte, ma entrambe scrivevano
+      **lo stesso file** — l'allegato pubblicato e' il secondo giro, e il primo
+      non esiste piu'. Per confrontarli servirebbe un secondo allegato, cioe' un
+      secondo file in una cartella che questo sprint non ha il permesso di
+      riempire. Limite dichiarato: la stabilita' dell'impronta e' **affermata
+      dallo strumento** (l'allegato la porta in testa ed e' quella del secondo
+      giro), non verificata con `confronta` su due file vivi.
+
+  - nome: "quanti file e quanti byte ha la cartella dei documenti"
+    comando: |
+      find "3. AD-Marketing-Factory/Analisi-Prompt-Report" -type f | wc -l
+    motivo: >
+      Si esprime in sola lettura, ma il numero sarebbe **sbagliato di uno appena
+      l'allegato esiste**: l'allegato vive dentro `Analisi-Prompt-Report/Milestone
+      3/Sprint 5/`, quindi la misura conterebbe anche se stessa, e due esecuzioni
+      consecutive darebbero due numeri diversi proprio perche' la prima ha
+      scritto. E' la lezione dello sprint 2, e la ragione per cui l'allegato e'
+      l'unico file che questo sprint scrive dentro quelle cartelle.
+
+  - nome: "il verdetto della suite smoke, come numero dell'allegato"
+    motivo: >
+      Non e' una misura e non lo diventa per essere scritto in una tabella. Il
+      rapporto cita il comando, l'esito **grezzo** e il momento, e dichiara che
+      quel numero viene da un'esecuzione manuale. Se un lettore vuole la prova,
+      la rifa': il comando e' nella prima voce qui sopra.
+
+  - nome: "il fail-closed di autenticazione sul runtime di produzione"
+    motivo: >
+      La casella 2.3 lo chiede «verificato sul runtime di produzione». Il
+      comportamento e' scritto e leggibile nel codice, ma **verificarlo richiede
+      il runtime di produzione**, che non esiste (l'artefatto del Worker non e'
+      mai stato costruito) e a cui questo sprint non accede. Come si
+      misurerebbe: un deploy, poi `MFA_FORCE_DEPLOY_AUTH=1` senza
+      `APP_ACCESS_TOKEN` e una richiesta senza token — che deve rispondere 401,
+      non servire la pagina.
+
+  - nome: "cosa c'e' dentro il database di lavoro"
+    comando: |
+      sqlite3 "file:prisma/dev.db?mode=ro" "select count(*) from Project"
+    motivo: >
+      Quanti marchi, campagne e pubblicazioni contiene il workspace dell'utente
+      sarebbe la prova piu' diretta dell'uso reale. Non si puo' fare da qui:
+      `sqlite3` non e' installato su questa macchina, e l'alternativa —
+      `python3 -c` o `node -e` — e' rifiutata dall'elenco (interprete con codice
+      inline) a ragione, perche' dentro una stringa ci sta qualunque cosa. Il
+      database si legge in sola lettura con lo strumento giusto; qui si dichiara
+      che non l'ho fatto, invece di dedurne il contenuto dalla dimensione del
+      file.

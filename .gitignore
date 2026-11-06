@@ -1,0 +1,86 @@
+# ==============================================================================
+# AD-AGENTS-PROJECTS — public repository
+#
+# This repository is the PUBLIC FACE of the engine. It contains the method,
+# the tools and the documentation. It contains NO projects, NO client names,
+# NO contracts and NO decision records.
+#
+# The lines below are not decoration: they are the boundary. Anything that
+# looks like a project, a secret, or an internal register is excluded here.
+# If you fork this and add work of your own, keep it this way.
+# ==============================================================================
+
+# -- Projects ----------------------------------------------------------------
+# A project folder is numbered: "01. Project Name". That leading number is
+# what the engine uses to recognise a product, and it is exactly what must
+# never cross this boundary.
+/[0-9][0-9]*/
+/[0-9][0-9]*.*/
+
+# -- Internal registers ------------------------------------------------------
+# Contracts, approvals, evidence, decisions, errors and drift are the memory
+# of the engine. They name people, clients and failures. They stay local.
+/contratti/
+/approvazioni/
+/evidenze/
+/DECISIONI/
+/errori/
+/drift/
+/comunicazioni/
+/REQUISITI/
+/evals/
+/orchestrazione/
+/milestone/
+/piani/
+/BLUEPRINT.md
+/sede.yaml
+
+# -- The brain ---------------------------------------------------------------
+# The constitution is personal: it names the CEO and the house rules.
+/.brain/
+
+# -- Study material ----------------------------------------------------------
+# Third-party source, data not machinery. Reconstructable, never shipped.
+/studio/
+/reference/
+/notes/
+
+# -- Secrets and credentials -------------------------------------------------
+*.key
+*.pem
+*.p12
+*.pfx
+.env
+.env.*
+secrets/
+credentials/
+.ad-consenso.key
+config.local.*
+
+# -- Local state -------------------------------------------------------------
+/.cache/
+/backup/
+/.monitoraggio-*.jsonl
+*.log
+*.tmp
+*.sqlite
+*.db
+
+# -- Editor and OS noise -----------------------------------------------------
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.venv/
+venv/
+
+# -- Keep the tools ----------------------------------------------------------
+# The tools are the engine: they are the reason this repository exists.
+!/tools/
+!/tools/**
+!/tests/
+!/tests/**
