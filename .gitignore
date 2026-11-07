@@ -11,11 +11,12 @@
 # ==============================================================================
 
 # -- Projects ----------------------------------------------------------------
-# A project folder is numbered: "01. Project Name". That leading number is
+# A project folder is numbered: "1. Project Name" or "01. Project Name".
+# The leading digits are
 # what the engine uses to recognise a product, and it is exactly what must
 # never cross this boundary.
-/[0-9][0-9]*/
-/[0-9][0-9]*.*/
+/[0-9]*/
+/[0-9]*.*/
 
 # -- Internal registers ------------------------------------------------------
 # Contracts, approvals, evidence, decisions, errors and drift are the memory

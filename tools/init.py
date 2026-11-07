@@ -84,8 +84,8 @@ GITIGNORE = """\
 # -- Progetti ----------------------------------------------------------------
 # Una cartella progetto ha un numero davanti: "01. Nome Del Progetto". Quel numero e'
 # cio' che dice al motore che la cartella va protetta. Non deve finire nel repository.
-/[0-9][0-9]*/
-/[0-9][0-9]*.*/
+/[0-9]*/
+/[0-9]*.*/
 
 # -- Segreti -----------------------------------------------------------------
 *.key

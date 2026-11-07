@@ -22,6 +22,22 @@ import tempfile
 from pathlib import Path
 
 RADICE = Path(__file__).resolve().parents[2]
+
+
+def _git_init(base: Path) -> None:
+    """Un repository di prova, per provare il confine con git vero."""
+    import subprocess as _sp
+
+    _sp.run(["git", "init", "-q"], cwd=base, capture_output=True)
+    _sp.run(["git", "add", "-A", "-n"], cwd=base, capture_output=True)
+
+
+def _git_ignora(base: Path, percorso: str) -> bool:
+    """git ignora davvero quel percorso?"""
+    import subprocess as _sp
+
+    esito = _sp.run(["git", "check-ignore", "-q", percorso], cwd=base, capture_output=True)
+    return esito.returncode == 0
 sys.path.insert(0, str(RADICE / "tools"))
 
 import init  # noqa: E402
@@ -55,9 +71,30 @@ def test_crea_tutto() -> None:
                 (base / cartella / "README.md").is_file(),
             )
         check(".gitignore esiste", (base / ".gitignore").is_file())
+        # Il pattern deve coprire UNA cifra, non solo due. La versione precedente
+        # (`/[0-9][0-9]*/`) lasciava passare "1. Nautilus", "8. GEORN" e ogni altra
+        # cartella a cifra singola — e questo test le dichiarava corrette, quindi il
+        # difetto si propagava in ogni motore nuovo. Ora si prova l'**effetto**: git
+        # ignora davvero le cartelle numerate?
         check(
             "il .gitignore tiene fuori i progetti",
-            "/[0-9][0-9]*/" in (base / ".gitignore").read_text(encoding="utf-8"),
+            "/[0-9]*/" in (base / ".gitignore").read_text(encoding="utf-8"),
+        )
+        for nome_cartella in ("1. Cliente", "8. Progetto", "11. Altro", "123. Grande"):
+            percorso = base / nome_cartella / "segreto.md"
+            percorso.parent.mkdir(parents=True, exist_ok=True)
+            percorso.write_text("dato\n", encoding="utf-8")
+        _git_init(base)
+        for nome_cartella in ("1. Cliente", "8. Progetto", "11. Altro", "123. Grande"):
+            check(
+                f"git ignora «{nome_cartella}»",
+                _git_ignora(base, f"{nome_cartella}/segreto.md"),
+                f"{nome_cartella} entra nel repository: il confine ha un buco",
+            )
+        check(
+            "ma i tools restano tracciati",
+            not _git_ignora(base, "tools/init.py"),
+            "il confine tiene fuori anche il motore",
         )
         check("tutti i passi hanno un esito", len(esiti) >= 9, str(len(esiti)))
 
