@@ -36,8 +36,14 @@
 /sede.yaml
 
 # -- The brain ---------------------------------------------------------------
-# The constitution is personal: it names the CEO and the house rules.
-/.brain/
+# The brain SHIPS: the constitution, the ten procedures and the gate are the
+# method. What does not ship is the memory: sede.yaml (who the CEO is) and the
+# registers below. A brain is rules; memory is made by the person who works.
+#
+# /.brain/ is therefore NOT excluded. The old line was removed on 2026-11-07:
+# without it, a downloaded engine reports "manca .brain/skills/" and cannot
+# become a working machine. The brain is checked for client names before every
+# publish, because it is authored in a private house.
 
 # -- Study material ----------------------------------------------------------
 # Third-party source, data not machinery. Reconstructable, never shipped.
