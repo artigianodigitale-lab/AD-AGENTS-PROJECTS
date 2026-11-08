@@ -82,12 +82,17 @@ def prenota_id(
     estensione: str = ".md",
     tentativi: int = 500,
 ) -> tuple[str, Path]:
-    """Prenota il primo id libero **creando il file**, e restituisce (id, percorso).
+    """Prenota il primo id libero **creando il file che si chiama col numero**.
 
-    Atomico: se due sessioni provano lo stesso numero nello stesso istante, una
-    vince e l'altra passa al successivo. Il file nasce vuoto — il chiamante lo
-    riempie subito dopo — perche' **la prenotazione e' il file**, non un numero
-    tenuto altrove.
+    Atomico perche' il nome del file e' `<PREFISSO>-<NNNN>` e nient'altro: il numero e'
+    la risorsa contesa, e `O_CREAT|O_EXCL` e' l'unica cosa che il filesystem garantisce
+    su di essa, fra processi e fra sessioni. Lo slug non entra nel nome, perche' lo slug
+    e' scelto da chi chiama e renderebbe unico cio' che deve restare condiviso.
+
+    Due correzioni sbagliate prima di questa, il 2026-11-08: lo slug nel nome (dieci
+    sessioni ottenevano lo stesso numero su dieci file diversi), e un sentinella
+    rinominato (il lucchetto spariva quando lo si usava). La lezione: **il file
+    definitivo deve essere il lucchetto**, non qualcosa che lo sostituisce.
 
     La cartella la sceglie il chiamante, quindi la guardia sta **qui**: e' il punto
     in cui il percorso diventa una scrittura. `errori/` e `DECISIONI/` stanno fuori
@@ -115,14 +120,39 @@ def prenota_id(
 
     for numero in range(massimo + 1, massimo + 1 + tentativi):
         identificatore = f"{prefisso}-{numero:0{cifre}d}"
-        percorso = cartella / f"{identificatore}-{slug}{estensione}"
+
+        # **Il nome del file E' il numero, e nient'altro.** Il numero e' la risorsa
+        # contesa, e il nome e' la sola cosa che `O_EXCL` sa proteggere.
+        #
+        # Due tentativi sbagliati, il 2026-11-08, entrambi miei:
+        #
+        #   1. `ERR-0096-<slug>.yaml` — O_EXCL protegge il percorso, e lo slug lo
+        #      cambia: dieci sessioni, dieci file, **stesso numero**. Lo slug nel nome
+        #      rende unico cio' che doveva restare condiviso.
+        #   2. sentinella `.prenotato` poi `os.replace` — il sentinella e' il lucchetto,
+        #      ma **sparisce quando lo usi**: dopo il rename il numero sembra di nuovo
+        #      libero, e il secondo processo lo prenota.
+        #
+        # La terza e' quella che regge: il file definitivo **e'** il lucchetto. Lo slug,
+        # che serve agli umani, va dentro il file — dove non tocca l'unicita'.
+        percorso = cartella / f"{identificatore}{estensione}"
         try:
             descrittore = os.open(percorso, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644)
         except FileExistsError:
-            continue  # qualcuno l'ha preso: si prova il prossimo
+            continue  # il numero e' preso: si prova il prossimo
         except OSError as errore:
             raise IdNonPrenotabile(f"non si prenota {percorso}: {errore}") from errore
         os.close(descrittore)
+
+        # Lo slug si conserva per chi legge, senza entrare nel nome. Il chiamante lo
+        # scrive comunque nel corpo del documento; qui lascio una traccia minima, cosi'
+        # un file appena prenotato dice a cosa servira'.
+        if slug and slug != "nuovo":
+            try:
+                with open(percorso, "w", encoding="utf-8") as scrittura:
+                    scrittura.write(f"# {identificatore} — {slug}\n")
+            except OSError:
+                pass  # la prenotazione e' fatta: il commento e' un di piu', non un requisito
         return identificatore, percorso
 
     raise IdNonPrenotabile(

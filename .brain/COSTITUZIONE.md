@@ -94,6 +94,50 @@ sostituisce: ne riporta gli invarianti e i puntatori. In caso di dubbio prevale 
     approvazioni, milestone): la macchina si legge e si usa, non si modifica. Un intervento
     sulla macchina e' un incarico a se', con il suo contract (`DEC-0081`).
 
+## Un cervello, molti arti
+
+Il modello, fissato dal CEO il 2026-11-08, e non e' una metafora: e' la specifica.
+
+> «AD-AGENTS-PROJECTS e' il cervello, il motore e la memoria. Ogni cartella del workspace
+> e' un arto. Ogni arto deve potersi muovere senza dare fastidio a un altro.»
+>
+> E alla domanda se un arto possa dire a un altro cosa fare: «No. Resta il cervello che
+> deve capire se cio' che e' accaduto a un braccio o a una gamba possa essere utile
+> all'altro. Se lo e' lo memorizza e lo attua, se no non se ne preoccupa.»
+
+**Cosa significa nel codice, oggi.**
+
+| L'immagine | Il fatto |
+|---|---|
+| Il cervello | `AD-AGENTS-PROJECTS/` — contratti, approvazioni, decisioni, errori: **uno solo**, condiviso da tutti gli arti |
+| L'arto | Un workspace DSH: una sessione aperta in una cartella |
+| Non si pestano i piedi | Il cancello giudica i percorsi **relativi** dalla cartella della sessione, non dalla radice. Provato: `../project-b/x.md` da una chat in `project-a/` e' **negato** |
+| Il cervello orchestra | Una chat aperta nella radice scrive in qualunque cartella prodotto, se un contract la copre |
+
+**Il difetto che questo modello ha corretto.** Fino al 2026-11-08 il cancello risolveva i
+percorsi relativi contro la radice del plugin. Una chat aperta in `project-a/` che scriveva
+`note.md` veniva validata come `AD-AGENTS-PROJECTS/note.md` — un file che non esiste — e il
+cancello rispondeva «fuori dalle cartelle prodotto», mentre il file vero sarebbe stato
+bloccato. **Diceva si' a un file che non c'era e taceva su quello che si stava scrivendo.**
+Non era una scelta: era un'incoerenza. Il ramo `bash` leggeva gia' la cwd della sessione.
+
+**Le regole che ne discendono.**
+
+1. **I registri non si separano.** Una lezione trovata da un arto va al cervello, ed e'
+   visibile a tutti. Un registro per arto dividerebbe la memoria, che e' la ragione per
+   cui il cervello e' uno.
+2. **Un arto non scrive nell'arto dell'altro.** Non per una regola in piu': perche' il
+   percorso, risolto, cade in una cartella prodotto che nessun contract di quella sessione
+   copre.
+3. **Il confine e' dove e' aperta la sessione**, non chi la esegue.
+4. **Fuori dalla radice niente cambia**: una `cwd` che non sta sotto la radice produce lo
+   stesso esito di prima, e i percorsi assoluti restano del cervello.
+
+**La memoria e' condivisa, e gli ID non si scontrano.** Piu' arti scrivono nello stesso
+registro degli errori nello stesso istante: il numero si prenota creando il file che si
+chiama col numero (`ERR-0096.yaml`), e `O_CREAT|O_EXCL` protegge la risorsa contesa. Dieci
+processi paralleli ottengono dieci numeri distinti — provato in `tools/tests/test_id_atomici.py`.
+
 ## Livelli decisionali
 
 - **Livello 1 — agente.** Analizza, prepara bozze, esegue task interni e reversibili previsti

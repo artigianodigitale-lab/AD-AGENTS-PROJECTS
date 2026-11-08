@@ -55,6 +55,38 @@ then the work.** Silence, ambiguity, or "let's see" is not consent.
 
 ---
 
+## One brain, many limbs
+
+This is how the engine is used, and it is a design decision, not a metaphor.
+
+| The image | The fact |
+|---|---|
+| **The brain** | `AD-AGENTS-PROJECTS/` - contracts, approvals, decisions, errors: **one**, shared by every limb |
+| **A limb** | A workspace: one session opened in one folder. Many can run at once |
+| **They do not trip over each other** | The gate judges **relative** paths from the session's folder, not from the root. `../other-project/x.md` from a chat in `project-a/` is **denied** |
+| **The brain orchestrates** | A chat opened at the root can write into any product folder, if a contract covers it |
+
+A limb does not command another limb. It is the brain that decides whether what happened
+to one arm is useful to the other, and remembers it if it is.
+
+**The defect this fixed, measured.** Until 2026-11-08 the gate resolved relative paths
+against the plugin's root. A chat opened in `project-a/` writing `note.md` was validated as
+`AD-AGENTS-PROJECTS/note.md` - a file that does not exist - and the gate answered exit 0,
+"outside product folders", while the real file would have been blocked. **It said yes to a
+file that was not there and said nothing about the one being written.** It was an
+inconsistency, not a choice: the bash branch already read the session's cwd.
+
+**The registers do not split.** `errori/`, `DECISIONI/`, `contratti/` stay one for every
+limb. A lesson found by one arm becomes a defence for all - that is the reason the brain is
+one. And because several limbs write to the same registry at the same instant, IDs are
+**reserved** rather than chosen: the file is named after the number (`ERR-0096.yaml`) and
+`O_CREAT|O_EXCL` protects the contended resource. Ten parallel processes get ten distinct
+numbers, proven in `tools/tests/test_id_atomici.py`.
+
+**What is not guaranteed, and is declared:** `~/.dsh/AGENTS.md` is still one per user, so
+the constitution loaded is a single one. A profile separates the **protection**, not the
+memory. True independence would need separate system users.
+
 ## What it can do
 
 Twenty-two capabilities. All of them. Each one is code you can run, not a recommendation.

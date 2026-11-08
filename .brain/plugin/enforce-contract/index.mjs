@@ -107,13 +107,39 @@ function insideRoot(target, root) {
 }
 
 /** Return the absolute target path of a write call, or null when not applicable. */
-function targetOf(exec, root) {
+/**
+ * La cartella della SESSIONE: dove l'arto sta lavorando.
+ *
+ * Un cervello, molti arti. La radice e' il cervello — contratti, approvazioni, errori,
+ * decisioni restano li' e si leggono da li'. Ma un percorso **relativo** appartiene
+ * all'arto: e' il file che l'arto sta scrivendo, nella sua cartella.
+ *
+ * Il 2026-11-08, prima di questa funzione: una chat aperta in `8. GEORN/` che scriveva
+ * `note.md` veniva validata come `AD-AGENTS-PROJECTS/note.md` — un file che non esiste —
+ * e il cancello rispondeva exit 0 «fuori dalle cartelle prodotto», mentre il file vero,
+ * `8. GEORN/note.md`, sarebbe stato bloccato. **Il cancello diceva si' a un file che non
+ * c'era e taceva su quello che si stava scrivendo.**
+ *
+ * Il ramo bash leggeva gia' la cwd: i tool di scrittura no. Era un'incoerenza, non una
+ * scelta. Il fallback e' `settings.root`: se DSH non passa la cwd, niente cambia.
+ */
+function cwdDellaSessione(exec, settings) {
+  const dallaSessione = exec?.agent?.session?.header?.cwd
+  if (typeof dallaSessione === 'string' && dallaSessione) return dallaSessione
+  const dalWorkdir = exec?.arguments?.workdir
+  if (typeof dalWorkdir === 'string' && dalWorkdir) return dalWorkdir
+  return settings.root
+}
+
+function targetOf(exec, base) {
   if (!exec || typeof exec.name !== 'string' || !PATH_TOOLS.has(exec.name)) return null
   const args = exec.arguments
   if (!args || typeof args !== 'object') return null
   const raw = args.file_path
   if (typeof raw !== 'string' || raw.trim() === '') return null
-  return isAbsolute(raw) ? raw : resolve(root, raw)
+  // `base` e' la base dei percorsi RELATIVI: la cartella della sessione. Un percorso
+  // assoluto non si tocca — quello e' del cervello, e `insideRoot` decide se lo copre.
+  return isAbsolute(raw) ? raw : resolve(base, raw)
 }
 
 /** Ask the Python authority. Returns null on any failure, which means fail-open. */
@@ -510,7 +536,7 @@ export function apply(ctx, config) {
       let relative = ''
 
       if (PATH_TOOLS.has(toolName)) {
-        const target = targetOf(exec, settings.root)
+        const target = targetOf(exec, cwdDellaSessione(exec, settings))
         trace(settings, `pre-execute name=${toolName} target=${target ?? '-'}`)
         if (!target || !insideRoot(target, settings.root)) return next()
 
@@ -592,11 +618,7 @@ export function apply(ctx, config) {
       } else if (toolName === 'bash' && settings.bashGuard) {
         const command = exec?.arguments?.command
         if (typeof command !== 'string' || command.trim() === '') return next()
-        const cwd =
-          exec?.agent?.session?.header?.cwd ??
-          (typeof exec?.arguments?.workdir === 'string' && exec.arguments.workdir
-            ? exec.arguments.workdir
-            : settings.root)
+        const cwd = cwdDellaSessione(exec, settings)
         // Il `cd` cambia la base dell'analisi, e il verificatore non lo sa (ERR-0085).
         // `cd "<progetto>" && echo x > file` passava perche' il controllo veniva fatto
         // sulla cwd originale, dove il percorso relativo non tocca niente. Qui si rifa'
@@ -686,7 +708,7 @@ export function apply(ctx, config) {
     try {
       if (settings.mode === 'allow') return next() // enforcement spento
 
-      const target = targetOf(exec, settings.root)
+      const target = targetOf(exec, cwdDellaSessione(exec, settings))
       if (!target || !insideRoot(target, settings.root)) return next()
 
       const problemi = controllaScritto(target, settings)

@@ -18,6 +18,10 @@ spiegazione ha bisogno di un termine tecnico, il termine va **tradotto nello ste
 | Termine interno | Come si dice al CEO |
 |---|---|
 | `.brain/` | **il cervello**: le istruzioni che ogni agente legge appena si sveglia |
+| `AD-AGENTS-PROJECTS/` | **la macchina**: la cartella che contiene il cervello, il motore e la memoria. Una sola, per tutti i lavori |
+| Un cervello, molti arti | **un capo e molte mani**: ogni chat e' un arto che lavora nella sua cartella; le mani non si comandano fra loro, decide il cervello |
+| Workspace | **un arto**: una finestra di lavoro aperta su una cartella. Puoi averne piu' d'una insieme |
+| Arto / arte | la stessa cosa: una sessione che lavora in una cartella sua. Non scrive nella cartella di un altro arto |
 | Costituzione | **il regolamento**: le regole che nessuno può saltare |
 | Skill | **la procedura**: il foglio che spiega come si fa una cosa |
 | Plugin di enforcement | **il controllore**: il programma che blocca le scritture non autorizzate |

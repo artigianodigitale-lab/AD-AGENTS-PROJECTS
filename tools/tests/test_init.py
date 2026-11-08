@@ -72,7 +72,7 @@ def test_crea_tutto() -> None:
             )
         check(".gitignore esiste", (base / ".gitignore").is_file())
         # Il pattern deve coprire UNA cifra, non solo due. La versione precedente
-        # (`/[0-9][0-9]*/`) lasciava passare "1. Nautilus", "8. GEORN" e ogni altra
+        # (`/[0-9][0-9]*/`) lasciava passare "1. Cliente", "8. Progetto" e ogni altra
         # cartella a cifra singola — e questo test le dichiarava corrette, quindi il
         # difetto si propagava in ogni motore nuovo. Ora si prova l'**effetto**: git
         # ignora davvero le cartelle numerate?
