@@ -114,10 +114,10 @@ function insideRoot(target, root) {
  * decisioni restano li' e si leggono da li'. Ma un percorso **relativo** appartiene
  * all'arto: e' il file che l'arto sta scrivendo, nella sua cartella.
  *
- * Il 2026-11-08, prima di questa funzione: una chat aperta in `8. GEORN/` che scriveva
+ * Il 2026-11-08, prima di questa funzione: una chat aperta in `project-a/` che scriveva
  * `note.md` veniva validata come `AD-AGENTS-PROJECTS/note.md` — un file che non esiste —
  * e il cancello rispondeva exit 0 «fuori dalle cartelle prodotto», mentre il file vero,
- * `8. GEORN/note.md`, sarebbe stato bloccato. **Il cancello diceva si' a un file che non
+ * `project-a/note.md`, sarebbe stato bloccato. **Il cancello diceva si' a un file che non
  * c'era e taceva su quello che si stava scrivendo.**
  *
  * Il ramo bash leggeva gia' la cwd: i tool di scrittura no. Era un'incoerenza, non una

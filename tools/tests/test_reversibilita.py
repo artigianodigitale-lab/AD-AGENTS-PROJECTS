@@ -62,7 +62,7 @@ ID_MCP = "ad-projects-mcp"
 def _home(base: Path) -> Path:
     """Una home con quattro profili DSH, ognuno col server MCP gia' dichiarato."""
     home = base / "home"
-    for profilo in ("desktop", "web", "georn", "nautilus"):
+    for profilo in ("desktop", "web", "alpha", "beta"):
         cartella = home / ".dsh" / "profiles" / profilo
         cartella.mkdir(parents=True, exist_ok=True)
         (cartella / "cordis.patch.yml").write_text(
@@ -164,31 +164,31 @@ def test_separazione_dei_profili() -> None:
         motore_b = _motore(base, "MotoreB")
 
         with _con(motore_a) as m:
-            m.attiva(home, profilo="georn")
+            m.attiva(home, profilo="alpha")
         with _con(motore_b) as m:
-            m.attiva(home, profilo="nautilus")
+            m.attiva(home, profilo="beta")
 
-        patch_georn = (home / ".dsh" / "profiles" / "georn" / "cordis.patch.yml").read_text(encoding="utf-8")
-        patch_nautilus = (home / ".dsh" / "profiles" / "nautilus" / "cordis.patch.yml").read_text(encoding="utf-8")
+        patch_alpha = (home / ".dsh" / "profiles" / "alpha" / "cordis.patch.yml").read_text(encoding="utf-8")
+        patch_beta = (home / ".dsh" / "profiles" / "beta" / "cordis.patch.yml").read_text(encoding="utf-8")
 
         check(
-            "il profilo georn monta il cancello di A",
-            "MotoreA" in patch_georn,
-            patch_georn[:200],
+            "il profilo alpha monta il cancello di A",
+            "MotoreA" in patch_alpha,
+            patch_alpha[:200],
         )
         check(
-            "il profilo nautilus monta il cancello di B",
-            "MotoreB" in patch_nautilus,
-            patch_nautilus[:200],
+            "il profilo beta monta il cancello di B",
+            "MotoreB" in patch_beta,
+            patch_beta[:200],
         )
         check(
             "il cancello di A NON e' nel profilo di B",
-            "MotoreA" not in patch_nautilus,
+            "MotoreA" not in patch_beta,
             "due motori nello stesso profilo: nessuno dei due protegge davvero",
         )
         check(
             "il cancello di B NON e' nel profilo di A",
-            "MotoreB" not in patch_georn,
+            "MotoreB" not in patch_alpha,
             "due motori nello stesso profilo",
         )
 
@@ -200,12 +200,12 @@ def test_il_profilo_si_legge_da_sede() -> None:
         base = Path(tmp)
         motore = _motore(base, "MotoreA")
         (motore / "sede.yaml").write_text(
-            'ceo:\n  nome: "X"\nmacchina:\n  nome: "A"\n  profilo: "georn"\n',
+            'ceo:\n  nome: "X"\nmacchina:\n  nome: "A"\n  profilo: "alpha"\n',
             encoding="utf-8",
         )
         with _con(motore) as m:
             letto = m.profilo_preferito()
-        check("legge «georn»", letto == "georn", str(letto))
+        check("legge «alpha»", letto == "alpha", str(letto))
 
         # Controprova: senza il campo, non inventa.
         (motore / "sede.yaml").write_text('ceo:\n  nome: "X"\n', encoding="utf-8")
@@ -225,7 +225,7 @@ def test_senza_profilo_monta_tutti() -> None:
             m.attiva(home)
         # dei 4 profili, tutti e 4 devono avere il cancello
         montati = 0
-        for profilo in ("desktop", "web", "georn", "nautilus"):
+        for profilo in ("desktop", "web", "alpha", "beta"):
             testo = (home / ".dsh" / "profiles" / profilo / "cordis.patch.yml").read_text(encoding="utf-8")
             if "MotoreA" in testo:
                 montati += 1

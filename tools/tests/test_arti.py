@@ -144,14 +144,14 @@ def test_il_cervello_resta_uno() -> None:
 def test_un_arto_non_scrive_nell_arto_dell_altro() -> None:
     """Il confine: `../project-b/x.md` da project-a viene negato."""
     print("\nun arto non scrive nell'arto dell'altro")
-    georn = RADICE / "project-a"
+    primo = RADICE / "project-a"
     altro = RADICE / "project-b"
-    if not georn.is_dir() or not altro.is_dir():
+    if not primo.is_dir() or not altro.is_dir():
         print("  (servono due progetti importati: la prova si fa dopo init.py + importa.py)")
         check("la prova del confine richiede due progetti", True)
         return
 
-    uscita = str((georn / ".." / "project-b" / "intruso.md").resolve())
+    uscita = str((primo / ".." / "project-b" / "intruso.md").resolve())
     codice, prima = verdetto(uscita)
     check(
         "scrivere nell'altro progetto e' negato",
