@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "server": "ad-projects",
+  "nota": "Impronta di nome+descrizione+schema. Se cambia senza questo file, la baseline va rossa: e' il tool poisoning.",
+  "tools": {
+    "ad_session": "sha256:6c5a57b01972d84a37f44c305618047431d20e1ce2ba8d2c74a62e6f2006d089",
+    "ad_contract_check": "sha256:3cf57ad918aa1dfdded713a074e6d7bc5d5c6f832e1658155709103f7dd28f98",
+    "ad_contract_validate": "sha256:2dcfef814b23e0c92bef7a52293cbad562bd252ece9ab1a969d52e7fd49f82ef",
+    "ad_cards_match": "sha256:a893e631fc5986ab87ed3e9999ba77659395cefa83dcc2d8afd316878b43d5a6",
+    "ad_verdict": "sha256:68377675186bf21106620c1f4c06cf500a9a55059a59aa433db90a393a5f733b",
+    "ad_evidence_check": "sha256:7f6e72e6b165fce32f577b629a9c014c2031102dba6a42c3966652f7f4c15269",
+    "ad_unknowns": "sha256:157250779ada88c37af6b7712a4778d25783422513ca3bd1c966ef0ef0633441",
+    "ad_bundle": "sha256:77d28f17eeb240692a52cfd222128da429093aefe2bdccebf6bc6afb09fd2505",
+    "ad_tree": "sha256:fd8b2092faf2b37eef32af6ea43f8e448c39a618e95641c49bea5ae70e7ec553",
+    "ad_registry": "sha256:f12fa9292336fb657979c52169457993eac83c1d36b1725790d7a38a739fd478",
+    "ad_shell_apri": "sha256:4c70010ce6d334c2c45341f192186b66e37b00097b1cc625bcf136b8c886078c",
+    "ad_shell_stato": "sha256:9bfae336551c3b7115a6ec44d013bc831f3cdea4214a54dab642b5784834fd03",
+    "ad_shell_chiudi": "sha256:2be382b0e1ecce03b9962419aa59af99c761a07cd6009ecb8d9efa7c94a41e93",
+    "ad_cerca": "sha256:fb1a4606d3b254267fb07ce810b0afcf5490fa7e0b913610aeb95772d29dc1bc",
+    "ad_esegui": "sha256:65b6a6a7a3a0c0f12ac3f9159ccdfa3b44d5c33944a487d22fadfdc22715eeaf"
+  }
+}

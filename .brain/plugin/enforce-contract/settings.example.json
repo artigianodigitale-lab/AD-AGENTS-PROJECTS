@@ -1,0 +1,10 @@
+{
+  "_nota": "Copia questo file in settings.json SOLO se serve un'eccezione. La radice si scopre da sola: e' la cartella che contiene .brain/.",
+  "_root": "lascia vuoto per scoprire la radice; metti un percorso solo se il plugin sta fuori dalla macchina",
+  "checker": "tools/contract_scope.py",
+  "python": "python3",
+  "mode": "auto",
+  "timeoutMs": 5000,
+  "debugLog": "",
+  "bashGuard": true
+}

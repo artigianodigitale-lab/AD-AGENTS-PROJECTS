@@ -1,0 +1,25 @@
+# Le domande dell'eval della memoria (M4, DEC-0116). Dati, non istruzioni.
+#
+# Ogni voce dice: la domanda (come la farebbe il CEO) e la FONTE canonica dove la risposta
+# vive. Il test chiede alla memoria i primi 3 risultati e verifica che la fonte attesa ci sia.
+# Se la memoria peggiora, il test diventa rosso: e' il punto.
+
+domande:
+  - domanda: "crawler rete interna rifiutata"
+    fonte: "piani/2026-11-15-m3-scraping.md"
+  - domanda: "lezione del link storto"
+    fonte: "errori/ERR-0100-un-link-storto-ferma-il-crawl.yaml"
+  - domanda: "come si cancella uno scarico"
+    fonte: "CRAWLING.md"
+  - domanda: "drift 037 rapporti progetto 4 fuori modello"
+    fonte: "drift/README.md"
+  - domanda: "manifest tool poisoning descrizione"
+    fonte: "DECISIONI/DEC-0115-code-mode-default.md"
+  - domanda: "default code mode due tool server"
+    fonte: "DECISIONI/DEC-0115-code-mode-default.md"
+  - domanda: "approvato M2 sicurezza CEO"
+    fonte: "piani/2026-11-15-m2-sicurezza.md"
+  - domanda: "consenso CEO milestone non lavoro"
+    fonte: "DECISIONI/DEC-0018-analisi-come-milestone.md"
+  - domanda: "cache provenienza TTL"
+    fonte: "piani/2026-11-15-m4-memoria-cache.md"

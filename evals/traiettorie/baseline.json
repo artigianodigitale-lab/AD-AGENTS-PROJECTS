@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "nota": "fotografia al 2026-11-16 (chiusura M6); --aggiorna e' una firma, non un tasto; i valori correnti li mostra `traiettorie.py analizza`",
+  "tolleranza_punti": 5.0,
+  "metriche": {
+    "task_chiusi": 53,
+    "contratti_totali": 73,
+    "gate_richiesti": 111,
+    "gate_aperti": 32,
+    "gate_valutati": 92,
+    "primo_colpo_percento": 66.3,
+    "errori_registrati": 104,
+    "lezioni_controllo_percento": 55.8,
+    "terza_domanda_percento": 100.0,
+    "errori_collegati": 22,
+    "errori_per_task_chiuso": 0.42
+  }
+}

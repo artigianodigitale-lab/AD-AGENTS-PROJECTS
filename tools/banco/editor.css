@@ -1,0 +1,443 @@
+/*
+ * L'aspetto dell'editor del banco — sobrio, e senza dipendenze.
+ *
+ * Perche' sta in un file separato da `editor.js`: il JavaScript e' il comportamento,
+ * questo e' il vestito, e chi vuole cambiare i colori non deve leggere il codice.
+ * Lo serve il banco insieme a `editor.js`; nessun font esterno, nessuna icona
+ * scaricata: solo il sistema.
+ */
+
+/* ------------------------------------------------------------------ */
+/* I testi modificabili                                               */
+/* ------------------------------------------------------------------ */
+
+html.banco-attiva [data-scritta] {
+	cursor: text;
+	border-radius: 2px;
+	outline: 1px dashed transparent;
+	outline-offset: 2px;
+	transition: outline-color 120ms ease, background-color 120ms ease;
+}
+
+html.banco-attiva [data-scritta]:hover {
+	outline-color: rgba(168, 50, 31, 0.5);
+	background-color: rgba(168, 50, 31, 0.045);
+}
+
+html.banco-attiva [data-scritta].banco-scelto {
+	outline: 2px solid rgba(168, 50, 31, 0.9);
+	outline-offset: 2px;
+	background-color: rgba(168, 50, 31, 0.06);
+}
+
+/* ------------------------------------------------------------------ */
+/* L'indicatore, in basso a destra                                    */
+/* ------------------------------------------------------------------ */
+
+.banco-indicatore {
+	position: fixed;
+	right: 14px;
+	bottom: 14px;
+	z-index: 2147483000;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 8px 10px 8px 12px;
+	border: 1px solid rgba(26, 35, 50, 0.12);
+	border-radius: 4px;
+	background: rgba(253, 252, 248, 0.96);
+	box-shadow: 0 8px 24px rgba(26, 35, 50, 0.14);
+	color: #1a2332;
+	font: 500 12px/1.3 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+	letter-spacing: 0.01em;
+	backdrop-filter: saturate(140%) blur(6px);
+}
+
+.banco-indicatore .banco-pallino {
+	width: 7px;
+	height: 7px;
+	flex: none;
+	border-radius: 50%;
+	background: #1f6b3c;
+}
+
+.banco-indicatore.banco-spento .banco-pallino {
+	background: #9aa1ab;
+}
+
+.banco-indicatore.banco-guasto .banco-pallino {
+	background: #a8321f;
+}
+
+.banco-testo {
+	white-space: nowrap;
+}
+
+.banco-interruttore {
+	position: relative;
+	display: inline-flex;
+	flex: none;
+}
+
+.banco-interruttore input {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	opacity: 0;
+	cursor: pointer;
+}
+
+.banco-interruttore span {
+	display: block;
+	width: 30px;
+	height: 17px;
+	border-radius: 999px;
+	background: #c9ccd2;
+	transition: background-color 140ms ease;
+	pointer-events: none;
+}
+
+.banco-interruttore span::after {
+	content: "";
+	display: block;
+	width: 13px;
+	height: 13px;
+	margin: 2px;
+	border-radius: 50%;
+	background: #fff;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+	transition: transform 140ms ease;
+}
+
+.banco-interruttore input:checked + span {
+	background: #1f6b3c;
+}
+
+.banco-interruttore input:checked + span::after {
+	transform: translateX(13px);
+}
+
+.banco-indicatore.banco-spento .banco-interruttore span {
+	background: #c9ccd2 !important;
+}
+
+.banco-indicatore.banco-spento .banco-interruttore span::after {
+	transform: none !important;
+}
+
+.banco-interruttore input:focus-visible + span {
+	outline: 2px solid #a8321f;
+	outline-offset: 2px;
+}
+
+/* ------------------------------------------------------------------ */
+/* La casella, ancorata al testo                                      */
+/* ------------------------------------------------------------------ */
+
+.banco-pannello {
+	position: fixed;
+	z-index: 2147483001;
+	width: min(380px, calc(100vw - 20px));
+	box-sizing: border-box;
+	padding: 10px;
+	border: 1px solid rgba(26, 35, 50, 0.16);
+	border-radius: 4px;
+	background: #fdfcf8;
+	box-shadow: 0 18px 44px rgba(26, 35, 50, 0.2);
+	color: #1a2332;
+	font: 400 13px/1.45 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+.banco-testa {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 8px;
+	margin-bottom: 8px;
+}
+
+.banco-descrizione {
+	display: flex;
+	min-width: 0;
+	flex-direction: column;
+	gap: 2px;
+}
+
+.banco-etichetta {
+	overflow: hidden;
+	font: 600 12px/1.4 ui-sans-serif, system-ui, sans-serif;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.banco-percorso {
+	overflow: hidden;
+	font: 400 11px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	color: #5c6572;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.banco-chiudi {
+	width: 26px;
+	height: 26px;
+	flex: none;
+	padding: 0;
+	border: 0;
+	border-radius: 3px;
+	background: transparent;
+	color: #5c6572;
+	font: 400 18px/1 ui-sans-serif, system-ui, sans-serif;
+	cursor: pointer;
+}
+
+.banco-chiudi:hover {
+	background: rgba(26, 35, 50, 0.07);
+	color: #1a2332;
+}
+
+.banco-casella {
+	display: block;
+	box-sizing: border-box;
+	width: 100%;
+	min-height: 72px;
+	max-height: 46vh;
+	padding: 8px 9px;
+	border: 1px solid rgba(26, 35, 50, 0.18);
+	border-radius: 3px;
+	background: #fff;
+	color: #1a2332;
+	font: 400 14px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+	resize: vertical;
+}
+
+.banco-casella:focus {
+	outline: none;
+	border-color: #a8321f;
+	box-shadow: 0 0 0 3px rgba(168, 50, 31, 0.14);
+}
+
+.banco-aiuto {
+	margin: 6px 0 0;
+	color: #5c6572;
+	font-size: 11px;
+	line-height: 1.4;
+}
+
+.banco-piede {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	margin-top: 8px;
+}
+
+.banco-messaggio {
+	min-width: 0;
+	color: #5c6572;
+	font-size: 12px;
+	line-height: 1.4;
+}
+
+.banco-messaggio.banco-ok {
+	color: #1f6b3c;
+}
+
+.banco-messaggio.banco-errore {
+	color: #a8321f;
+}
+
+.banco-salva {
+	min-height: 32px;
+	flex: none;
+	padding: 0 14px;
+	border: 1px solid #1a2332;
+	border-radius: 2px;
+	background: #1a2332;
+	color: #f5f4f0;
+	font: 600 12px/1 ui-sans-serif, system-ui, sans-serif;
+	cursor: pointer;
+}
+
+.banco-salva:hover {
+	background: #2b3648;
+}
+
+.banco-salva[disabled] {
+	opacity: 0.5;
+	cursor: progress;
+}
+
+/* ------------------------------------------------------------------ */
+/* L'avviso, quando il banco non risponde                             */
+/* ------------------------------------------------------------------ */
+
+.banco-avviso {
+	position: fixed;
+	right: 14px;
+	bottom: 62px;
+	z-index: 2147483000;
+	max-width: min(420px, calc(100vw - 28px));
+	padding: 10px 12px;
+	border-left: 3px solid #a8321f;
+	border-radius: 3px;
+	background: #fdfcf8;
+	box-shadow: 0 14px 34px rgba(26, 35, 50, 0.18);
+	color: #1a2332;
+	font: 400 12px/1.5 ui-sans-serif, system-ui, sans-serif;
+	cursor: pointer;
+}
+
+/* ------------------------------------------------------------------ */
+/* Chi preferisce meno movimento                                      */
+/* ------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+	html.banco-attiva [data-scritta],
+	.banco-interruttore span,
+	.banco-interruttore span::after {
+		transition: none;
+	}
+}
+
+/* ------------------------------------------------------------------ */
+/* Il campo «foto»: si sceglie un percorso, non si carica un file      */
+/* ------------------------------------------------------------------ */
+
+.banco-corpo {
+	display: block;
+}
+
+.banco-foto {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.banco-foto-anteprima {
+	display: block;
+	max-width: 100%;
+	max-height: 190px;
+	width: auto;
+	object-fit: contain;
+	border-radius: 4px;
+	border: 1px solid rgba(26, 35, 50, 0.12);
+	background: rgba(26, 35, 50, 0.04);
+}
+
+.banco-foto-scelta,
+.banco-foto-percorso,
+.banco-ai-istruzione,
+.banco-ai-foto {
+	width: 100%;
+	box-sizing: border-box;
+	padding: 7px 9px;
+	border: 1px solid rgba(26, 35, 50, 0.18);
+	border-radius: 4px;
+	background: #fff;
+	color: #1a2332;
+	font: 400 13px/1.45 ui-sans-serif, system-ui, sans-serif;
+}
+
+.banco-foto-scelta {
+	cursor: pointer;
+}
+
+.banco-foto-percorso:focus,
+.banco-foto-scelta:focus,
+.banco-ai-istruzione:focus,
+.banco-ai-foto:focus {
+	outline: 2px solid rgba(30, 90, 170, 0.45);
+	outline-offset: 1px;
+}
+
+.banco-foto-etichetta {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	font: 500 11px/1.4 ui-sans-serif, system-ui, sans-serif;
+	color: rgba(26, 35, 50, 0.62);
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+}
+
+/* ------------------------------------------------------------------ */
+/* «Chiedi all'AI»: la richiesta e' un file, il contenuto non si tocca */
+/* ------------------------------------------------------------------ */
+
+.banco-ai {
+	margin-left: auto;
+	padding: 6px 10px;
+	border: 1px solid rgba(30, 90, 170, 0.35);
+	border-radius: 4px;
+	background: rgba(30, 90, 170, 0.07);
+	color: #1c3f73;
+	font: 500 12px/1.3 ui-sans-serif, system-ui, sans-serif;
+	cursor: pointer;
+}
+
+.banco-ai:hover {
+	background: rgba(30, 90, 170, 0.14);
+}
+
+.banco-ai-pannello {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	margin-top: 10px;
+	padding-top: 10px;
+	border-top: 1px dashed rgba(26, 35, 50, 0.18);
+}
+
+.banco-ai-testo {
+	margin: 0;
+	font: 400 11px/1.5 ui-sans-serif, system-ui, sans-serif;
+	color: rgba(26, 35, 50, 0.66);
+}
+
+.banco-ai-istruzione {
+	resize: vertical;
+	min-height: 60px;
+}
+
+.banco-ai-invia {
+	align-self: flex-start;
+	padding: 6px 12px;
+	border: none;
+	border-radius: 4px;
+	background: #1c3f73;
+	color: #fff;
+	font: 500 12px/1.3 ui-sans-serif, system-ui, sans-serif;
+	cursor: pointer;
+}
+
+.banco-ai-invia[disabled] {
+	opacity: 0.5;
+	cursor: default;
+}
+
+/* Il piede ora ha tre elementi: il messaggio prende lo spazio. */
+.banco-piede .banco-messaggio {
+	margin-right: auto;
+}
+
+/* La conferma dell'invio: dice cosa e' successo e cosa aspettarsi.
+   Non finge una risposta che non c'e': l'agente legge la richiesta quando si torna in chat. */
+.banco-ai-conferma {
+	margin-top: 10px;
+	padding: 10px 12px;
+	border-left: 3px solid #004aad;
+	background: #f2f6fc;
+	border-radius: 0 4px 4px 0;
+	font-size: 12.5px;
+	line-height: 1.55;
+	color: #1a2332;
+}
+.banco-ai-conferma code {
+	font-size: 11.5px;
+	background: rgba(26, 35, 50, 0.07);
+	padding: 1px 5px;
+	border-radius: 3px;
+}

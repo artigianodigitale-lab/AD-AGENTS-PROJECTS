@@ -1,0 +1,16 @@
+# Copia questo file in `sede.yaml` e mettici il tuo nome.
+#
+# Perche' esiste: le regole parlano al **CEO**, che e' un ruolo. Il nome e' un dato,
+# e sta in un posto solo. Se `sede.yaml` non c'e', l'engine non e' avviato: vedi la
+# skill `ad-avvio`.
+
+ceo:
+  nome: ""          # <-- il tuo nome. Diventa il CEO, cioe' chi approva.
+  ruolo: "CEO"
+  dal: ""           # la data del primo avvio, AAAA-MM-GG
+
+macchina:
+  nome: "AD-AGENTS-PROJECTS"
+  # Dove stanno i progetti, se non accanto al motore. Vuoto = accanto.
+  progetti: ""
+  avviata: ""

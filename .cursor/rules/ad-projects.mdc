@@ -1,0 +1,12 @@
+---
+description: AD Projects — regole operative
+globs: 
+alwaysApply: true
+---
+
+# AD Projects
+
+Le regole stanno in **una sola fonte**: `.brain/COSTITUZIONE.md`.
+Leggile da li': non sono copiate qui, perche' una copia invecchia in silenzio.
+
+Radice della macchina: `AD-AGENTS-PROJECTS`

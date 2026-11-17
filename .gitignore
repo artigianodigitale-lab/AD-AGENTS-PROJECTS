@@ -1,0 +1,45 @@
+# La configurazione locale: chi e' il CEO e dove stanno i progetti.
+# Non e' codice, e' di chi usa il motore. Si versiona solo l'esempio.
+sede.yaml
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Cache degli strumenti
+*.tmp
+*.log
+.DS_Store
+
+# Materiale di studio: e' dato, non macchina. 65 MB su 68, ricostruibile dalla
+# fonte, non serve al funzionamento. Resta su disco, non nel repository.
+studio/
+
+# Cache locale degli strumenti (rigenerabile)
+.cache/
+.pytest_cache/
+
+# Le chiavi dei servizi esterni: mai in git. Si versiona solo l'esempio.
+.env
+.env.*
+!.env.example
+
+# Il backup locale degli aggiornamenti: e' tuo, non si versiona.
+.aggiornamento/
+
+# I backup locali del repository (bundle git): non si versionano.
+/backup/
+
+# Progetti numerati: le carte di un progetto stanno NEL progetto, e ogni progetto
+# ha il suo repository (la maggior parte delle 19 cartelle ha `.git`). Il repository della macchina **non**
+# li pubblica e **non** ci scende dentro: se ci scendesse, git registrerebbe un
+# gitlink al posto dei file (misurato dal gate GOV-017, 16 gitlink). Il registro
+# delle autorizzazioni vive in `<progetto>/governance/` (DEC-0080) ed e' versionato
+# **nel repository del progetto**, non qui: cosi' la storia resta e la macchina
+# non si riempie dei dati dei progetti (ERR-0065, DEC-0081).
+/[0-9]*/
+
+# Risposta API scaricata per prova: non si versiona.
+/cboe.json

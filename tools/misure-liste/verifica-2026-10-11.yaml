@@ -1,0 +1,562 @@
+# Le misure della verifica del 10-11 ottobre, come elenco dichiarato.
+#
+# Da dove vengono. Il report di quella verifica
+# (`3. AD-Marketing-Factory/Analisi-Prompt-Report/Milestone 3/Sprint 2/REPORT.md`)
+# porta i suoi numeri **scritti a mano**, e per questo ha preso `FAIL` tre volte
+# sullo stesso criterio: ogni correzione spostava le righe e rompeva le citazioni
+# interne (`DEC-0044`). Qui quegli stessi numeri diventano **comandi**: l'elenco
+# dice cosa misurare, `tools/misure.py` lo esegue e genera l'allegato.
+#
+# Cosa NON e' questo file. Non e' il report: non conclude niente e non interpreta
+# niente. Dichiara delle misure, e le misure falliscono senza dover chiedere
+# permesso a una conclusione.
+#
+# Le misure sono dichiarate **di sola lettura**, e chi scrive questo file ne
+# risponde: e' l'unica difesa che regge, perche' un elenco di cose vietate non
+# finisce mai. `tools/misure.py check` rifiuta le famiglie note — scrittura sul
+# filesystem, storia di git, esecuzione annidata, linguaggi che eseguono, testo
+# che diventa codice, redirezioni — ma **non e' un sandbox**: un comando che
+# scrive senza somigliare a nessuna di quelle forme non viene visto.
+#
+# La prima versione di questo file diceva «nessun comando scrive, sposta,
+# cancella o riscrive la storia». **Era falso**, e il gate `QA` l'ha dimostrato
+# eseguendo dieci forme che passavano — fra cui `git -C . commit`, che ha creato
+# un commit vero. Quelle forme ora si rifiutano, ma la promessa assoluta non si
+# rimette: il testo del limite vive in `misure.LIMITE_RIFIUTO` e finisce
+# **dentro l'allegato**, che e' l'artefatto che si cita come prova.
+#
+# Le misure escluse stanno in fondo, con la ragione: una misura che manca senza
+# dirlo si legge come una misura che non serviva.
+
+titolo: "Verifica del 10-11 ottobre — le misure del report, rieseguite"
+descrizione: |
+  Le misure che il report dello sprint 2 porta scritte a mano, rieseguite come
+  comandi. Ogni riga dell'allegato porta il comando, l'esito, il codice di uscita
+  e il momento: un numero vecchio non si legge come attuale, e un comando che
+  fallisce non viene nascosto. Dove un valore e' diverso da quello che il report
+  dichiara, la differenza e' il fatto — il mondo si e' mosso, e l'allegato dice
+  di quanto e da quando.
+
+  **Una nota sulla riproducibilita', che riguarda questo file.** L'allegato vive
+  dentro la cartella che alcune misure osservano: la prima esecuzione successiva
+  alla sua nascita vede una riga in piu' in `M13` (`git status`), cioe' vede se
+  stessa. Il testo pubblicato e' quello del **secondo** giro, quando il file
+  esisteva gia': da li' in poi l'allegato e' un punto fisso **a parita' di
+  mondo** — due esecuzioni consecutive senza che nulla cambi danno lo stesso
+  testo, mentre se un registro o un file si muove l'impronta cambia, ed e' il
+  punto.
+
+  E c'e' un caso che nessuna maschera toglie, dichiarato qui e non taciuto: **un
+  comando puo' stampare un valore che dipende dal tempo**. In questo elenco lo fa
+  `M36` (`coherence.py`, che nei messaggi scrive l'ora corrente). Quelle righe
+  restano nel testo e contano nell'impronta, perche' toglierle nasconderebbe
+  anche una differenza vera che capita nello stesso output; la misura le
+  **dichiara** (`tempo_nell_output: true`) e `misure.py confronta` separa le
+  differenze dichiarate da quelle vere, mostrandole entrambe. Non e' un dettaglio
+  da nascondere: e' la stessa ragione per cui il conteggio dei file della
+  cartella e' fra le misure escluse.
+
+area: "."
+
+misure:
+  # --- Il repository del progetto -----------------------------------------
+  - nome: "commit del progetto"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      git rev-list --count HEAD
+    descrizione: >
+      Quanti commit ha il repository del progetto. Il report ne dichiara 162 e
+      scrive che "nei tre giorni in mezzo non e' stato committato niente": la
+      misura dice se quella frase regge ancora.
+
+  - nome: "ultimo commit del progetto"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      git log -1 --format='%H%n%h%n%ad%n%an%n%s' --date=iso
+    descrizione: >
+      L'impronta, l'autore e la data dell'ultimo commit: e' il modo di dire
+      "fermo a quando" senza citare a memoria.
+
+  - nome: "le date del log del progetto"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      git log --date=short --pretty='%ad' | sort | uniq -c
+    descrizione: >
+      Quanti commit per giorno. Il report somma 1+9+64+84+4=162 e conclude che le
+      date del log sono tutte le date del repository: la somma della colonna si
+      rifa' in testa, e se il totale non torna col conteggio dei commit la
+      differenza si vede.
+
+  - nome: "commit del 9, 10 e 11 ottobre nel progetto"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      git log --since='2026-10-09 00:00' --until='2026-10-12 00:00' --date=iso --pretty='%h %ad %s'
+    descrizione: >
+      I commit dei tre giorni in cui, secondo il report, il progetto non e' stato
+      toccato. La misura stampa le righe: se sono zero, l'elenco e' vuoto e il
+      codice di uscita e' comunque 0 — il silenzio di git e' l'esito.
+
+  - nome: "i quattro commit del 7 ottobre"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      git log -1 --date=iso --pretty='%h %ad %s' 4b28085 1a536d5 9995412 a021939
+    descrizione: >
+      I quattro commit che smentiscono la premessa del piano (motore browser,
+      report per sezione, i tasti che non funzionavano, il badge dell'origine):
+      il report li data al 7 ottobre, non all'11.
+
+  - nome: "la serie di commit AMF-134..158"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      git log --all --date=iso --pretty='%h %ad %s' | grep -E 'AMF-1(3[4-9]|4[0-9]|5[0-8]):' | wc -l
+    descrizione: >
+      Quanti commit appartengono alla serie di lavorazione che il piano diceva
+      non coperta da nessun permesso. Il report ne conta 25: il numero e' la
+      prima colonna, e il criterio (il pattern) e' scritto nel comando, cosi' chi
+      legge puo' contestare il criterio invece del risultato.
+
+  - nome: "la storia del progetto, e il taglio dichiarato"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      git log --all --oneline
+    descrizione: >
+      Tutta la storia del progetto, un commit per riga: sono piu' righe di quante
+      l'allegato ne mostri, e la sezione lo **dichiara** invece di tagliare in
+      silenzio — quante righe ha detto il comando e quante ne sono state omesse
+      stanno entrambe scritte. E' la stessa classe di difetto di `ERR-0029`: uno
+      strumento che risponde meno di quanto sa senza dirlo si legge come uno
+      strumento che ha detto tutto.
+
+  - nome: "i documenti del progetto versionati"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      git ls-files Analisi-Prompt-Report/ | wc -l
+    descrizione: >
+      Quanti file di `Analisi-Prompt-Report/` stanno in un commit. Il report
+      misura 0 ed e' il suo residuo vero: le carte del progetto fuori da ogni
+      storia e da ogni copia. E' la misura che l'11 ottobre e' cambiata.
+
+  - nome: "la cartella dei documenti e' ignorata dal progetto?"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      git check-ignore -v "Analisi-Prompt-Report/BLUEPRINT.md"
+    esito_atteso: 1
+    descrizione: >
+      Esce 1 e non stampa niente quando il percorso **non** e' ignorato: e' la
+      differenza fra "untracked" (non aggiunto) e "ignorato" (escluso per
+      regola), che il report chiama il punto tecnico piu' importante. Un codice
+      di uscita diverso da zero qui non e' un guasto: e' la risposta.
+
+  - nome: "il ramo del progetto e il suo remoto"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      git branch -vv
+    descrizione: >
+      Il ramo locale, il suo upstream e di quanto e' avanti. Il report legge
+      "dopo 161": e' la misura del lavoro che non e' mai uscito da questa
+      macchina.
+
+  - nome: "i commit del progetto mai spediti"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      git rev-list --count origin/main..HEAD
+    descrizione: >
+      Quanti commit locali non sono su `origin/main`. "Committato non vuol dire
+      al sicuro": questa e' la distanza fra le due cose.
+
+  - nome: "dove sta il remoto del progetto"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      git for-each-ref --format='%(refname:short) %(objectname:short) %(committerdate:iso)' refs/remotes/origin/main
+    descrizione: >
+      Il punto in cui il remoto e' fermo: la data dell'ultimo commit che l'ha
+      raggiunto.
+
+  - nome: "lo stato del progetto adesso"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      git status --porcelain
+    descrizione: >
+      Cosa e' modificato e cosa non e' versionato, adesso. E' la misura piu'
+      esposta di tutte — la cartella e' scritta da piu' esecutori mentre la si
+      misura — ed e' per questo che sta in un allegato datato invece che in una
+      frase di un rapporto.
+
+  - nome: "il .gitignore del progetto nomina i documenti?"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      grep -n -i "analisi\|prompt\|report" .gitignore
+    esito_atteso: 1
+    descrizione: >
+      Nessuna riga e codice di uscita 1: il `.gitignore` del progetto non nomina
+      la cartella dei documenti, quindi non c'e' un divieto — c'e' una omissione.
+      E' la tesi del report, e qui e' un comando che puo' smentirla.
+
+  - nome: "quante righe ha il .gitignore del progetto"
+    cwd: "3. AD-Marketing-Factory"
+    comando: |
+      wc -l .gitignore
+    descrizione: >
+      La dimensione del file che l'esclusione la scriverebbe, se ci fosse.
+
+  # --- La radice: la macchina di governance --------------------------------
+  - nome: "commit della radice"
+    comando: |
+      git rev-list --count HEAD
+    descrizione: >
+      Quanti commit ha la supercartella. Il report ne conta 3, tutti dell'11
+      ottobre: e' la nascita della macchina, non del progetto.
+
+  - nome: "il log della radice"
+    comando: |
+      git log --date=iso --pretty='%h %ad %s'
+    descrizione: >
+      I commit della macchina con data e messaggio: l'11 ottobre nasce il sistema
+      che i permessi li concede.
+
+  - nome: "cosa hanno cambiato i tre commit della radice"
+    comando: |
+      for h in fe47b82 1c0f096 3496330; do
+        git show --stat --format='%h %ad %s' --date=iso "$h" | grep -E 'files? changed|^[0-9a-f]{7} '
+      done
+    descrizione: >
+      Quanti file e quante righe ha mosso ciascuno dei tre commit: 261 file per
+      la macchina, 6 per il controllo delle dipendenze, 3 per le esenzioni ai
+      segreti. Il numero e' generato da git, non ricopiato.
+
+  - nome: "i Decision Record di oggi"
+    comando: |
+      ls DECISIONI/DEC-*.md | wc -l
+    descrizione: >
+      Quanti Decision Record esistono adesso. E' una misura viva — il registro
+      cresce — e il suo valore vale al momento scritto accanto.
+
+  - nome: "i Decision Record alla nascita della macchina"
+    comando: |
+      git ls-tree --name-only fe47b82 DECISIONI/ | grep -c 'DEC-.*\.md'
+    descrizione: >
+      Quanti ne esistevano nel primo commit della radice: il confronto col
+      conteggio di oggi dice quanto e' cresciuta la macchina, e il criterio
+      (`DEC-*.md`, non tutto quello che nomina la cartella) e' scritto nel
+      comando.
+
+  - nome: "le skill del cervello"
+    comando: |
+      ls .brain/skills/ | wc -l
+    descrizione: >
+      Quante skill globali esistono adesso.
+
+  - nome: "le skill alla nascita della macchina"
+    comando: |
+      git ls-tree -d --name-only fe47b82 .brain/skills/ | wc -l
+    descrizione: >
+      Quante ne esistevano al primo commit: otto e otto, cioe' non sono
+      cresciute, sono nate cosi'.
+
+  - nome: "file dei progetti tracciati nella radice"
+    comando: |
+      git ls-files | grep -cE '^[0-9]+\.'
+    esito_atteso: 1
+    descrizione: >
+      Zero righe e codice di uscita 1: nessun file dei progetti numerati e'
+      tracciato nel repository della macchina, perche' il `.gitignore` della
+      radice li esclude uno per uno. L'esclusione e' deliberata e scritta, non
+      dimenticata.
+
+  - nome: "l'esclusione deliberata nella radice"
+    comando: |
+      git check-ignore -v "3. AD-Marketing-Factory/Analisi-Prompt-Report/BLUEPRINT.md"
+    descrizione: >
+      Quale riga di quale file esclude i documenti del progetto dal repository
+      della radice. Il report dice `.gitignore:20`: qui la riga la stampa git.
+
+  - nome: "le voci dei progetti nel .gitignore della radice"
+    comando: |
+      sed -n '10,26p' .gitignore | grep -c '^/'
+    descrizione: >
+      Quante esclusioni di progetto sono scritte una per una in quel blocco. Il
+      report ne conta 17.
+
+  # --- Il registro delle autorizzazioni ------------------------------------
+  - nome: "i permessi del progetto e i loro stati"
+    comando: |
+      grep -H '^status:' contratti/3-ad-marketing-factory/*.yaml | sed 's/.*status: *//' | sort | uniq -c
+    descrizione: >
+      Quanti permessi del progetto sono aperti e quanti chiusi. Il report legge
+      "2 active, 8 chiuso" e da li' deduce quali lavorazioni sono in corso: e' un
+      conteggio che invecchia in minuti.
+
+  - nome: "i permessi del progetto"
+    comando: |
+      ls -1 contratti/3-ad-marketing-factory/*.yaml | wc -l
+    descrizione: >
+      Quanti file di permesso esistono per il progetto.
+
+  - nome: "la data di nascita dei permessi del progetto, e dei loro marcatori"
+    comando: |
+      stat -c '%w %n' contratti/3-ad-marketing-factory/*.yaml | sort
+      stat -c '%w %n' approvazioni/3-ad-marketing-factory/*.yaml | sort
+    descrizione: >
+      Quando ogni permesso del progetto e' **nato**, non quando e' stato toccato
+      l'ultima volta: `%w` e' la data di creazione del file. Due voci delle
+      «misure escluse» dicevano che le date di nascita non si possono misurare
+      «perche' il filesystem non le conserva»: **era falso** — su `ext4` con
+      coreutils 9.4 si leggono — e il gate `QA` l'ha dimostrato.
+      **I marcatori ci sono per una ragione precisa.** La prima versione di questa
+      misura guardava solo i contract, e la ragione di un'esclusione citava «la
+      nascita di `ADMF-001`, 16:57:52» come se fosse qui dentro. Non c'era: il
+      contract e' nato alle **17:55:01** (il file e' stato ricreato) e il
+      **marcatore** alle **16:57:45**. Il 16:57:52 non e' la nascita di nessuno dei
+      due — era la data di **modifica** che un verificatore misuro' alle 17:40, e
+      da allora il file e' stato riscritto. Adesso le due meta' del registro si
+      vedono tutte e due, e chi legge confronta invece di fidarsi.
+      Un `-` al posto della data significa un filesystem che davvero non le tiene,
+      e allora la ragione vecchia tornerebbe vera.
+
+  - nome: "il registro delle autorizzazioni, su disco e in git"
+    comando: |
+      printf 'su disco: '; find contratti approvazioni -type f | wc -l
+      printf 'in git:   '; git ls-files contratti approvazioni | wc -l
+    descrizione: >
+      Due numeri che devono coincidere e non coincidono: il registro e' la cosa
+      che il controllore legge a ogni scrittura, e una parte non sta in nessun
+      commit.
+
+  - nome: "i file di autorizzazione fuori da ogni commit"
+    comando: |
+      comm -23 <(find contratti approvazioni -type f | sort) <(git ls-files contratti approvazioni | sort)
+    descrizione: >
+      L'elenco esatto, non il conteggio: quali file del registro non sono in
+      nessun commit. Il report ne elenca otto, tutti dell'11 ottobre.
+
+  - nome: "la guardia di ambito e' definita una volta sola"
+    comando: |
+      grep -n "def guard" tools/*.py
+    descrizione: >
+      Una sola definizione di `guard`, dentro l'autorita'. E' la riparazione di
+      `ERR-0026`, e la prova che non e' stata riscritta altrove.
+
+  - nome: "le porte che chiamano la guardia"
+    comando: |
+      grep -l "ad_scope\.guard(" tools/*.py
+    descrizione: >
+      Quali strumenti chiedono il permesso prima di scrivere. Il report ne conta
+      sei chiamanti diretti piu' le due porte che passano da `ad_docs.prenota_id`:
+      il numero e' cambiato dopo il rework di `ADMF-004`, ed e' cambiato di nuovo
+      quando e' nato questo strumento.
+
+  - nome: "il Blueprint del progetto e' coperto da un permesso?"
+    comando: |
+      python3 tools/contract_scope.py check "3. AD-Marketing-Factory/Analisi-Prompt-Report/BLUEPRINT.md"
+    esito_atteso: [0, 1]
+    descrizione: >
+      Il report misura `exit 1` — nessun permesso copre la fotografia che i
+      permessi li fotografa — e da li' deduce che il passo 12 di chiusura e'
+      bloccato. La misura dice se quella deduzione regge ancora, e quale permesso
+      copre adesso quel percorso. **Entrambi i codici sono un esito**, e la
+      risposta sta nell'output: «coperto dal contract X» oppure l'elenco dei
+      permessi attivi. Il campo `esito_atteso` non e' un verdetto sul mondo — e'
+      il modo di accorgersi se il comando smette di funzionare, e qui il mondo
+      puo' dire onestamente sia 0 sia 1.
+
+  - nome: "il verdetto dei sette permessi del progetto"
+    comando: |
+      for c in FIX-001 SEC-001 SEC-002 REL-001 ORD-001 ORD-003 ORD-004; do
+        out=$(python3 tools/verdict.py --contract "contratti/3-ad-marketing-factory/$c.yaml" \
+          --evidence "3. AD-Marketing-Factory/Analisi-Prompt-Report/Evidenze/" 2>&1)
+        codice=$?
+        printf '%-9s codice=%s  %s\n' "$c" "$codice" "$(printf '%s\n' "$out" | grep -E '^verdetto:')"
+      done
+    descrizione: >
+      Il verdetto di ogni permesso del progetto con il **suo** codice di uscita.
+      Il codice si legge subito dopo il comando, non dopo una pipe: con
+      `| tail`, `$?` darebbe l'esito di `tail` e la prova direbbe il contrario di
+      quello che vuole dire — ed e' un errore che il report ha gia' commesso e
+      dichiarato.
+
+  - nome: "le tre cicatrici dell'11 ottobre"
+    comando: |
+      grep -H '^stato:' errori/ERR-0026-blueprint-senza-guardia.yaml \
+        errori/ERR-0027-evidenza-scelta-senza-filtro.yaml \
+        errori/ERR-0028-prodotto-modificato-durante-il-gate.yaml
+    descrizione: >
+      Lo stato delle tre voci di `errori/` nate quel giorno. Due si chiudono
+      quando la difesa e' codice ed e' eseguita; la terza resta aperta perche' la
+      sua difesa sarebbe una regola in un documento normativo, e quella e' una
+      decisione del CEO.
+
+  # --- I controlli deterministici della macchina ---------------------------
+  - nome: "coerenza fra descrizione e sistema"
+    comando: |
+      python3 tools/coherence.py
+    tempo_nell_output: true
+    descrizione: >
+      Il livello sempre caricato corrisponde al sistema: skill, comandi, passi,
+      ganci. **Dichiara un output dipendente dal tempo**, e non e' una precauzione
+      teorica: nei messaggi delle sue divergenze `coherence.py` scrive l'ora
+      corrente («adesso e' 2026-10-11T21:15:37+02:00») e un conto alla rovescia
+      («che non e' ancora arrivato»). Il gate `QA` l'ha trovato cosi': tre
+      esecuzioni consecutive, mondo fermo, **tre impronte stabili diverse**, con
+      due righe di differenza tutte qui dentro. Non si mascherano: nasconderebbero
+      anche una divergenza nuova che capitasse nello stesso output. Si dichiarano,
+      e `confronta` separa le differenze dichiarate da quelle vere.
+
+  - nome: "integrita' del registry delle card"
+    comando: |
+      python3 tools/cards.py check
+    descrizione: >
+      Le card tecniche e business: campi critici, assegnabilita', catalogo dei
+      gate.
+
+  - nome: "il registro delle divergenze"
+    comando: |
+      python3 tools/drift.py check
+    descrizione: >
+      Le divergenze fra documenti e realta': quante ne sono aperte e se il
+      registro e' coerente.
+
+  - nome: "i verbali seguono il modello"
+    comando: |
+      python3 tools/verbali.py check
+    descrizione: >
+      Una decisione senza fonti verificabili e' un errore, e una revisione
+      passata senza esito e' una decisione che nessuno ha misurato.
+
+  - nome: "le voci di errori/ hanno una difesa che esiste"
+    comando: |
+      python3 tools/errori.py check
+    descrizione: >
+      Ogni cicatrice dichiara cosa l'ha risolta, e quella difesa esiste davvero
+      nel codice: una voce chiusa senza difesa sarebbe il difetto peggiore.
+
+  - nome: "nessun Blueprint mente"
+    comando: |
+      python3 tools/blueprint.py check
+    descrizione: >
+      Distingue tre cose, e solo una e' un errore: aggiornato, indietro
+      (fotografia autentica di registri piu' vecchi) e manomesso.
+
+  - nome: "la vista operativa e' aggiornata"
+    comando: |
+      python3 tools/stato.py check
+    descrizione: >
+      La vista e' generata dai registri: se dice di essere indietro, e' perche'
+      un registro si e' mosso dopo l'ultima fotografia. Il codice di uscita e' 0
+      anche quando e' indietro — indietro non e' un errore — quindi il verdetto
+      sta nell'output, non nel codice.
+
+  - nome: "la storia del progetto e' completa"
+    comando: |
+      python3 tools/milestone.py check "3. AD-Marketing-Factory"
+    descrizione: >
+      Ogni milestone con il suo rapporto, ogni sprint aperto e chiuso,
+      numerazione contigua. Il report misura "3 milestone, 4 sprint": il numero
+      degli sprint e' cambiato con lo sprint che e' stato aperto dopo.
+
+  - nome: "il plugin di enforcement"
+    comando: |
+      node .brain/plugin/enforce-contract/test.mjs 2>&1 | tail -2
+    descrizione: >
+      I controlli del plugin che intercetta i tool di scrittura prima del
+      dispatch. E' l'ultima porta prima del disco, e ha i suoi test.
+
+  # --- La classe di difetto, misurata su uno strumento vivo -----------------
+  - nome: "un output che si accorcia in silenzio, e la difesa opposta"
+    comando: |
+      grep -n 'esito.get("testo"' tools/ricerca.py
+      grep -c 'non mostrate' tools/misure.py
+    descrizione: >
+      Il rework della ricerca ha contraddetto un gate con la prova, e la causa era
+      uno strumento che rispondeva **meno di quanto sapeva senza dirlo**: questa
+      riga di `ricerca.py` tronca il testo a 4.000 caratteri, e il testo intero sta
+      solo in `--json`. Un verificatore ha concluso «il testo non e' estraibile»
+      mentre l'articolo cominciava all'offset 8.807. E' la stessa famiglia di
+      difetti che questo allegato combatte — un output che si accorcia in silenzio
+      si legge come un output completo — e si vede leggendo: la prima riga mostra
+      il taglio, la seconda mostra la difesa opposta, il taglio di **questo**
+      strumento, che dichiara quante righe ha omesso invece di sparire. Non ripara
+      niente e non e' una misura del report: misura che la classe esiste, e che si
+      puo' vedere.
+
+# ---------------------------------------------------------------------------
+# Le misure che questo allegato NON contiene. Non e' una dimenticanza: e' la
+# parte del report che non si puo' rieseguire, e va detta invece che finta.
+# ---------------------------------------------------------------------------
+escluse:
+  - nome: "quanti file e quanti byte ha la cartella dei documenti"
+    comando: |
+      find "3. AD-Marketing-Factory/Analisi-Prompt-Report" -type f | wc -l
+      find "3. AD-Marketing-Factory/Analisi-Prompt-Report" -type f -printf '%s\n' | paste -sd+ | bc
+    motivo: >
+      Si puo' esprimere in sola lettura, e il comando e' qui sotto — ma il numero
+      sarebbe **sbagliato di uno appena l'allegato esiste**: questo file vive in
+      quella cartella, quindi la misura conterebbe anche se stessa, e due
+      esecuzioni consecutive darebbero due numeri diversi proprio perche' la
+      prima ha scritto. E' un conteggio che si auto-invalida, e non e' il posto
+      giusto per farlo: il numero giusto per «com'e' la cartella adesso» e' un
+      comando che si esegue e si legge, non una riga di un allegato dentro la
+      cartella misurata. Il report lo dichiarava «non piu' verificabile»: qui la
+      ragione e' piu' stretta, ed e' questa.
+
+  - nome: "righe di markdown e di YAML della cartella dei documenti"
+    comando: |
+      find Analisi-Prompt-Report -type f -name '*.md' -exec cat {} + | wc -l
+      find Analisi-Prompt-Report -type f -name '*.yaml' -exec cat {} + | wc -l
+    motivo: >
+      Due ragioni, e nessuna delle due si aggira. La prima: si esprime solo
+      eseguendo `cat` su un elenco di file, cioe' con `find -exec`, che la lista
+      dei comandi vietati rifiuta — e rifiuta a ragione, perche' `-exec` esegue
+      qualunque cosa. La seconda: il numero somma file che gli altri esecutori
+      stanno scrivendo adesso, e un allegato che promette riproducibilita' non
+      puo' contenere una misura che non la garantisce.
+
+  - nome: "i conteggi dello sprint 1: 1.028 righe, 45.284 e 51.347 byte"
+    motivo: >
+      Misurano un insieme di file che oggi non esiste piu' come insieme: due file
+      sono nuovi, due sono cresciuti, e i file di allora non hanno una versione
+      precedente da rileggere perche' non sono versionati. Non sono
+      riproducibili: si dichiarano qui e non si rifanno, invece di ricalcolarli
+      fingendo che sia lo stesso numero.
+
+  - nome: "la finestra di 41 minuti fra il Blueprint e il primo permesso"
+    motivo: >
+      **Questa ragione e' stata riscritta due volte, e la seconda versione era
+      falsa a sua volta.** La prima diceva che le date di nascita non si misurano
+      «perche' il filesystem non le conserva»: falso, e M28 lo prova.
+      La seconda diceva che il **secondo** estremo della finestra — «la nascita di
+      `ADMF-001`, 16:57:52» — si misura con M28. **No**: M28 stampa `17:55:01` per
+      `contratti/…/ADMF-001.yaml` e `16:57:45` per il suo marcatore, e **nessun file
+      dell'albero e' nato alle 16:57:52**. Quel numero era la data di **modifica**
+      che un verificatore misuro' alle 17:40, e da allora il file e' stato
+      riscritto: una dichiarazione, non una misura di oggi.
+      La ragione vera, e finalmente esatta, e' questa: **entrambi gli estremi della
+      finestra sono dichiarazioni**, non valori che l'albero di oggi conferma. Il
+      primo (16:16:43, la scrittura del Blueprint) non esiste piu' in nessun file,
+      perche' il Blueprint e' stato rigenerato due volte; il secondo (16:57:52) e'
+      stato misurato allora su un file che oggi dice un'altra data. Un intervallo i
+      cui due estremi sono citazioni non si ricalcola: si cita, dichiarando che e'
+      una citazione.
+
+  - nome: "quale permesso fosse attivo ora per ora il 7 e l'8 ottobre"
+    motivo: >
+      **Anche questa ragione era falsa** — la data di nascita si misura (M28,
+      contract **e** marcatori). Il dato che manca e' un altro: `status:` e' un
+      valore **di adesso**, senza storia. Il file dice se un permesso e' `active`
+      o `chiuso` oggi, non quando e' cambiato: per ricostruire ora per ora
+      servirebbe la transizione, e nessun registro la tiene. Si misura la nascita
+      di un permesso, non la sua vita — e M28 lo dice con le date in chiaro.
+
+  - nome: "la suite dei test come misura"
+    comando: |
+      python3 tools/tests/test_ad_org.py
+    motivo: >
+      Non e' una misura in sola lettura: la suite crea cartelle temporanee
+      **dentro** l'albero di autorita' e ci scrive dentro (e' il modo in cui
+      prova gli strumenti che scrivono). Le misure osservano, non cambiano: la
+      suite si esegue come controllo, non come misura.
+
+  - nome: "i dati di prodotto del piano: 5 brand, 63 smoke, 59 PASS"
+    motivo: >
+      Sono affermazioni del piano di prodotto, non di questa verifica, e
+      misurarle vuol dire eseguire il prodotto invece di leggere il repository.
+      Non le confermo e non le smentisco: non appartengono a questo elenco.
